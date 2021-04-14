@@ -32,13 +32,41 @@ function saveCart() {
     const itemObj = { item: item.innerText };
     itemsToSave.push(itemObj);
   });
-  console.log(itemsToSave);
+  localStorage.setItem('CartItemsToSave', JSON.stringify(itemsToSave));
 }
 
-function cartItemClickListener(event) {
-  const cardItems = document.querySelector('.cart__items');
+const cardItems = document.querySelector('.cart__items');
+
+function cartItemClickListener(event) {  
   cardItems.removeChild(event.srcElement);
   saveCart();
+}
+
+function updateCart(itemsCard) {
+  // const cardItems = document.querySelector('.cart__items');
+
+  itemsCard.forEach((itemCard) => {
+    const li = document.createElement('li');
+    li.className = 'cart__item';
+    li.innerText = itemCard;
+    li.addEventListener('click', cartItemClickListener); 
+    cardItems.appendChild(li);
+  });  
+}
+
+function loadCart() {
+  const itemsCard = [];
+  const toLoadItems = JSON.parse(localStorage.getItem('CartItemsToSave'));
+  console.log(!toLoadItems);
+  if (toLoadItems) {
+    for (let item = 0; item < toLoadItems.length; item += 1) {
+      itemsCard.push(toLoadItems[item].item);
+    }
+    console.log(`Carregado ${itemsCard}`);
+    updateCart(itemsCard);
+  } else {
+    console.log('Vasio');
+  }
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -60,10 +88,10 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     .appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   buttonAdd.addEventListener('click', async () => {
-    const cardItems = document.querySelector('.cart__items');
+    const cardItemsNow = document.querySelector('.cart__items');
     const idItem = buttonAdd.parentNode.firstChild.innerText;
     const itemInfo = await fetchProducts(idItem, urlProduct);
-    cardItems.appendChild(createCartItemElement(itemInfo));
+    cardItemsNow.appendChild(createCartItemElement(itemInfo));
     saveCart();
   });
 
@@ -81,14 +109,6 @@ const mountItems = async (product) => {
   arrItens.results.forEach((item) => conteinerItems.appendChild(createProductItemElement(item)));
 };
 
-// const reviveButtons = () => {
-//   const AddButtons = document.querySelectorAll('.item__add');
-//   
-
-//   AddButtons.forEach((buttom) => {
-
-//   });
-// };
-
 mountItems('computador');
+loadCart();
 // setTimeout(() => reviveButtons(), 500);
