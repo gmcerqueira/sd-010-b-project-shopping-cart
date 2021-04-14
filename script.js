@@ -1,21 +1,58 @@
 window.onload = function onload() {
-  fetchItems()
+  load()
+  construct()
 };
 
-const fetchItems = () => {
-    let url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador'
-    fetch(url)
-      .then(res => res.json())
-      .then(res => res.results)
-      // .then(console.log)
-      .then(getItems)
+const construct = async () => {
+  const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador'
+  await fetch(url)
+    .then(res => res.json())
+    .then(res => res.results)
+    .then(getItems)
+  let btnArr = document.querySelectorAll('.item__add')
+  btnArr.forEach((_, i) => btnArr[i].addEventListener('click', addItemToCart))
 }
 
 const getItems = (arr) => {
-  
   for(let i = 0; i < arr.length; i += 1) {
-    let obj = {sku: arr[i].id, name: arr[i].title, image: arr[i].thumbnail}
-    document.querySelector('section .items').appendChild(createProductItemElement(obj))
+    const obj = {sku: arr[i].id, name: arr[i].title, image: arr[i].thumbnail}
+    document.querySelector('section.items').appendChild(createProductItemElement(obj))
+  }
+}
+
+const addItemToCart = async (event) => {
+  const item = event.target
+  const itemId = item.parentElement.firstElementChild.innerText
+  const url = `https://api.mercadolibre.com/items/${itemId}`
+  
+  await fetch(url)
+    .then(res => res.json())
+    .then(res => {
+      const itemObj = {sku: res.id, name: res.title, salePrice: res.price}
+      document.querySelector('ol.cart__items').appendChild(createCartItemElement(itemObj))
+    })
+  
+  save()
+}
+
+const save = () => {
+  localStorage.clear()
+  const cartItems = document.querySelector('ol.cart__items')
+  const arr = [...cartItems.children]
+  arr.map((e, i) => {
+    localStorage.setItem(`${i}`, e.innerText)
+  })
+  
+
+}
+
+const load = () => {
+  for( let i = 0; i < localStorage.length; i += 1){
+    const data = localStorage[i]
+    const li = document.createElement('li');
+    li.innerText = data
+    li.addEventListener('click', cartItemClickListener)
+    document.querySelector('ol.cart__items').appendChild(li)
   }
 }
 
@@ -52,7 +89,9 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const item = event.target
+  item.remove()
+  save()
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
