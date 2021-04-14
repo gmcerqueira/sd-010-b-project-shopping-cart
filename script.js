@@ -1,4 +1,3 @@
-window.onload = function onload() { };
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -60,4 +59,6 @@ function createList() {
       });
     });
   }
-  createList();
+  window.onload = function onload() { 
+    createList();
+  };
