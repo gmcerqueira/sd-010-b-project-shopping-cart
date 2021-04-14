@@ -1,3 +1,4 @@
+// Abimael Rocha - Trybe
 window.onload = function onload() { };
 
 function createProductImageElement(imageSource) {
