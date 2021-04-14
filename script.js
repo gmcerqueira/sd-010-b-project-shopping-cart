@@ -35,7 +35,7 @@ function createProductItemElement({ sku, name, thumbnail }) {
   sectionItems.appendChild(section);
 
   btn.addEventListener('click', () => {
-    addItem(sku);
+    // addItem(sku);
   });
 
   return section;
