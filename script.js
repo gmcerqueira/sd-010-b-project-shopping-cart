@@ -1,11 +1,15 @@
 const storage = localStorage;
 const cartClass = '.cart__items';
 
+function productInStorage(id, products) {
+  return products.find((product) => product.id === id);
+}
+
 function saveProductIdOnLocalStorage(product) {
     if (!storage.length) storage.setItem('products', JSON.stringify([product]));
     else {
       const arrProducts = JSON.parse(storage.getItem('products'));
-      if (arrProducts.includes(product)) return; 
+      if (productInStorage(product.id, arrProducts)) return;
       arrProducts.push(product);
       storage.setItem('products', JSON.stringify(arrProducts));
     }
@@ -18,12 +22,21 @@ function removeProductIdOnLocalStorage(id) {
   storage.setItem('products', JSON.stringify(localStorageArr));
 }
 
+async function totalPrice() {
+  const totalPriceTag = document.querySelector('.total-price');
+  const arrProducts = await JSON.parse(storage.getItem('products'));
+  const totalRes = (arrProducts.reduce((result, acc) => result + acc.base_price, 0));
+  totalPriceTag.innerHTML = totalRes;
+  return totalRes;
+}
+
 function cartItemClickListener(event) {
   const item = event.target;
   const itemId = item.innerText.match(/MLB\d*/g)[0];
   const cartList = document.querySelector(cartClass);
 
   removeProductIdOnLocalStorage(itemId);
+  totalPrice();
   cartList.removeChild(item);
 }
 
@@ -38,8 +51,10 @@ function createCartItemElement({ id, title, price }) {
 async function loadProductCartFromLocalStorage() {
   const cartList = document.querySelector(cartClass);
   const ids = await JSON.parse(storage.getItem('products'));
+  if (!ids) return;
   ids.map((id) => 
     cartList.appendChild(createCartItemElement(id)));
+  totalPrice();
 }
 
 function createProductImageElement(imageSource) {
@@ -65,13 +80,15 @@ async function addProductToCart(event) {
   const cartList = document.querySelector(cartClass);
   const item = event.target.parentNode;
   const id = getSkuFromProductItem(item);
-  // if (JSON.parse(storage.getItem('products')).includes(id)) return;
+  // const arrProducts = JSON.parse(storage.getItem('products'));
+
   try {
+    // if (productInStorage(id, arrProducts)) return;
     const res = await fetch(`https://api.mercadolibre.com/items/${id}`);
     const data = await res.json();
     cartList.appendChild(createCartItemElement(data));
-      // totalPrice();
-      saveProductIdOnLocalStorage(data);
+    saveProductIdOnLocalStorage(data);
+    totalPrice();
   } catch (err) {
     console.log(err);
   }
@@ -100,13 +117,14 @@ async function createProductList() {
     .catch((err) => console.log(err));
 }
 
-// async function totalPrice() {
-//   const cartItems = document.querySelectorAll('.cart__item');
-//   console.log(cartItems);
+function clearCart() {
+  document.querySelector('.cart__items').innerHTML = '';
+  document.querySelector('.total-price').innerHTML = '0,00';
+  storage.clear();
+}
 
-//   // const itemId = item.innerText.match(/MLB\d*/g)[0];
-// }
-window.onload = function onload() {
+window.onload = async function onload() {
   createProductList();
   loadProductCartFromLocalStorage();
+  document.querySelector('.empty-cart').addEventListener('click', clearCart);
 };
