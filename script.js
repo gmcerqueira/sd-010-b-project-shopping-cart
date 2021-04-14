@@ -123,13 +123,11 @@ window.onload = function onload() {
     .then((result) => {
       populateList(result);
       addToCart();
-    })
-    .then(() => {
-      const father = document.querySelector('.list');
-      father.classList = 'hide';
-      const child = document.querySelector('.loading');
-      father.removeChild(child);
     });
+  const father = document.querySelector('.list');
+  father.classList = 'hide';
+  const child = document.querySelector('.loading');
+  father.removeChild(child);
   if (localStorage) {
     populateFromStorage(loadStorage());
   }
