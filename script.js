@@ -1,4 +1,8 @@
+const { templateSettings } = require('cypress/types/lodash');
+
 window.onload = function onload() { };
+
+teste;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
