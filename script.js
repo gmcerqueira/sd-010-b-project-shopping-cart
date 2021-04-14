@@ -26,12 +26,17 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
+function cartItemClickListener() {
+  const listItems = document.querySelectorAll('.cart__item');
+    listItems.forEach((listItem) => {
+      listItem.addEventListener('click', (e) => {
+        listItem.remove(e.target);
+      });
+    });
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -41,3 +46,50 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+function appendItemCart(result) {
+  const olItems = document.querySelector('.cart__items');
+  const { id, title, price } = result;
+  olItems.appendChild(createCartItemElement({ sku: id, name: title, salePrice: price }));      
+  cartItemClickListener();
+}
+
+const fetchSearchById = (id) => {  
+  fetch(`https://api.mercadolibre.com/items/${id}`)
+  .then((response) => {
+    response.json()
+    .then((result) => {
+      appendItemCart(result);
+    });
+  });
+};
+
+function addCart() {
+  const itemAdd = document.querySelectorAll('.item__add');
+  itemAdd.forEach((add) => {
+    add.addEventListener('click', () => {
+      const textId = add.parentNode.querySelector('.item__sku').innerText;
+      fetchSearchById(textId);
+    });
+  });
+}
+
+function appendResult(fetchResult) {
+  const item = document.querySelector('.items');
+  fetchResult.results.forEach((result) => {
+    const { id, title, thumbnail } = result;
+    item.appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail }));
+   });
+   addCart();
+}
+
+const fetchComputer = () => {  
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+  .then((response) => {
+    response.json()
+    .then((result) => {
+      appendResult(result);
+    });
+  });
+};
+fetchComputer();
