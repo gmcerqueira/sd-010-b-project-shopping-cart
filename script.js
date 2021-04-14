@@ -30,9 +30,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-function cartItemClickListener(_event) {
-  // coloque seu código aqui
-  console.log('event');
+function cartItemClickListener(event) {
+  const cardItems = document.querySelector('.cart__items');
+  cardItems.removeChild(event.srcElement);
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
