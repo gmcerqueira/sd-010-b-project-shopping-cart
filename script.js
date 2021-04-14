@@ -19,7 +19,6 @@ const checkCarItems = async () => {
   return (
     carItem.length && [...carItem].reduce((acc, { textContent }) => {
       const price = Number(textContent.match(/(?<=\$)\d+(\.?(\d+))/gi));
-      console.log(price);
       return acc + price;
     }, 0)
   );
