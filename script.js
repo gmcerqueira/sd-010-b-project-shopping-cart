@@ -1,7 +1,3 @@
-window.onload = function onload() { 
-  computerInfo('computador');
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -33,10 +29,11 @@ function computerInfo(product) {
   .then((response) => response.json())
   .then((computers) => {
     computers.results.forEach((element) => {
-      const pc = {};
-      pc.sku = element.id;
-      pc.name = element.title;
-      pc.image = element.thumbnail;
+      const pc = {
+        sku: element.id,
+        name = element.title,
+        image = element.thumbnail,
+      };
       document.querySelector('.items').appendChild(createProductItemElement(pc));
     });
   });
@@ -60,3 +57,7 @@ function computerInfo(product) {
 //   li.addEventListener('click', cartItemClickListener);
 //   return li;
 // }
+
+window.onload = function onload() { 
+  computerInfo('computador');
+};
