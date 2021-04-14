@@ -1,5 +1,6 @@
 const sectionItems = document.getElementsByClassName('items')[0];
 const cartItems = document.getElementsByClassName('cart__items')[0];
+const emptyCartButton = document.getElementsByClassName('empty-cart')[0];
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -19,8 +20,8 @@ function createCustomElement(element, className, innerText) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-function cartItemClickListener() {
-  // coloque seu código aqui
+function cartItemClickListener(event) {
+  event.target.remove();
 }
 
 function createCartItemElement({ id, title, price }) {
@@ -61,4 +62,5 @@ function makeRequest() {
 
 window.onload = function onload() { 
   makeRequest();
+  emptyCartButton.addEventListener('click', cartItemClickListener);
 };
