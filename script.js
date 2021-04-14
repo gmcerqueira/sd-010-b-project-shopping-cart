@@ -38,16 +38,29 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function sumValue() {
+  let sum = 0;
+  const totalValue = document.querySelector('.total-value');
+  const cartItems = document.querySelectorAll('li');
+  [...cartItems].forEach((element) => {
+    sum += parseFloat(element.innerHTML.split('$')[1]);
+  });
+  totalValue.innerHTML = sum;
+}
+
 function saveCart() {
   // salva lista do carrinho
   const cartList = document.querySelector('.cart__items');
+  const totalValue = document.querySelector('.total-value');
   localStorage.setItem('cart', cartList.innerHTML);
   // salva conteudo dos elementos da lista
+  localStorage.setItem('value', totalValue.innerHTML);
 }
 
 function cartItemClickListener(event) {
   event.target.remove();
   // remove elemento target do click
+  sumValue();
   saveCart();
 }
 
@@ -58,6 +71,7 @@ function loadCart() {
   const cartItems = document.querySelectorAll('li');
   cartItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
   // torna os itens da lista recarregada clicaveis
+  sumValue();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -75,23 +89,24 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 async function fetchAPIML(QUERY) {
-  // funcao assincrona de requisicao a API e listagem de produtos encontrados (async - retorna uma PROMISE)
+  // funcao assincrona
+  // de requisicao a API e listagem de produtos encontrados
+  // (async - retorna uma PROMISE)
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`;
   // determina o endpoint de acesso atraves do parametro da funcao
-  const response = await fetch(endpoint);
-  // 'response' espera receber o resultado da requisicao
-  const object = await response.json();
-  // converte resultado da requisicao em formato JSON
-  const { results } = object;
-  // 'results' recebe, os valores da chave "results" do JSON retornado pela requisicao a API na forma de array de objetos
-  const itemsElement = document.querySelector('.items'); // vasculha o DOM por tag com classe 'items'
+  const response = await fetch(endpoint); // 'response' espera receber o resultado da requisicao
+  const object = await response.json();// converte resultado da requisicao em formato JSON
+  const { results } = object;// 'results' recebe, os valores da chave "results" do JSON retornado pela requisicao a API na forma de array de objetos
+  const itemsElement = document.querySelector('.items');// vasculha o DOM por tag com classe 'items'
 
   results.forEach((result) => { // estrutura de repeticao que passa executa acoes com cada valor do array 'results'
-    const { id: sku, title: name, thumbnail: image } = result;
-    // estrutura objeto
-    const element = createProductItemElement({ sku, name, image });// chama funcao de listagem de produtos tendo como parametros os valores dos objetos da array results
-    itemsElement.appendChild(element);// cria elemento filho, do elemento com classe 'items'  com os valores de cada elemento do array 'results'
+    const { id: sku, title: name, thumbnail: image } = result;// estrutura objeto
+    const element = createProductItemElement({ sku, name, image });
+    // chama funcoa de listagem de produtos tendo como parametros os valores dos objetos da array results
+    itemsElement.appendChild(element);
+    // cria elemento filho, do elemento com classe 'items' com os valores de cada elemento do array 'results'
   });
+  sumValue();
 }
 
 async function fetchID(sku) {
@@ -104,17 +119,18 @@ async function fetchID(sku) {
         sku,
         name: data.title,
         salePrice: data.price,
-      };
-      // estrutura objeto
-      const list = document.querySelector('.cart__items');
-      // vasculha DOM por tag com classe 'cart__items'
+      };// estrutura objeto
+      const list = document.querySelector('.cart__items');// vasculha DOM por tag com classe 'cart__items'
       list.appendChild(createCartItemElement(dataProduct));
-      // cria elemento filho do elemento com classe 'cart__items' com os valores do objeto 'product' passado como parametro
+      // cria elemento filho do elemento com classe 'cart__items'
+      // com os valores do objeto 'product'
+      // passado como parametro
     });
+  sumValue();
   saveCart();
 }
 
-const getId = () => {
+function getId() {
   // busca id (sku) do produto
   const sectionItems = document.querySelector('.items');
   // vasculha o DOM por tag com classe 'items'
@@ -129,7 +145,7 @@ const getId = () => {
     fetchID(sku);
     // roda requisicao com id encontrado
   });
-};
+}
 
 window.onload = function onload() {
   fetchAPIML('computador');
