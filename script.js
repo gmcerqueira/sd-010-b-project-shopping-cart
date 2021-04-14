@@ -13,6 +13,8 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener() {
+  document.querySelector('.cart__items')
+  .addEventListener('click', (event) => event.target.remove());
 }
 
 function createCartItemElement({
@@ -25,7 +27,7 @@ function createCartItemElement({
   ol.appendChild(li);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener());
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
