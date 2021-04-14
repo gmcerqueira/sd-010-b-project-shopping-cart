@@ -1,3 +1,26 @@
+const addToLocalStorage = ({ sku, name, salePrice }) => {
+  const arrayToSave = [`${sku};${name};${salePrice}`];
+  if (!localStorage.getItem('cart')) {
+    localStorage.setItem('cart', JSON.stringify(arrayToSave));
+  } else {
+    const storedItem = JSON.parse(localStorage.getItem('cart'));
+    const itemToStore = [...storedItem, ...arrayToSave];
+    localStorage.setItem('cart', JSON.stringify(itemToStore));
+  }
+};
+
+const sumCartItems = () => {
+  const allCartItems = document.querySelectorAll('.cart__item');
+  let currentPrice = 0;
+  allCartItems.forEach((element) => {
+    const stringPrice = element.innerText.match(/\$\d+(\.\d+)?/g)[0];
+    const realPrice = Number(stringPrice.substring(1));
+    currentPrice += realPrice;
+  });
+  const elementToAppend = document.querySelector('.total-price');
+  elementToAppend.innerText = currentPrice;
+};
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -25,6 +48,8 @@ const getSiblingThatContainsID = (element) => {
 };
 
 function cartItemClickListener(event) {
+  event.target.parentElement.removeChild(event.target);
+  sumCartItems();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -47,6 +72,8 @@ const renderedBtnListener = async (e) => {
   const createdCardItemElement = createCartItemElement(params);
   document.querySelector('.cart__items')
     .appendChild(createdCardItemElement);
+  addToLocalStorage(params);
+  sumCartItems();
 };
 
 function createProductItemElement({ sku, name, image }) {
@@ -63,9 +90,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 const renderResults = (items) => {
   const itemContainer = document.querySelector('.items');
@@ -86,6 +113,23 @@ const getResults = async () => {
   renderResults(results);
 };
 
+const loadCartFromStorage = async () => {
+  const arrToRender = JSON.parse(localStorage.getItem('cart'));
+  arrToRender.forEach((element) => {
+    const [id, title, price] = element.split(';');
+    const params = {
+      sku: id,
+      name: title,
+      salePrice: price,
+    };
+    const createdCardItemElement = createCartItemElement(params);
+    document.querySelector('.cart__items')
+    .appendChild(createdCardItemElement);
+  });
+  sumCartItems();
+};
+
 window.onload = function onload() {
   getResults();
+  loadCartFromStorage();
 };
