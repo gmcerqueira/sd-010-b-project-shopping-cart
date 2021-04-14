@@ -1,8 +1,6 @@
-const { templateSettings } = require('cypress/types/lodash');
+// const { templateSettings } = require('cypress/types/lodash');
 
 window.onload = function onload() { };
-
-teste;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -18,15 +16,15 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
+  
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  
   return section;
 }
 
@@ -38,10 +36,39 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+function criaDom(itens) {
+  const shelf = document.getElementsByClassName('items');
+  for (let index = 0; index < 6; index += 1) {
+    const placeOfItem = document.createElement('div');
+    shelf[0].appendChild(placeOfItem);
+    const esse = shelf[0].lastChild;
+    esse.id = itens.id;
+    esse.className = 'itensInShelf';
+    esse.appendChild(createProductItemElement(itens[index]));
+  }
+}
+
+function getItensListFromApi() {
+const query = 'computador';
+const API_URL = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
+const myObject = {
+  method: 'GET',
+  headers: { Accept: 'application/json' },
+};
+fetch(API_URL, myObject)
+    .then((response) => response.json())
+    .then(({ results }) => {
+      console.log(results);
+      criaDom(results);
+    });
+}
+
+getItensListFromApi();
