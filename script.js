@@ -12,24 +12,13 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
-}
-
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  return event;
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -40,6 +29,36 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function addCartItemElement(evento) {
+  const pegaId = getSkuFromProductItem(evento.target.parentNode);
+  const url = `https://api.mercadolibre.com/items/${pegaId}`;
+  fetch(url)
+  .then((response) => response.json())
+  .then((response) => {
+    const resultElement = {
+      sku: response.id,
+      name: response.title,
+      salePrice: response.price,
+    };    
+    const item = createCartItemElement(resultElement);
+    const carrinho = document.querySelector('.cart__items');
+    carrinho.appendChild(item);    
+  });
+}
+
+function createProductItemElement({ sku, name, image }) {
+  const section = document.createElement('section');
+  section.className = 'item';
+
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+    .addEventListener('click', addCartItemElement);
+
+  return section;
+}
+
 const fetchItem = () => {
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   fetch(url)
@@ -47,16 +66,17 @@ const fetchItem = () => {
   .then((response) => {
     const result = response.results;
     result.forEach((element) => {
-      const resultElement = {};
-      resultElement.sku = element.id;
-      resultElement.name = element.title;
-      resultElement.image = element.thumbnail;
+      const resultElement = {
+        sku: element.id,
+        name: element.title,
+        image: element.thumbnail,
+      };
       const produto = createProductItemElement(resultElement);
       const section = document.querySelector('.items');
       section.appendChild(produto);
-    });
-  });
-}
+    });    
+  });  
+};
 
 window.onload = function onload() {
   fetchItem();
