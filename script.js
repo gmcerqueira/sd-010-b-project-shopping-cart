@@ -24,12 +24,13 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
+  const cartList = document.querySelector('.cart__items');
+  cartList.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
