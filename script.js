@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 function createProductImageElement(imageSource) {
   // funcao que gera thumbnail do produto
   const img = document.createElement('img');
@@ -138,7 +139,7 @@ async function fetchAPIML(QUERY) {
   const { results } = object;// 'results' recebe, os valores da chave "results" do JSON retornado pela requisicao a API na forma de array de objetos
   const itemsElement = document.querySelector('.items'); // vasculha o DOM por tag com classe 'items'
 
-  results.forEach((result) => {// estrutura de repeticao que passa executa acoes com cada valor do array 'results'
+  results.forEach((result) => { // estrutura de repeticao que passa executa acoes com cada valor do array 'results'
     const { id: sku, title: name, thumbnail: image } = result;// estrutura objeto
     const element = createProductItemElement({ sku, name, image });
     // chama funcoa de listagem de produtos tendo como parametros os valores dos objetos da array results
@@ -149,26 +150,20 @@ async function fetchAPIML(QUERY) {
   sumValue();
 }
 
-async function fetchID(sku) {
-  // requisicao feita a partir do valor da chave id do produto
-  loadingAlert();
-  // dispara alerta de carregamento
+async function fetchID(sku) { // requisicao feita a partir do valor da chave id do produto
+  loadingAlert();// dispara alerta de carregamento
   await fetch(`https://api.mercadolibre.com/items/${sku}`)
-    .then((response) => response.json())
-    // converte resultado da requisicao em formato JSON
+    .then((response) => response.json())// converte resultado da requisicao em formato JSON
     .then((data) => {
       const dataProduct = {
         sku,
         name: data.title,
         salePrice: data.price,
-      };
-      // estrutura objeto
-      const list = document.querySelector('.cart__items');
-      // vasculha DOM por tag com classe 'cart__items'
+      }; // estrutura objeto
+      const list = document.querySelector('.cart__items');// vasculha DOM por tag com classe 'cart__items'
       list.appendChild(createCartItemElement(dataProduct));
       // cria elemento filho do elemento com classe 'cart__items'
-      // com os valores do objeto 'product'
-      // passado como parametro
+      // com os valores do objeto 'product' passado como parametro
     });
   removeLoadingAlert();
   // remove alerta de carregamento
