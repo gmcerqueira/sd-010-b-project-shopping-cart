@@ -54,7 +54,7 @@ const fetchItem = () => {
       const produto = createProductItemElement(resultElement);
       const section = document.querySelector('.items');
       section.appendChild(produto);
-    });    
+    });
   });
 }
 
