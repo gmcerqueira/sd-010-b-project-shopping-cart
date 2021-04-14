@@ -85,8 +85,7 @@ function getId() {
       });
 }
 
-window.onload = function onload() { 
-
+window.onload = function onload() {
   const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
 
   fetch(endPoint)
