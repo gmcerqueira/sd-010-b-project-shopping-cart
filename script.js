@@ -21,7 +21,14 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  const button = section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  button.addEventListener('click', async () => {
+    const cardItems = document.querySelector('.cart__items');
+    const idItem = button.parentNode.firstChild.innerText;
+    const itemInfo = await fetchProducts(idItem, urlProduct);
+    cardItems.appendChild(createCartItemElement(itemInfo));
+    saveCart();
+  });
 
   return section;
 }
@@ -56,18 +63,29 @@ const mountItems = async (product) => {
   arrItens.results.forEach((item) => conteinerItems.appendChild(createProductItemElement(item)));
 };
 
-const reviveButtons = () => {
-  const AddButtons = document.querySelectorAll('.item__add');
-  const cardItems = document.querySelector('.cart__items');
+// const reviveButtons = () => {
+//   const AddButtons = document.querySelectorAll('.item__add');
+//   
 
-  AddButtons.forEach((buttom) => {
-    buttom.addEventListener('click', async () => {
-      const idItem = buttom.parentNode.firstChild.innerText;
-      const itemInfo = await fetchProducts(idItem, urlProduct);
-      cardItems.appendChild(createCartItemElement(itemInfo));
-    });
-  });
-};
+//   AddButtons.forEach((buttom) => {
+
+//   });
+// };
 
 mountItems('computador');
-setTimeout(() => reviveButtons(), 1000);
+// setTimeout(() => reviveButtons(), 500);
+
+function dellCartsSaveds() {
+  localStorage.removeItem('CartItemsToSave');
+}
+
+function saveCart(){
+  const itemsToSave = [];
+  dellCartsSaveds();
+  const allItemsNow = document.querySelectorAll('.cart__item');
+  allItemsNow.forEach((item) => {
+    const itemObj = { item: item.innerText };
+    itemsToSave.push(itemObj);
+  });
+  console.log(itemsToSave);
+}
