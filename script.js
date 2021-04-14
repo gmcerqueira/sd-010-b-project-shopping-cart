@@ -21,8 +21,6 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  const items = document.querySelector('.items');
-  items.appendChild(section);
   return section;
 }
 
@@ -56,8 +54,8 @@ const start = ($QUERY) => {
             name: element.title,
             image: element.thumbnail,
           };
-          createProductItemElement(obj);
-          console.log(element.id);
+          const items = document.querySelector('.items');
+          items.appendChild(createProductItemElement(obj));
         });
       });
   });
