@@ -29,38 +29,40 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
+// function cartItemClickListener(event) {
+//   // coloque seu código aqui
+// }
 
-function createCartItemElement({ id: sku, title: name, price: salePrice }) {
-  const cartItems = document.getElementsByClassName('cart__items')[0];
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  cartItems.appendChild(li);
-  return li;
-}
+// function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+//   const cartItems = document.getElementsByClassName('cart__items')[0];
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   cartItems.appendChild(li);
+//   return li;
+// }
+
+// function addToCart() {
+//   const addButton = document.getElementsByClassName('item__add');
+//   const itemsBySku = document.getElementsByClassName('item__sku');
+//   addButton.forEach((button, index) => button.addEventListerner('click', () => {
+//     fetch(`https://api.mercadolibre.com/items/${itemsBySku[index]}`)
+//       .then((data) => data.json())
+//       .then((data) => {
+//         data[0].forEach((product) => { createCartItemElement(product); });
+//       });
+//   }));
+// }
 
 const productsList = async () => {
 const result = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
 const data = await result.json();
 data.results.forEach((product) => { createProductItemElement(product); });
-addToCart();
+// addToCart();
 };
 
-function addToCart() {
-  const addButton = document.getElementsByClassName('item__add');
-  const itemsBySku = document.getElementsByClassName('item__sku');
-  addButton.forEach((button, index) => button.addEventListerner('click', () => {
-    fetch(`https://api.mercadolibre.com/items/${itemsBySku[index]}`)
-      .then((data) => data.json())
-      .then((data) => {
-        data[0].forEach((product) => { createCartItemElement(product); });
-      });
-  }));
-}
+
 
 window.onload = function onload() { 
   productsList();
