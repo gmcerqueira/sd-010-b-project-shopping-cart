@@ -37,7 +37,7 @@ function createProductItemElement({ sku, name, image }) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
-
+getSkuFromProductItem();
 function sumValue() {
   let sum = 0;
   const totalValue = document.querySelector('.total-value');
@@ -88,14 +88,25 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function emptyCart() {
+  const emptyCartBtn = document.querySelector('.empty-cart');
+  const cartList = document.querySelector('.cart__items');
+  const totalValue = document.querySelector('.total-value');
+  emptyCartBtn.addEventListener('click', () => {
+    cartList.innerHTML = '';
+    localStorage.clear();
+    totalValue.innerHTML = 0;
+  });
+}
+
 async function fetchAPIML(QUERY) {
   // funcao assincrona
   // de requisicao a API e listagem de produtos encontrados
   // (async - retorna uma PROMISE)
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`;
   // determina o endpoint de acesso atraves do parametro da funcao
-  const response = await fetch(endpoint); // 'response' espera receber o resultado da requisicao
-  const object = await response.json();// converte resultado da requisicao em formato JSON
+  const response = await fetch(endpoint);// 'response' espera receber o resultado da requisicao
+  const object = await response.json(); // converte resultado da requisicao em formato JSON
   const { results } = object;// 'results' recebe, os valores da chave "results" do JSON retornado pela requisicao a API na forma de array de objetos
   const itemsElement = document.querySelector('.items');// vasculha o DOM por tag com classe 'items'
 
@@ -104,23 +115,23 @@ async function fetchAPIML(QUERY) {
     const element = createProductItemElement({ sku, name, image });
     // chama funcoa de listagem de produtos tendo como parametros os valores dos objetos da array results
     itemsElement.appendChild(element);
-    // cria elemento filho, do elemento com classe 'items' com os valores de cada elemento do array 'results'
+    // cria elemento filho, do elemento com classe 'items'com os valores de cada elemento do array 'results'
   });
   sumValue();
 }
 
-async function fetchID(sku) {
-  // requisicao feita a partir do valor da chave id do produto
+async function fetchID(sku) { // requisicao feita a partir do valor da chave id do produto
   await fetch(`https://api.mercadolibre.com/items/${sku}`)
-    .then((response) => response.json())
-    // converte resultado da requisicao em formato JSON
+    .then((response) => response.json())// converte resultado da requisicao em formato JSON
     .then((data) => {
       const dataProduct = {
         sku,
         name: data.title,
         salePrice: data.price,
-      };// estrutura objeto
-      const list = document.querySelector('.cart__items');// vasculha DOM por tag com classe 'cart__items'
+      };
+      // estrutura objeto
+      const list = document.querySelector('.cart__items');
+      // vasculha DOM por tag com classe 'cart__items'
       list.appendChild(createCartItemElement(dataProduct));
       // cria elemento filho do elemento com classe 'cart__items'
       // com os valores do objeto 'product'
@@ -157,4 +168,5 @@ window.onload = function onload() {
   // seus ids acessiveis
   loadCart();
   // recarrega carrinho ao recarregar pagina
+  emptyCart();
 };
