@@ -27,24 +27,30 @@ function createProductItemElement({ sku, name, image }) {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
+function listItem() {
+  let list = 0;
+  const totalValue = document.querySelector('.total-price');
+  const cartItems = document.querySelectorAll('li');
+  [...cartItems].forEach((element) => {
+    list += element;
+  });
+  totalValue.innerHTML = list;
+}
 
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-// }
+function cartItemClickListener() {
+  // coloque seu código aqui
+  listItem();
+}
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
 
-// const renderItems = () => {
-  
-// }
-
-async function fetchAPIML(endpoint) {
+async function fetchAPI(endpoint) {
   const response = await fetch(endpoint);
   const object = await response.json();
   const resul = object.results;
@@ -57,7 +63,32 @@ async function fetchAPIML(endpoint) {
   });
 }
 
+async function fetchID(sku) {
+  const endpoint = (`https://api.mercadolibre.com/items/${sku}`);  
+  const response = await fetch(endpoint);
+  await response.json()
+    .then((data) => {
+      const dataProduct = {
+        sku,
+        name: data.title,
+        salePrice: data.price,
+      };
+      const list = document.querySelector('.cart__items');
+      list.appendChild(createCartItemElement(dataProduct));
+    });
+}
+
+function getId() {
+  const sectionItems = document.querySelector('.items');
+  sectionItems.addEventListener('click', (event) => {
+    const item = event.target.parentNode;
+    const sku = item.querySelector('span.item__sku').innerText;
+    fetchID(sku);
+});
+}
+
 window.onload = function onload() { 
   const endpoint = ('https://api.mercadolibre.com/sites/MLB/search?q=computador');
-  fetchAPIML(endpoint);
+  fetchAPI(endpoint);
+  getId();
 };
