@@ -31,6 +31,8 @@ function createProductItemElement({ sku, name, image }) {
 function cartItemClickListener(event) {
   const cartList = document.querySelector('.cart__items');
   cartList.removeChild(event.target);
+  const array = event.target.innerText.split(' | ');
+  localStorage.removeItem(array[0]);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -38,6 +40,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  localStorage.setItem(`SKU: ${sku}`, `${li.innerText}`);
   return li;
 }
 
@@ -45,7 +48,6 @@ async function fetchML() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador',
     { method: 'GET' });
   const json = await response.json();
-  console.log(json.results);
   return json.results;
 }
 
@@ -53,24 +55,46 @@ async function fetchItem(id) {
   const response = await fetch(`https://api.mercadolibre.com/items/${id}`,
     { method: 'GET' });
   const json = await response.json();
-  console.log(json);
   return json;
 }
 
 const addToCart = () => {
   document.querySelectorAll('.item__add').forEach((elem) => {
     elem.addEventListener('click', (event) => {
-      console.log(event.target);
       const firstSibling = event.target.parentNode.firstChild;
       fetchItem(firstSibling.innerText).then((result2) => {
-        const father2 = document.querySelector('.cart__items');
+        const father = document.querySelector('.cart__items');
         const child = createCartItemElement({
           sku: result2.id,
           name: result2.title,
           salePrice: result2.price,
         });
-        father2.appendChild(child);
+        father.appendChild(child);
       });
+    });
+  });
+};
+
+const loadStorage = () => {
+  console.log(localStorage);
+  const indexes = Object.keys(localStorage);
+  const skuList = indexes.map((element) => {
+    const array = element.split(' ');
+    return array[1];
+  });
+  return skuList;
+};
+
+const populateFromStorage = (array) => {
+  array.forEach((element) => {
+    fetchItem(element).then((result) => {
+      const father = document.querySelector('.cart__items');
+      const child = createCartItemElement({
+        sku: result.id,
+        name: result.title,
+        salePrice: result.price,
+      });
+      father.appendChild(child);
     });
   });
 };
@@ -88,4 +112,7 @@ window.onload = function onload() {
     });
     addToCart();
   });
+  if (localStorage) {
+    populateFromStorage(loadStorage());
+  }
 };
