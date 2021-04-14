@@ -44,7 +44,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 
 function criaDom(itens) {
   const shelf = document.getElementsByClassName('items');
-  for (let index = 0; index < 6; index += 1) {
+  for (let index = 0; index < 49; index += 1) {
     const placeOfItem = document.createElement('div');
     shelf[0].appendChild(placeOfItem);
     const esse = shelf[0].lastChild;
