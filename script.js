@@ -1,4 +1,4 @@
-
+/* eslint-disable max-lines-per-function */
 function createProductImageElement(imageSource) {
   // funcao que gera thumbnail do produto
   const img = document.createElement('img');
@@ -41,7 +41,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // START
+  event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -68,7 +68,7 @@ async function fetchAPIML(QUERY) {
   // 'response' espera receber o resultado da requisicao
   const object = await response.json();
   // converte resultado da requisicao em formato JSON
-  const results = object.results;
+  const { results } = object;
   // 'results' recebe, os valores da chave "results" do JSON retornado pela requisicao a API
   // na forma de array de objetos
   const itemsElement = document.querySelector('.items');
@@ -86,13 +86,13 @@ async function fetchAPIML(QUERY) {
   });
 }
 
-const fetchID = (ItemID) => {
+const fetchID = (sku) => {
   // requisicao feita a partir do valor da chave id do produto
-  fetch(`https://api.mercadolibre.com/items/${ItemID}`)
-    .then(response => response.json())
+  fetch(`https://api.mercadolibre.com/items/${sku}`)
+    .then((response) => response.json())
     // converte resultado da requisicao em formato JSON
     .then((data) => {
-      const product = {
+      const dataProduct = {
         sku,
         name: data.title,
         salePrice: data.price,
@@ -100,7 +100,7 @@ const fetchID = (ItemID) => {
       // estrutura objeto
       const list = document.querySelector('.cart__items');
       // vasculha DOM por tag com classe 'cart__items'
-      list.appendChild(createCartItemElement(product));
+      list.appendChild(createCartItemElement(dataProduct));
       // cria elemento filho do elemento com classe 'cart__items'
       // com os valores do objeto 'product'
       // passado como parametro
@@ -109,9 +109,9 @@ const fetchID = (ItemID) => {
 
 const getId = () => {
   // busca id (sku) do produto
-  const itemsElement = document.querySelector('.items');
+  const sectionItems = document.querySelector('.items');
   // vasculha o DOM por tag com classe 'items'
-  itemsElement.addEventListener('click', (event) => {
+  sectionItems.addEventListener('click', (event) => {
     // torna elemento clicavel
     // click no item devolve seu id (sku)
     const item = event.target.parentNode;
