@@ -12,7 +12,7 @@ const updatePrices = async () => {
   const totalPrice = pricesArray.reduce((acc, curr) => acc + curr, 0);
   console.log(totalPrice);
   const pricePlace = document.querySelector('.total-price');
-  pricePlace.innerText = `TOTAL: ${totalPrice}`;
+  pricePlace.innerText = `${totalPrice}`;
 };
 
 function createProductImageElement(imageSource) {
@@ -141,9 +141,9 @@ window.onload = function onload() {
       populateList(result);
       addToCart();
     });
-  document.querySelector('.list').remove();
   if (localStorage) {
     populateFromStorage(loadStorage());
   }
   document.querySelector('.empty-cart').addEventListener('click', clearCart);
+  document.querySelector('.list').remove();
 };
