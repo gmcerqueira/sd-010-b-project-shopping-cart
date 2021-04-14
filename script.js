@@ -1,10 +1,7 @@
-window.onload = function onload() {};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
-  //sadasd
   return img;
 }
 
@@ -16,9 +13,9 @@ function createCustomElement(element, className, innerText) {
 }
 
 function createProductItemElement({
-  sku,
-  name,
-  image
+  id: sku,
+  title: name,
+  thumbnail: image,
 }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -29,6 +26,20 @@ function createProductItemElement({
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   return section;
+}
+
+async function getProductsList(word) {
+  const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${word}`);
+  const object = await response.json();
+  console.log(object.results);
+  const {
+    results,
+  } = object;
+  const section = document.querySelector('.items');
+  results.forEach((item) => {
+    // Dica do PR da Ana Gomes 
+    section.appendChild(createProductItemElement(item));
+  });
 }
 
 function getSkuFromProductItem(item) {
@@ -50,3 +61,6 @@ function createCartItemElement({
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+window.onload = function onload() {
+  getProductsList('computador');
+};
