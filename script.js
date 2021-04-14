@@ -51,12 +51,12 @@ function createList() {
     .then((response) => response.json())
     .then((data) => {
       data.results.forEach((item) => {
-        const computer = createProductItemElement({
+        const product = createProductItemElement({
           sku: item.id,
           name: item.title,
           image: item.thumbnail,
         });
-        document.querySelector('.items').appendChild(computer);
+        document.querySelector('.items').appendChild(product);
       });
     });
   }
