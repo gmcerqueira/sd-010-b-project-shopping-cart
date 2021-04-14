@@ -41,11 +41,18 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function cartItemClickListener(event) {
+  event.target.remove();
+}
+
+// creates a eventListener for add buttons
 async function cartBtnListener(event) {
   const parent = event.target.parentElement;
   const prodID = getSkuFromProductItem(parent);
   const prod = await getProductId(prodID);
+
   const newEl = createCartItemElement({ sku: prod.id, name: prod.title, salePrice: prod.price });
+  newEl.addEventListener('click', cartItemClickListener);
   document.querySelector('.cart__items').appendChild(newEl);
 }
 
@@ -57,7 +64,7 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   const cartBtn = (createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  cartBtn.addEventListener('click', cartBtnListener);
+  cartBtn.addEventListener('click', cartBtnListener); // add a listener for every button
   section.appendChild(cartBtn);
 
   return section;
@@ -79,7 +86,3 @@ async function renderProducts() {
 window.onload = function onload() {
   renderProducts();
 };
-
-// function cartItemClickListener(event) {
-//   // codigo
-// }
