@@ -29,8 +29,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 }
 
 function cartItemClickListener(event) {
-  const cart = event.target.parentElement;
-  cart.removeChild(event.target);
+  const cartItems = event.target.parentElement;
+  cartItems.removeChild(event.target);
+  localStorage.setItem('shoppingCart', cartItems.innerHTML);
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -55,6 +56,7 @@ function addToCart() {
       fetch(url).then((response) => response.json()).then((obj) => {
         const cartItems = document.querySelector('.cart__items');
         cartItems.appendChild(createCartItemElement(obj));
+        localStorage.setItem('shoppingCart', cartItems.innerHTML);
       });
     });
   }
@@ -72,7 +74,18 @@ function createElements() {
   });
 }
 
+function setShoppingCart() {
+  const cartItems = document.querySelector('.cart__items');
+  const localCart = localStorage.getItem('shoppingCart');
+  cartItems.innerHTML = localCart;
+  const items = cartItems.children;
+  for (let i = 0; i < items.length; i += 1) {
+    items[i].addEventListener('click', cartItemClickListener);
+  }
+}
+
 window.onload = function onload() {
   createElements();
+  setShoppingCart();
 };
 // #VQV
