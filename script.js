@@ -12,7 +12,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({ id: sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -44,7 +44,7 @@ async function createListOfProducts() {
   const api = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const { results } = await api.json();
   results.forEach((product) => {
-    const parentElement = document.getElementsByClassName('items');
+    const parentElement = document.querySelector('.items');
     const creatingItem = createProductItemElement(product);
     parentElement.appendChild(creatingItem);
   });
