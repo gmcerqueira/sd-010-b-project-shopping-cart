@@ -145,5 +145,5 @@ window.onload = function onload() {
     populateFromStorage(loadStorage());
   }
   document.querySelector('.empty-cart').addEventListener('click', clearCart);
-  setTimeout(() => document.querySelector('.list').remove(), 2000);
+  setTimeout(() => document.querySelector('.list').remove(), 500);
 };
