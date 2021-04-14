@@ -1,7 +1,3 @@
-window.onload = function onload() { 
-  fetchProduct('computador');
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -52,3 +48,7 @@ const fetchProduct = (computer) => {
   li.addEventListener('click', cartItemClickListener);
   return li;
 } */
+
+window.onload = function onload() { 
+  fetchProduct('computador');
+};
