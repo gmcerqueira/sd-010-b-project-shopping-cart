@@ -82,6 +82,7 @@ const loadStorage = () => {
   const indexes = Object.keys(localStorage);
   const skuList = indexes.map((element) => {
     const array = element.split(' ');
+    console.log(array[1]);
     return array[1];
   });
   return skuList;
@@ -101,6 +102,11 @@ const populateFromStorage = (array) => {
   });
 };
 
+const clearCart = () => {
+  document.querySelector(cartItem).innerHTML = '';
+  localStorage.clear();
+};
+
 window.onload = function onload() {
   fetchML().then((result) => {
     const father = document.querySelector('.items');
@@ -117,4 +123,5 @@ window.onload = function onload() {
   if (localStorage) {
     populateFromStorage(loadStorage());
   }
+  document.querySelector('.empty-cart').addEventListener('click', clearCart);
 };
