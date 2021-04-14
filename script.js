@@ -50,11 +50,11 @@ function createList() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
     .then((data) => {
-      data.results.forEach((element) => {
+      data.results.forEach((item) => {
         const computer = createProductItemElement({
-          sku: element.id,
-          name: element.title,
-          image: element.thumbnail,
+          sku: item.id,
+          name: item.title,
+          image: item.thumbnail,
         });
         document.querySelector('.items').appendChild(computer);
       });
