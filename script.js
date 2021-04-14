@@ -39,7 +39,7 @@ function listItem() {
 }
 
 function cartItemClickListener(event) {
-  event.target.remove();
+  if (event != null) event.target.remove();
   listItem();
 }
 
