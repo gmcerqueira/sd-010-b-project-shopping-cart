@@ -62,8 +62,6 @@ data.results.forEach((product) => { createProductItemElement(product); });
 // addToCart();
 };
 
-
-
 window.onload = function onload() { 
   productsList();
 };
