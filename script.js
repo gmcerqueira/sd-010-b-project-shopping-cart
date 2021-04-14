@@ -50,6 +50,8 @@ async function fetchML() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador',
     { method: 'GET' });
   const json = await response.json();
+  const loader = document.querySelector('.items .show');
+  loader.classList = 'hide';
   return json.results;
 }
 
@@ -83,7 +85,7 @@ const loadStorage = () => {
   return items;  
 };
 
-// REVER A IMPLEMENTAÇÃO
+// REVER A IMPLEMENTAÇÃO - no carregamento a ordem está diferente
 const populateFromStorage = (array) => {
   const father = document.querySelector(cartItem);
   array.forEach((element) => {
@@ -101,22 +103,26 @@ const clearCart = () => {
   localStorage.clear();
 };
 
-window.onload = function onload() {
-  fetchML().then((result) => {
-    const father = document.querySelector('.items');
-    result.forEach((element) => {
-      const child = createProductItemElement({
-        sku: element.id,
-        name: element.title,
-        image: element.thumbnail,
-      });
-      father.appendChild(child);
+const populateList = (param) => {
+  const father = document.querySelector('.items');
+  param.forEach((element) => {
+    const child = createProductItemElement({
+      sku: element.id,
+      name: element.title,
+      image: element.thumbnail,
     });
-    addToCart();
+    father.appendChild(child);
   });
+};
+
+window.onload = function onload() {
+  fetchML()
+    .then((result) => {
+      populateList(result);
+      addToCart();
+    });
   if (localStorage) {
     populateFromStorage(loadStorage());
   }
   document.querySelector('.empty-cart').addEventListener('click', clearCart);
-  console.log(document.querySelectorAll('.cart__item'));
 };

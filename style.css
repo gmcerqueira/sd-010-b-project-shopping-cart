@@ -74,3 +74,13 @@
   font-size: 16pt;
   text-align: center;
 }
+
+.show {
+  list-style: none;
+  display: table;
+}
+
+.hide {
+  list-style: none;
+  display: none;
+}
