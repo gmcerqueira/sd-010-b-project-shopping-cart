@@ -1,24 +1,9 @@
 function createProductImageElement(imageSource) {
-  const img = document.createElement("img");
-  img.className = "item__image";
+  const img = document.createElement('img');
+  img.className = 'item__image';
   img.src = imageSource;
   return img;
 }
-
-const recoverProduct = async () => {
-  const items = document.querySelector(".items");
-  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=$computador`).then(
-    (response) => {
-      response.json().then((result) => {
-        const resultado = result.results;
-        console.log(result.results[0]);
-        resultado.forEach((element) => {
-          items.appendChild(createProductItemElement(element));
-        });
-      });
-    }
-  );
-};
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
@@ -28,18 +13,33 @@ function createCustomElement(element, className, innerText) {
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
-  const section = document.createElement("section");
-  section.className = "item";
+  const section = document.createElement('section');
+  section.className = 'item';
 
-  section.appendChild(createCustomElement("span", "item__sku", sku));
-  section.appendChild(createCustomElement("span", "item__title", name));
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(
-    createCustomElement("button", "item__add", "Adicionar ao carrinho!")
+    createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'),
   );
 
   return section;
 }
+
+const recoverProduct = async () => {
+  const items = document.querySelector('.items');
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador').then(
+    (response) => {
+      response.json().then((result) => {
+        const resultado = result.results;
+        console.log(result.results[0]);
+        resultado.forEach((element) => {
+          items.appendChild(createProductItemElement(element));
+        });
+      });
+    },
+  );
+};
 /*
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
