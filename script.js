@@ -1,4 +1,5 @@
 const totalValue = document.querySelector('.total-price');
+const cartList = document.querySelector('.cart__items');
 
 function createProductImageElement(imageSource) {
   // funcao que gera thumbnail do produto
@@ -51,9 +52,6 @@ function sumValue() {
 }
 
 function saveCart() {
-  // salva lista do carrinho
-  // eslint-disable-next-line sonarjs/no-duplicate-string
-  const cartList = document.querySelector('.cart__items');
   localStorage.setItem('cart', cartList.innerHTML);
   // salva conteudo dos elementos da lista
   localStorage.setItem('value', totalValue.innerHTML);
@@ -67,7 +65,6 @@ function cartItemClickListener(event) {
 }
 
 function loadCart() {
-  const cartList = document.querySelector('.cart__items');
   cartList.innerHTML = localStorage.getItem('cart');
   // carrega lista com conteudo do localStorage
   const cartItems = document.querySelectorAll('li');
@@ -91,17 +88,11 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 function emptyCart() {
-  // esvazia o carrinho
   const emptyCartBtn = document.querySelector('.empty-cart');
-  const cartList = document.querySelector('.cart__items');
   emptyCartBtn.addEventListener('click', () => {
-    // torna o botao clicavel
     cartList.innerHTML = '';
-    // limpa a lista do carrinho
     localStorage.clear();
-    // limpa tudo o que esta armazenado no localStorage
     totalValue.innerHTML = 0;
-    // reseta valor da soma total
   });
 }
 
