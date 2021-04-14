@@ -30,28 +30,44 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-//   console.log(event);
-// }
+function cartItemClickListener(_event) {
+  // coloque seu código aqui
+  console.log('event');
+}
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   console.log(sku, name, salePrice);
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener); 
-//   return li;
-// }
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener); 
+  return li;
+}
 
-const Url = 'https://api.mercadolibre.com/sites/MLB/search?q=';
-const fetchProduct = (product) => fetch(`${Url}${product}`).then((resp) => resp.json());
+// URL's
+const urlProducts = 'https://api.mercadolibre.com/sites/MLB/search?q=';
+const urlProduct = 'https://api.mercadolibre.com/items/';
 
-const items = document.querySelector('.items');
+const fetchProducts = (item, Url) => fetch(`${Url}${item}`).then((resp) => resp.json());
 
-const mountItems = async (product) => {
-  const arrItens = await fetchProduct(product);
-  arrItens.results.forEach((item) => items.appendChild(createProductItemElement(item)));
+const mountItems = async (product) => {  
+  const conteinerItems = document.querySelector('.items');
+
+  const arrItens = await fetchProducts(product, urlProducts);
+  arrItens.results.forEach((item) => conteinerItems.appendChild(createProductItemElement(item)));
+};
+
+const reviveButtons = () => {
+  const AddButtons = document.querySelectorAll('.item__add');
+  const cardItems = document.querySelector('.cart__items');
+
+  AddButtons.forEach((buttom) => {
+    buttom.addEventListener('click', async () => {
+      const idItem = buttom.parentNode.firstChild.innerText;
+      const itemInfo = await fetchProducts(idItem, urlProduct);
+      cardItems.appendChild(createCartItemElement(itemInfo));
+    });
+  });
 };
 
 mountItems('computador');
+setTimeout(() => reviveButtons(), 1000);
