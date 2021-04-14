@@ -47,7 +47,7 @@ const productsList = () => {
   .then((data) => {
     data.results.forEach((product) => { createProductItemElement(product); });
   });
-}
+};
 
 window.onload = function onload() { 
   productsList();
