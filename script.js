@@ -18,15 +18,14 @@ function createProductItemElement({
   thumbnail: image,
 }) {
   const section = document.createElement('section');
-  const sectionsItems = document.querySelector('.items');
   section.className = 'item';
-
+  const sectionItems = document.querySelector('.items');
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
-  return sectionsItems.appendChild(section);
+  return sectionItems.appendChild(section);
 }
 
 // function getSkuFromProductItem(item) {
