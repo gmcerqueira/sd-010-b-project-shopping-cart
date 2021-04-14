@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -14,8 +12,13 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createProductItemElement({
+  id: sku,
+  title: name,
+  thumbnail: image,
+}) {
   const section = document.createElement('section');
+  const sectionsItems = document.querySelector('.items');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
@@ -23,21 +26,44 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
-  return section;
+  return sectionsItems.appendChild(section);
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
+// function cartItemClickListener(event) {
+//   // coloque seu código aqui
+// }
 
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+// function createCartItemElement({
+//   sku,
+//   name,
+//   salePrice,
+// }) {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   return li;
+// }
+
+// 1° Desafio
+// Baby Steps: 
+// 1° informação
+// 1.1 acessar a API do 'mercadolivre'
+// 1.2 pega-la e transformar em .json para ser lido pelo javascript
+// 2 Capturar as informações 
+// 2.1 Apos capturada, percorrer as info contidas dentro
+// 2.2 adicionar estas informações nos parametros de createProductItemElement
+// entrega-los crateProduction
+const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+fetch(API_URL)
+  .then((response) => response.json())
+  .then((data) => {
+    data.results.forEach((element) =>
+      createProductItemElement(element));
+  });
+
+window.onload = function onload() {};
