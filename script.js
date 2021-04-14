@@ -1,5 +1,20 @@
 const cartItem = '.cart__items';
 
+const updatePrices = async () => {
+  const items = document.querySelectorAll('.cart__item');
+  const pricesArray = [];
+  items.forEach((element) => {
+    const split = element.innerText.split(' | ');
+    const priceTag = split[2].split(' ');
+    const price = priceTag[1].substring(1);
+    pricesArray.push(Number(price));
+  });
+  const totalPrice = pricesArray.reduce((acc, curr) => acc + curr, 0);
+  console.log(totalPrice);
+  const pricePlace = document.querySelector('.total-price');
+  pricePlace.innerText = `TOTAL: ${totalPrice}`;
+};
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -35,6 +50,7 @@ function cartItemClickListener(event) {
   cartList.removeChild(event.target);
   const array = event.target.innerText.split(' | ');
   localStorage.removeItem(array[0]);
+  updatePrices();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -55,7 +71,6 @@ async function fetchML() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador',
     { method: 'GET' });
   const json = await response.json();
-  father.remove();
   return json.results;
 }
 
@@ -78,13 +93,13 @@ const addToCart = () => {
           salePrice: result2.price,
         });
         father.appendChild(child);
+        updatePrices();
       });
     });
   });
 };
 
 const loadStorage = () => {
-  console.log(localStorage);
   const items = Object.values(localStorage);
   return items;  
 };
@@ -93,18 +108,19 @@ const loadStorage = () => {
 const populateFromStorage = (array) => {
   const father = document.querySelector(cartItem);
   array.forEach((element) => {
-    console.log(element);
     const li = document.createElement('li');
     li.className = 'cart__item';
     li.innerText = `${element}`;
     li.addEventListener('click', cartItemClickListener);
     father.appendChild(li);
   });
+  updatePrices();
 };
 
 const clearCart = () => {
   document.querySelector(cartItem).innerHTML = '';
   localStorage.clear();
+  document.querySelector('.total-price').innerText = '';
 };
 
 const populateList = (param) => {
@@ -125,6 +141,7 @@ window.onload = function onload() {
       populateList(result);
       addToCart();
     });
+  document.querySelector('.list').remove();
   if (localStorage) {
     populateFromStorage(loadStorage());
   }
