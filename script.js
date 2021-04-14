@@ -1,3 +1,5 @@
+/* const consButton = document.querySelectorAll('.item__add'); */
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,8 +14,8 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image }) {
-  console.log(name);
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+  console.log();
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -40,27 +42,40 @@ function createProductItemElement({ sku, name, image }) {
   return li;
 } */
 
+/* const add = (mercados) => {
+  const deconstruct = mercados.results;
+  const items = document.querySelector('.items');
+  deconstruct.forEach((element) => {
+  items.appendChild(createProductItemElement(element));
+  });
+}; */
+
 const start = ($QUERY) => {
  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${$QUERY}`)
   .then((response) => {
     response.json()
       .then((mercados) => {
+          document.querySelector('.loading').remove();
         const deconstruct = mercados.results;
-        /* const { id } = deconstruct; */
-        /* const list = document.querySelector('items'); */
+        const items = document.querySelector('.items');
         deconstruct.forEach((element) => {
-          const obj = {
-            sku: element.id,
-            name: element.title,
-            image: element.thumbnail,
-          };
-          const items = document.querySelector('.items');
-          items.appendChild(createProductItemElement(obj));
+          items.appendChild(createProductItemElement(element));
         });
       });
   });
 };
 
+/* consButton.addEventListener('click', createCartItemElement); */
+
+const clear = () => {
+  const consClear = document.querySelector('.empty-cart');
+  consClear.addEventListener('click', () => {
+    const cleando = document.querySelector('.cart__items');
+    cleando.innerHTML = '';
+  });
+};
+
 window.onload = function onload() {
   start('computador');
+  clear();
 };
