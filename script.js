@@ -27,6 +27,7 @@ function createProductItemElement({ sku, name, image }) {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
+
 function listItem() {
   let list = 0;
   const totalValue = document.querySelector('.total-price');
@@ -37,8 +38,8 @@ function listItem() {
   totalValue.innerHTML = list;
 }
 
-function cartItemClickListener() {
-  // coloque seu código aqui
+function cartItemClickListener(event) {
+  event.target.remove();
   listItem();
 }
 
