@@ -1,3 +1,5 @@
+const cartItem = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -29,7 +31,7 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 function cartItemClickListener(event) {
-  const cartList = document.querySelector('.cart__items');
+  const cartList = document.querySelector(cartItem);
   cartList.removeChild(event.target);
   const array = event.target.innerText.split(' | ');
   localStorage.removeItem(array[0]);
@@ -63,7 +65,7 @@ const addToCart = () => {
     elem.addEventListener('click', (event) => {
       const firstSibling = event.target.parentNode.firstChild;
       fetchItem(firstSibling.innerText).then((result2) => {
-        const father = document.querySelector('.cart__items');
+        const father = document.querySelector(cartItem);
         const child = createCartItemElement({
           sku: result2.id,
           name: result2.title,
@@ -88,7 +90,7 @@ const loadStorage = () => {
 const populateFromStorage = (array) => {
   array.forEach((element) => {
     fetchItem(element).then((result) => {
-      const father = document.querySelector('.cart__items');
+      const father = document.querySelector(cartItem);
       const child = createCartItemElement({
         sku: result.id,
         name: result.title,
