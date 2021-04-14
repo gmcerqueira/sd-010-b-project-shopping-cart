@@ -46,9 +46,13 @@ const fetchProducts = () => {
   fetch(url)
     .then((resp) => resp.json())
     .then((data) => {
-      const [{ id: sku, title: name, thumbnail: image }] = data.results;
-      const itemList = createProductItemElement({ sku, name, image });
-      document.querySelector('.items').appendChild(itemList);
+      data.results.forEach((computador) => {
+        const { id: sku, title: name, thumbnail: image } = computador;
+        const itemList = createProductItemElement({ sku, name, image });
+        document.querySelector('.items').appendChild(itemList);
+        document.querySelector('.items').appendChild(itemList);
+        document.querySelector('.items').appendChild(itemList);
+      });
     });
 };
 
