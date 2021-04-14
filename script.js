@@ -39,7 +39,7 @@ function fetchItemId(idItem) {
       const itemObj = {
         sku: item.id,
         name: item.title,
-        salePrice: item.base_price,
+        salePrice: item.price,
       };
       document.querySelector('.cart__items').appendChild(createCartItemElement(itemObj)); 
     });
