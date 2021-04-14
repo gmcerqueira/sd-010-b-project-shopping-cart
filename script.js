@@ -20,6 +20,7 @@ function createProductItemElement({
   const section = document.createElement('section');
   section.className = 'item';
   const sectionItems = document.querySelector('.items');
+
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
@@ -47,7 +48,6 @@ function createProductItemElement({
 //   li.addEventListener('click', cartItemClickListener);
 //   return li;
 // }
-
 // 1° Desafio
 // Baby Steps: 
 // 1° informação
@@ -55,14 +55,17 @@ function createProductItemElement({
 // 1.2 pega-la e transformar em .json para ser lido pelo javascript
 // 2 Capturar as informações 
 // 2.1 Apos capturada, percorrer as info contidas dentro
-// 2.2 adicionar estas informações nos parametros de createProductItemElement
-// entrega-los crateProduction
-const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-fetch(API_URL)
-  .then((response) => response.json())
-  .then((data) => {
-    data.results.forEach((element) =>
-      createProductItemElement(element));
-  });
-
-window.onload = function onload() {};
+// 2.2 acionar o createProductItemElement
+// 2.3 adicionar um destructuring no parametro do creatProductItemElement
+// 2.4 colocar dentor do create o 'element' contendo as informações da API
+// 3° o Parametro da API está desestruturado e fará a organização da pesquisa
+// entrega-los para o crateProduction
+window.onload = function onload() {
+  const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  fetch(API_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      data.results.forEach((element) =>
+        createProductItemElement(element));
+    });
+};
