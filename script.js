@@ -86,7 +86,7 @@ function getId() {
 }
 
 window.onload = function onload() { 
-  buffer = JSON.parse(localStorage.getItem('cart'));
+
   const endPoint = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
 
   fetch(endPoint)
@@ -95,6 +95,7 @@ window.onload = function onload() {
     .then(() => {
       renderItems();
       getId();
+      buffer = JSON.parse(localStorage.getItem('cart'));
       if (buffer.length !== 0) {
         buffer.forEach((element) => { createCartItemElement(element); });
       }
