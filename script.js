@@ -39,10 +39,10 @@ async function getMLProducts() {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const response = await fetch(endpoint);
   const object = await response.json();
-  const { results: obj } = object;
+  const { results: answer } = object;
   const itemsElements = document.querySelector('.items');
 
-  obj.forEach((result) => {
+  answer.forEach((result) => {
     const obj = {
       sku: result.id,
       name: result.title,
