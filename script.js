@@ -68,7 +68,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
    li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
    li.addEventListener('click', cartItemClickListener);
    priceItem += salePrice;
-   amountValue(priceItem);
+   amountValue();
    return li;
  }
 
