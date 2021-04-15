@@ -1,3 +1,11 @@
+const cartClass = '.cart__items';
+
+const btn = document.querySelector('.empty-cart');
+btn.addEventListener('click', () => {
+  localStorage.clear();
+  document.querySelector('.cart__items').innerHTML = '';
+});
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -17,7 +25,6 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
   return event.target.remove();
 }
 
@@ -30,6 +37,32 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// document.getElementById('oi');
+
+// Salva a lista de produtos no carrinho:
+function saveCartList() {
+  const ol = document.querySelector(cartClass);
+  [...ol.children].map((children, index) => {
+    const cartList = {
+      sku: children.id,
+      name: children.title,
+      salePrice: children.price,
+      };
+    // Salva no localstorage: o indice da tarefa(keyName do LS) e seu obj respectivo transformado em string(keyValue do LS);
+    localStorage.setItem(`${index}`, JSON.stringify(cartList));
+    return true; // Lint: 'Expected to return a value in arrow function.'
+  });
+}
+
+function loadCartList() {
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const obj = JSON.parse(localStorage[i]);
+    const cartItemLoad = document.createElement('li');
+    cartItemLoad.innerHTML = `${console.log(obj)}`;
+    document.querySelector(cartClass).appendChild(cartItemLoad);
+  }
+}
+
 // Com o ID vindo de 'getSkuFromProductItem' cria o produto especifico no carrinho de compras com a função 'createCartItemElement':
 const getProduct = (itemID) => fetch(`https://api.mercadolibre.com/items/${itemID}`)
     .then((response) => response.json())
@@ -39,8 +72,19 @@ const getProduct = (itemID) => fetch(`https://api.mercadolibre.com/items/${itemI
         name: productToCart.title,
         salePrice: productToCart.price,
         };
-        document.querySelector('.cart__items').appendChild(createCartItemElement(inCart));
-     });
+        document.querySelector(cartClass).appendChild(createCartItemElement(inCart));
+    })
+    .then(saveCartList);
+
+// Caso haja uma lista no local storage, ela será exibida: 
+// function loadCartList() {
+//   for (let i = 0; i < localStorage.length; i += 1) {
+//     const obj = JSON.parse(localStorage[i]);
+//     const cartItemLoad = document.createElement('li');
+//     cartItemLoad.innerHTML = `${obj.name}`;
+//     ol.appendChild(cartItemLoad);
+//   }
+// }
 
 // Através de infos especificas cria elementos filhos de 'section', com auxilio de outras funções previamente criadas;
 function createProductItemElement({ sku, name, image }) {
@@ -59,7 +103,7 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// Através da requisição da API captura uma lista de obj e, pegando infos especificas deles cria a lista de produtos com a função: 'createProductItemElement';
+// Através da requisição da API captura uma lista de obj e, pegando infos especificas deles, cria a lista de produtos com a função: 'createProductItemElement';
 function productInfo(product) {
   return fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${product}`)
   .then((response) => response.json())
@@ -77,4 +121,6 @@ function productInfo(product) {
         
 window.onload = function onload() { 
   productInfo('computador');
+  // saveCartList();
+  loadCartList();
 };
