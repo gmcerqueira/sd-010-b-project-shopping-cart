@@ -4,10 +4,18 @@ window.onload = function onload() { };
 const urlProducts = 'https://api.mercadolibre.com/sites/MLB/search?q=';
 const urlProduct = 'https://api.mercadolibre.com/items/';
 
-const fetchProducts = (item, Url) => fetch(`${Url}${item}`).then((resp) => resp.json());
-
 const totalPrice = document.querySelector('.total-price');
 const cardItems = document.querySelector('.cart__items');
+const loader = document.querySelector('.loder');
+
+// ----------------------------------------------------------
+const fetchProducts = async (item, Url) => {
+  const loading = '<div class="loading">Carregando...</div>';
+  loader.innerHTML = loading;
+  const result = await fetch(`${Url}${item}`).then((resp) => resp.json());
+  loader.innerHTML = '';
+  return result;
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -75,7 +83,6 @@ function loadCart() {
     for (let item = 0; item < toLoadItems.length - 1; item += 1) {
       itemsCard.push(toLoadItems[item].item);
     }
-    // console.log(`Carregado ${itemsCard}`);
     updateCart(itemsCard);
     upTotalPrice(toLoadItems[toLoadItems.length - 1], '+');
   } else {
