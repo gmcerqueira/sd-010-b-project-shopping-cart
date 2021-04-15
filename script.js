@@ -1,5 +1,6 @@
 // const fetch = require('node-fetch');
 
+// -FETCH--------------------------------------------------------------------------------------------------------
 const getItemsResults = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const responseObj = await response.json();
@@ -14,24 +15,15 @@ const getItemById = async (id) => {
   
   return responseObj;
 };
+// --------------------------------------------------------------------------------------------------------------
 
-const createProductImageElement = (imageSource) => {
-  const img = document.createElement('img');
-  img.className = 'item__image';
-  img.src = imageSource;
-  return img;
-};
-
-const createCustomElement = (element, className, innerText) => {
-  const e = document.createElement(element);
-  e.className = className;
-  e.innerText = innerText;
-  return e;
-};
-
+// -ARRAY DE OBEJETOS SALVOS NO LOCAL STORAGE--------------------------------------------------------------------
 let savedCartItems = [];
+// --------------------------------------------------------------------------------------------------------------
 
+// -CARD ITEMS---------------------------------------------------------------------------------------------------
 const cartItemClickListener = (event) => {
+  // Basicamente ele obtem todos os irmãos do elemento clicado, cria um array, retorna o index do elemento clicado desse array, remove esse mesmo index do 'savedCartItems' e salva no localStorage.
   let cartItemsList = event.target.parentNode.children;
   cartItemsList = [...cartItemsList];
   const cartItem = cartItemsList.reduce((acc, element, index) => {
@@ -57,18 +49,9 @@ const renderCardItem = (item) => {
   const cartItems = document.querySelector('.cart__items');
   cartItems.appendChild(cardItem);
 };
+// --------------------------------------------------------------------------------------------------------------
 
-const restoreSavedCartItems = () => {
-  if (localStorage.getItem('cartItems')) {
-    const cartItems = JSON.parse(localStorage.getItem('cartItems'));
-    savedCartItems = [];
-    cartItems.forEach((cartItem) => {
-      savedCartItems.push(cartItem);
-      renderCardItem(cartItem);
-    });
-  }
-};
-
+// -ITEM LIST----------------------------------------------------------------------------------------------------
 // Retorna o ID do elemento
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
 
@@ -80,6 +63,20 @@ const itemClickListener = async (event) => {
   // Salva no localStorage o objeto como string.
   localStorage.setItem('cartItems', JSON.stringify(savedCartItems));
   renderCardItem(itemObj);
+};
+
+const createProductImageElement = (imageSource) => {
+  const img = document.createElement('img');
+  img.className = 'item__image';
+  img.src = imageSource;
+  return img;
+};
+
+const createCustomElement = (element, className, innerText) => {
+  const e = document.createElement(element);
+  e.className = className;
+  e.innerText = innerText;
+  return e;
 };
 
 const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
@@ -104,7 +101,20 @@ const renderItems = async () => {
     items.appendChild(createProductItemElement(item));
   });
 };
+// --------------------------------------------------------------------------------------------------------------
 
+// -LOCAL STORAGE------------------------------------------------------------------------------------------------
+const restoreSavedCartItems = () => {
+  if (localStorage.getItem('cartItems')) {
+    const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+    savedCartItems = [];
+    cartItems.forEach((cartItem) => {
+      savedCartItems.push(cartItem);
+      renderCardItem(cartItem);
+    });
+  }
+};
+// --------------------------------------------------------------------------------------------------------------
 window.onload = async () => {
   await renderItems();
   restoreSavedCartItems();
