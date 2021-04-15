@@ -19,6 +19,19 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+const sumTotal = async (target) => {
+  let value = 0;
+  const arr = await document.querySelectorAll('li');
+
+  arr.forEach((li) => {
+  // split based on: https://stackoverflow.com/a/573337
+  const amount = Number(li.innerText.split('$')[1]);
+  value = li !== target ? value += amount : value -= amount;
+});
+
+pTotal.innerText = value;
+};
+
 function createCartItemElement(sku, name, salePrice) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -34,7 +47,7 @@ const addItem = (sku) => {
       const item = createCartItemElement(sku, name, salePrice);
       olList.appendChild(item);
       localStorage.setItem('product', olList.innerHTML);
-      // sumTotal(true);
+      sumTotal();
     });
 };
 
@@ -52,13 +65,22 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(btn);
   sectionItems.appendChild(section);
 
-  btn.addEventListener('click', () => {
-    const id = getSkuFromProductItem(section);
+  btn.addEventListener('click', () => {    
+    const id = getSkuFromProductItem(section);    
     addItem(id);
   });
 
   return section;
 }
+
+function cartItemClickListener(event) {
+  event.target.remove();
+  sumTotal(event.target); 
+
+  localStorage.setItem('product', olList.innerHTML);
+}
+
+olList.addEventListener('click', cartItemClickListener);
 
 const fetchApi = () => {
   const load = document.querySelector('.loading');
