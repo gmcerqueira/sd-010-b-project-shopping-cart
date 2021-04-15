@@ -12,6 +12,12 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+function salvaItens() {
+  const itens = document.querySelector('.cart__items');
+  localStorage.cart = itens.innerHTML;
+  console.log(localStorage.cart);
+}
+
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -46,7 +52,8 @@ function addCartItemElement(evento) {
     };
     const item = createCartItemElement(resultElement);
     produto.appendChild(item);
-  });
+    salvaItens();
+  });  
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -89,4 +96,9 @@ const fetchItem = () => {
 
 window.onload = function onload() {
   fetchItem();
+  if (localStorage.cart) {
+    produto.innerHTML = localStorage.cart;
+    const li = document.querySelectorAll('li');
+    li.forEach((item) => item.addEventListener('click', cartItemClickListener));
+  }
 };
