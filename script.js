@@ -28,15 +28,21 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-// function cartItemClickListener(event) {
+function cartItemClickListener(event) {
+  const parentNode = event.target.parentElement;
+  parentNode.removeChild(event.target);
+}
 
-// }
-
+// carItemClickListener cria um evento ao clicar em um item da lista, removendo
+// mesma logica do moveItensToCart
+// no elemento pai clico na const parentNode que eh o event target elemento pai
+// escolho a child que vou remover da lista de itens que cliquei event.target
+// indo pro parentNode que remove o filho, o item que cliquei 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
@@ -90,7 +96,7 @@ function moveItensToCart() {
 // id eh o sku do Readme
 // ao clicar no botao, ele pega os itens que cliquei e joga no ol com querySelector('items)
 // usando eventListener que ao clicar ele me da o event target com tudo
-// crio a const id, uso a funcao ja existente (getSkuFromProductItem) que busca o ID
+// crio a const sku, uso a funcao ja existente (getSkuFromProductItem) que busca o ID
 // passo o elemento parentNode que eh o item clicado
 // ele busca no elemento pai, se existe span, class, item__sku, id
 // faco fetch buscado especificamente conforme readme link
