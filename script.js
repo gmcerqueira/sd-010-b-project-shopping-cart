@@ -1,3 +1,12 @@
+function clearCart(itemsCartClear) {
+  const clearBtn = document.querySelector('.empty-cart');
+  clearBtn.addEventListener('click', () => {
+    while (itemsCartClear.hasChildNodes()) {
+    itemsCartClear.removeChild(itemsCartClear.firstChild);
+    }
+  });
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -27,10 +36,12 @@ function createProductItemElement({ sku, name, image }) {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
+  
+// let cartContainer = [];
 
 function cartItemClickListener(event) {
-  const listItems = document.querySelector('.cart__items');
-  listItems.removeChild(event.target);
+  const olItems = document.querySelector('.cart__items');
+  olItems.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -45,7 +56,17 @@ function appendItemCart(result) {
   const olItems = document.querySelector('.cart__items');
   const { id, title, price } = result;
   olItems.appendChild(createCartItemElement({ sku: id, name: title, salePrice: price }));
+  clearCart(olItems);
+  // cartContainer.push(olItems.lastChild.outerHTML);   
+  // localStorage.setItem('cart-item', cartContainer); 
+  // cartLocalStorage()
 }
+
+// function cartLocalStorage() {
+//   const getItemLocalStorage = localStorage.getItem('cart-item');
+//   const olItems = document.querySelector('.cart__items');  
+//   olItems.innerHTML = getItemLocalStorage;  
+// }
 
 const fetchSearchById = (id) => {  
   fetch(`https://api.mercadolibre.com/items/${id}`)
@@ -62,7 +83,7 @@ function addCart() {
   itemAdd.forEach((add) => {
     add.addEventListener('click', () => {
       const textId = add.parentNode.querySelector('.item__sku').innerText;
-      fetchSearchById(textId);
+      fetchSearchById(textId);      
     });
   });
 }
@@ -81,10 +102,12 @@ async function appendResult() {
   itemResult.forEach((result) => {
     const { id, title, thumbnail } = result;
     item.appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail }));
-   });
-   addCart();
+  });
+  addCart();
 }
 
-  window.onload = async function onload() {
-    await appendResult();
-  };
+window.onload = async function onload() {
+  await appendResult();
+};
+
+// https://www.w3schools.com/jsref/met_node_removechild.asp 
