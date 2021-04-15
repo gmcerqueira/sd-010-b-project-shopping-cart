@@ -12,6 +12,20 @@ const listCart = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('.total-price');
 // -----------------------------------------------------------------------------------------------------
 
+// REQUISITO 7 -----------------------------------------------------------------------------------------
+function createLoading() {
+  const container = document.querySelector('.container');
+  const loading = document.createElement('p');
+  loading.className = 'loading';
+  loading.innerText = 'loading...';
+  container.appendChild(loading);
+}
+
+function removeLoading() {
+  const loading = document.querySelector('.loading');
+  loading.remove();
+}
+
 // REQUISITO 1 -----------------------------------------------------------------------------------------
 
 // Desenvolvendo Função para Criar Elementos HTML Dinamicamente
@@ -46,6 +60,7 @@ function createProductItemElement({ sku, name, image }) {
 // Desenvolvendo a Lista de Produtos
 async function getMLProducts() {
   const answer = await fetchPC();
+  createLoading();
   const itemsElements = document.querySelector('.items');
 
   answer.forEach((result) => {
@@ -57,6 +72,7 @@ async function getMLProducts() {
     const element = createProductItemElement(obj);
     itemsElements.appendChild(element);
   });
+  removeLoading();
 }
 
 // REQUISITO 5 -----------------------------------------------------------------------------------------

@@ -1,3 +1,7 @@
+*{
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
 .top-bar {
   align-items: center;
   display: flex;
@@ -75,9 +79,20 @@
   text-align: center;
 }
 
+.cart__item {
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.cart__item {
+  background: linear-gradient(rgb(188, 196, 194), rgba(6, 40, 2, 0.721));
+  border-bottom: 8px solid white;
+  cursor: pointer;
+}
+
 .priceValue {
   align-self: center;
-  background-color: rgba(64, 64, 80, 0.892);
+  background:linear-gradient( rgba(64, 64, 80, 0.447), rgba(64, 64, 80, 0.892));
   border: 1px solid black;
   border-radius: 5px;
   color: white;
