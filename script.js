@@ -41,18 +41,16 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 function createListItems() {
-  fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-    .then((response) => response.json())
-    .then((response) => response.results)
-    .forEach((itemProduct) => {
-      const product = {
+  fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
+  .then((response) => response.json())
+  .then((info) => info.results.forEach((itemProduct) => {
+    const product = {
         sku: itemProduct.id,
         name: itemProduct.title,
         image: itemProduct.thumbnail,
       };
-      const itemsProduct = document.querySelector('.items');
-      itemsProduct.appendChild(createProductItemElement(product));
-  });
+      document.querySelector('.items').appendChild(createProductItemElement(product));
+  }));
 }
 
 window.onload = function onload() {
