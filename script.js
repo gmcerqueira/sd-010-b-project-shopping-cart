@@ -1,3 +1,5 @@
+const olOfCartShopping = '.cart__items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -43,6 +45,8 @@ async function getProducts() {
 
 function cartItemClickListener(event) {
   event.target.remove();
+  const cartElement = document.querySelector(olOfCartShopping);
+  localStorage.setItem('cartShopping', JSON.stringify(cartElement.innerHTML));
 }
 
 function createCartItemElement({ id, title, price }) {
@@ -60,9 +64,10 @@ async function fetchItem(productID) {
 }
 
 async function addItemToCart(productID) {
-  const cartElement = document.querySelector('.cart__items');
+  const cartElement = document.querySelector(olOfCartShopping);
   const item = await fetchItem(productID);
   cartElement.appendChild(createCartItemElement(item));
+  localStorage.setItem('cartShopping', JSON.stringify(cartElement.innerHTML));
 }
 
 function eventListenerToAllButtons() {
@@ -70,14 +75,19 @@ function eventListenerToAllButtons() {
   buttons.forEach((but) => but.addEventListener('click', (evt) => {
     const productID = evt.target.parentElement.firstChild.innerText;
     addItemToCart(productID);
-    // console.log(item);
   }));
+}
 
-  // console.log(buttons);
+function loadCartShopping() {
+  const savedCart = localStorage.getItem('cartShopping');
+  const cartElement = document.querySelector(olOfCartShopping);
+  cartElement.innerHTML = JSON.parse(savedCart);
+  cartElement.childNodes.forEach((item) => // childNodes return an array of child nodes
+    item.addEventListener('click', cartItemClickListener));
 }
 
 window.onload = async function onload() {
-  // console.log('OK, Start!');
   await getProducts();
   eventListenerToAllButtons();
+  loadCartShopping();
 };
