@@ -107,7 +107,18 @@ function loadLocalStorage() {
   });
   listCart.innerHTML = localStorage.getItem('product');
 }
+
+function deliteList() {
+  const buttonDelite = document.querySelector('.empty-cart');
+  const listCart = document.querySelector('.cart__items');
+  const totalValue = document.querySelector('.total-price');
+  buttonDelite.addEventListener('click', () => {
+    listCart.innerHTML = '';
+    totalValue.innerHTML = 0;
+  });
+}
 window.onload = function onload() {
   getProductsList('computador');
   loadLocalStorage();
+  deliteList();
 };
