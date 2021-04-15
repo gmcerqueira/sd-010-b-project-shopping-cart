@@ -123,15 +123,23 @@ async function renderProducts() {
     });
     document.querySelector('.items').appendChild(newItem);
   });
-  document.querySelector('.cart__items').innerHTML = localStorage.getItem('cartItems');
 }
-
-window.onload = function onload() {
-  renderProducts();
-};
 
 // creates clearCart button event listener
 const clearBtn = document.querySelector('.empty-cart');
 clearBtn.addEventListener('click', () => {
   document.getElementsByClassName('cart__items')[0].innerHTML = '';
 });
+
+// bring the items saved in the local store to the shopping cart
+function loadFromLocalStorage() {
+  document.querySelector('.cart__items').innerHTML = localStorage.getItem('cartItems');
+  document.querySelectorAll('li.cart__item').forEach((el) => {
+    el.addEventListener('click', cartItemClickListener);
+  });
+}
+
+window.onload = function onload() {
+  renderProducts();
+  loadFromLocalStorage();
+};
