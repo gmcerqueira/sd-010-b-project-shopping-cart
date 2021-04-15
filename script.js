@@ -116,10 +116,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
-
 const mountItems = async (product) => {  
   const conteinerItems = document.querySelector('.items');
 
@@ -139,4 +135,3 @@ function reviverButtonClear() {
 mountItems('computador');
 loadCart();
 reviverButtonClear();
-// setTimeout(() => reviveButtons(), 500);
