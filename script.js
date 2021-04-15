@@ -12,8 +12,9 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
- function cartItemClickListener() {
-
+ function cartItemClickListener(event) {
+  const select = event.target;
+  select.remove();
   }
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
     const ol = document.querySelector('.cart__items');
