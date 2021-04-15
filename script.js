@@ -41,6 +41,7 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+const loadingElement = createCustomElement('p', 'loading', 'loading...');
 
 const getSiblingThatContainsID = (element) => {
   const { children } = element.parentElement;
@@ -61,7 +62,11 @@ const getIdFromElement = (element) => {
 
 const removeElement = async (element) => {
   const elId = getIdFromElement(element);
+  const cart = document.querySelector('.cart');
+  const loadingElementForRemove = createCustomElement('p', 'loading', 'loading...');
+  cart.insertBefore(loadingElementForRemove, cart.firstChild);
   const res = await fetch(`https://api.mercadolibre.com/items/${elId}`);
+  cart.removeChild(loadingElementForRemove);
   const { id, title, price } = res.json();
   const params = {
     sku: id,
@@ -70,6 +75,7 @@ const removeElement = async (element) => {
   };
   removeItemFromStorage(params);
   element.parentElement.removeChild(element);
+  sumCartItems();
 };
 
 function cartItemClickListener(event) {
@@ -87,7 +93,10 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 const renderedBtnListener = async (e) => {
   const elId = getSiblingThatContainsID(e.target);
+  const cart = document.querySelector('.cart');
+  cart.insertBefore(loadingElement, cart.firstChild);
   const res = await fetch(`https://api.mercadolibre.com/items/${elId}`);
+  cart.removeChild(loadingElement);
   const { id, title, price } = await res.json();
   const params = {
     sku: id,
@@ -129,7 +138,10 @@ const renderResults = (items) => {
 };
 
 const getResults = async () => {
+  const cart = document.querySelector('.cart');
+  cart.insertBefore(loadingElement, cart.firstChild);
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=Monitor');
+  cart.removeChild(loadingElement);
   const { results } = await response.json();
   renderResults(results);
 };
@@ -150,7 +162,19 @@ const loadCartFromStorage = async () => {
   sumCartItems();
 };
 
+const loadEmptyCart = () => {
+  document.querySelector('.empty-cart')
+    .addEventListener('click', () => {
+      const allCartItems = document.querySelectorAll('.cart__item');
+      allCartItems.forEach((element) => {
+        removeElement(element);
+      });
+      sumCartItems();
+    });
+};
+
 window.onload = function onload() {
   getResults();
   loadCartFromStorage();
+  loadEmptyCart();
 };
