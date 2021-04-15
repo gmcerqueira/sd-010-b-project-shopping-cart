@@ -14,7 +14,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ id: sku, name, image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -42,13 +42,14 @@ function createProductItemElement({ id: sku, name, image }) {
 //   return li;
 // }
 
-const greatListProduct = async () => {
+const fetchPC = async () => {
+  // referencia https://www.youtube.com/watch?v=Zl_jF7umgcs&ab_channel=RogerMelo
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
-  const { results } = await response.json();
-  results.forEach((product) => {
-    const sonElement = document.querySelector('.items');
-    const creatingItem = createProductItemElement(product);
-    sonElement.appendChild(creatingItem);
+  const data = await response.json();
+  data.results.forEach((product) => {
+    const element = document.querySelector('.items');
+    console.log('cheguei product: ', product.thumbnail);
+    element.appendChild(createProductItemElement(product));
   });
 };
-greatListProduct();
+fetchPC();
