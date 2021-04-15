@@ -51,6 +51,8 @@ function appendItemCart(result) {
   // clearCart(olItems);
   // pricesSum.push(price);
   // showSumCart();  
+  const listItems = document.querySelectorAll('.cart__item');
+  cartItemClickListener(listItems);
 }
 
 const fetchSearchById = (id) => {  
