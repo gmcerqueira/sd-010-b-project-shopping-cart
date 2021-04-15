@@ -53,12 +53,16 @@ async function lista(url) {
   await teste(url)
   .then((coisa) => coisa.results.forEach((item) => {
     dataUser.appendChild(
-    createProductItemElement({
-      sku: item.id,
-      name: item.title,
-      image: item.thumbnail,
-    }));
-  }))
+      createProductItemElement({
+        sku: item.id,
+        name: item.title,
+        image: item.thumbnail,
+      }
+      )
+    );
+  }
+  )
+  )
   .catch((erro) => erro);
 }
 
