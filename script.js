@@ -1,9 +1,5 @@
-const apiUrl = async (item) => {
-  const URL = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${item}`);
-  const docJson = await URL.json();
-  const listComputer = await docJson.results;
-  return listComputer;
-};
+const classOl = document.querySelector('.cart__items');
+const buttonAdd = document.querySelector('.item__add');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -39,15 +35,22 @@ function cartItemClickListener(event) {
   return event;
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-
-const elementSection = async () => {
+// Faz a requisição para a API
+const apiUrl = async (item) => {
+  const URL = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${item}`);
+  const docJson = await URL.json();
+  const listComputer = await docJson.results;
+  return listComputer;
+};
+// Adiciona o elemento buscado (computador) como filho da section com a classe items
+const elementComputerSection = async () => {
   const list = await apiUrl('computador');
   const classItens = document.querySelector('.items');
   list.forEach((item) => {
@@ -56,4 +59,14 @@ const elementSection = async () => {
   });
 };
 
-window.onload = elementSection();
+const addProductcart = async () => {
+  buttonAdd.addEventListener('click', () => {
+  const productAdded = apiUrl('id');
+  classOl.appendChild(createCartItemElement(productAdded));
+  });  
+};
+
+window.onload = () => {
+  elementComputerSection();
+  addProductcart();
+};
