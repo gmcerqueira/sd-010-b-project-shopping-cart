@@ -74,3 +74,9 @@
   font-size: 16pt;
   text-align: center;
 }
+
+.cart .total-price {
+  text-align: end;
+  padding-right: 15px;
+  font-size: 18px;
+}

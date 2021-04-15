@@ -18,21 +18,38 @@ const getItemById = async (id) => {
 // --------------------------------------------------------------------------------------------------------------
 
 // -ARRAY DE OBEJETOS SALVOS NO LOCAL STORAGE--------------------------------------------------------------------
-let savedCartItems = [];
+const savedCartItems = [];
+const itemsPrices = [];
 // --------------------------------------------------------------------------------------------------------------
 
 // -CARD ITEMS---------------------------------------------------------------------------------------------------
+const sumAllPrices = (arrayOfPrices) => {
+  const addingUp = arrayOfPrices.reduce((acc, element) => {
+    let sum = acc;
+    sum += element;
+    return sum;
+  }, 0);
+  return parseFloat(addingUp.toFixed(2));
+};
+
+const renderSummedPrices = () => {
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerText = `R$ ${sumAllPrices(itemsPrices)}`;
+};
+
 const cartItemClickListener = (event) => {
   // Basicamente ele obtem todos os irmãos do elemento clicado, cria um array, retorna o index do elemento clicado desse array, remove esse mesmo index do 'savedCartItems' e salva no localStorage.
   let cartItemsList = event.target.parentNode.children;
   cartItemsList = [...cartItemsList];
-  const cartItem = cartItemsList.reduce((acc, element, index) => {
+  const cartItemIndex = cartItemsList.reduce((acc, element, index) => {
     let current = acc;
     if (element === event.target) current = index;
     return current;
   }, 0);
-  savedCartItems.splice(cartItem, 1);
+  itemsPrices.splice(cartItemIndex, 1);
+  savedCartItems.splice(cartItemIndex, 1);
   localStorage.setItem('cartItems', JSON.stringify(savedCartItems));
+  renderSummedPrices();
   event.target.remove();
 };
 
@@ -49,6 +66,7 @@ const renderCardItem = (item) => {
   const cartItems = document.querySelector('.cart__items');
   cartItems.appendChild(cardItem);
 };
+
 // --------------------------------------------------------------------------------------------------------------
 
 // -ITEM LIST----------------------------------------------------------------------------------------------------
@@ -59,10 +77,14 @@ const itemClickListener = async (event) => {
   // Retorna o pai do elemento clicado.
   const item = event.target.parentNode;
   const itemObj = await getItemById(getSkuFromProductItem(item));
+  const { price } = itemObj;
+  itemsPrices.push(price);
+  console.log(itemsPrices);
   savedCartItems.push(itemObj);
   // Salva no localStorage o objeto como string.
   localStorage.setItem('cartItems', JSON.stringify(savedCartItems));
   renderCardItem(itemObj);
+  renderSummedPrices();
 };
 
 const createProductImageElement = (imageSource) => {
@@ -107,11 +129,12 @@ const renderItems = async () => {
 const restoreSavedCartItems = () => {
   if (localStorage.getItem('cartItems')) {
     const cartItems = JSON.parse(localStorage.getItem('cartItems'));
-    savedCartItems = [];
     cartItems.forEach((cartItem) => {
+      itemsPrices.push(cartItem.price);
       savedCartItems.push(cartItem);
       renderCardItem(cartItem);
     });
+    renderSummedPrices();
   }
 };
 // --------------------------------------------------------------------------------------------------------------
