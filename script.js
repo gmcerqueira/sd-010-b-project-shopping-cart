@@ -12,8 +12,18 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+const sumTotal = async () => {
+    const totalPrice = document.querySelector('.total-price');
+    const items = document.querySelectorAll('.cart__item');
+    const total = [...items]
+      .map((element) => element.innerText.match(/([0-9.]){1,}$/))
+      .reduce((acc, curr) => acc + parseFloat(curr), 0);
+    totalPrice.innerHTML = total;
+};
+
 function cartItemClickListener(event) {
-  return event.target.remove();
+  event.target.remove();
+  sumTotal();
 }
 
 function createCartItemElement(sku, name, salePrice) {
@@ -33,7 +43,7 @@ const createCart = (sku) => {
         const { id, title, price } = data;
         return createCartItemElement(id, title, price);
       },
-    );
+    ).then((_item) => sumTotal());
 };
 
 function createProductItemElement(sku, name, image) {
