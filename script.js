@@ -133,8 +133,26 @@ function addToCart() {
   });
 }
 
+// REQUISITO 6 -----------------------------------------------------------------------------------------
+function clearCart() {
+  const btnClearCart = document.querySelector('.empty-cart');
+  btnClearCart.addEventListener('click', () => {
+  const listItems = document.querySelectorAll('li');
+  if (listItems.length !== 0) {
+      for (let i = 0; i < listItems.length; i += 1) {
+      listItems[i].remove();
+      }
+      totalPrice.innerHTML = '0.00';
+      saveCart();
+  } else {
+      alert('Não existe produto a ser removido do carrinho de compras'); 
+  }
+});
+}
+
 window.onload = function onload() {
   getMLProducts();
   addToCart();
   loadCart();
+  clearCart();
  };
