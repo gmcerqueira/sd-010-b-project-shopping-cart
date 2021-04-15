@@ -26,10 +26,10 @@ function sumTotalCart() {
   const pricesArray = [0];
   if (cartItem.length > 0) {
     for (let index = 0; index < cartItem.length; index += 1) {
-      let item = cartItem[index].innerText.split('$');
+      const item = cartItem[index].innerText.split('$');
       pricesArray.push(parseFloat(item[item.length - 1]));
     }
-    return pricesArray.reduce((acc, curr) => parseFloat((acc + curr).toPrecision(6)));
+    return pricesArray.reduce((acc, curr) => parseFloat((acc + curr).toPrecision(7)));
   }
   return 0;
 }
