@@ -5,7 +5,7 @@ let priceItem = 0;
 let totalPrice = 0;
 
 async function amountValue() {
-  totalPrice.innerText = priceItem;
+  totalPrice.innerHTML = priceItem;
 }
 
 const removeAllItemsLocalHistorage = () => {
@@ -15,6 +15,7 @@ const removeAllItemsLocalHistorage = () => {
     orderedList.removeChild(item);
   });
   localStorage.removeItem('projectCart');
+  priceItem = 0;
   }
 };
 
@@ -68,7 +69,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
    li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
    li.addEventListener('click', cartItemClickListener);
    priceItem += salePrice;
-   amountValue();
    return li;
  }
 
