@@ -1,3 +1,25 @@
+function eventListenerOlList() {
+  const arrayLiCartItems = Array.from(document.querySelectorAll('.cart__item'));
+  const splitedArray = (arrayLiCartItems).map((element) => element.innerText.split('$'));
+  const justPrices = splitedArray.map((element) => Number(element[1]));
+  const finalPrice = justPrices.reduce((sum, number) => sum + number, 0);
+  if (finalPrice - Math.floor(finalPrice) === 0) return finalPrice.toFixed(0);
+  if (finalPrice - finalPrice.toFixed(1) === 0) return finalPrice.toFixed(1);
+  return finalPrice.toFixed(2);
+}
+
+async function createPriceElement() {
+  const newParagraph = document.createElement('p');
+  newParagraph.className = 'total-price';
+  newParagraph.innerText = `${await eventListenerOlList()}`;
+  return document.querySelector('.cart').appendChild(newParagraph);
+}  
+
+async function addSumToCartList() {
+  const price = document.querySelector('.total-price');
+  price.innerText = `${await eventListenerOlList()}`;
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -42,6 +64,7 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
   event.target.remove();
   setLocalStorageItemCartItems();
+  addSumToCartList();
 }
 
 async function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -65,6 +88,7 @@ async function getResultsAPI(url) {
 async function createItemElements(url) {
   const sectionItems = document.querySelector('.items');
   
+// Essa linha começa a trabalhar no 'loading' da página.
   const APILoading = '<div class = "loading" >loading...</div>';
   sectionItems.innerHTML = APILoading;
   const getLoading = document.querySelector('.loading');
@@ -93,20 +117,26 @@ function executeFunctionWhenClick() {
 
       getOlList.appendChild(await createCartItemElement(itemInfo));
       setLocalStorageItemCartItems();
+      addSumToCartList();
     });
   });
 }
 
 // requisito 3 ------------------------------------------------------------------------------------
-// código na linha 35
+// código na linha 41
 
 // requisito 4 ------------------------------------------------------------------------------------
 // Quando devo salvar o carrinho? Quando ele é atualizado?
-// Quando adiciono um item - V
-// Quando removo um item - V
-// Quando esvazio o carrinho - V
-// requisito 5 ------------------------------------------------------------------------------------
+// Quando adiciono um item
+// Quando removo um item
+// Quando esvazio o carrinho
 
+// Função feita na linha 8
+
+// requisito 5 ------------------------------------------------------------------------------------
+// Quando devo somar no carrinho? Quando a soma é atualizada?
+// Nas mesmas horas que algum item do carrinho muda.
+// 
 // requisito 6 ------------------------------------------------------------------------------------
 function actionCleanItemsCart() {
   const arrayItems = document.querySelectorAll('.cart__item');  
@@ -114,6 +144,7 @@ function actionCleanItemsCart() {
     item.remove();
   });
   setLocalStorageItemCartItems();
+  addSumToCartList();
 }
 
 function cleanAllItemsShoppingCart() {
@@ -122,14 +153,17 @@ function cleanAllItemsShoppingCart() {
 }
 
 // requisito 7 ------------------------------------------------------------------------------------
-// código na linha 62 em diante
+// código na linha 69 em diante
 // peguei a idéia desse requisito nesses links:
 //  stackoverflow.com/questions/53799108/how-to-add-a-loading-animation-while-fetch-data-from-api-vanilla-js
 //  stackoverflow.com/questions/36294109/how-to-check-if-a-promise-is-pending
 // ------------------------------------------------------------------------------------------------
+
 window.onload = async function onload() {
   rememberCartItemsOnload();
+  await createPriceElement();
   await createItemElements('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   await executeFunctionWhenClick();
   cleanAllItemsShoppingCart();
+  await addSumToCartList();
  };
