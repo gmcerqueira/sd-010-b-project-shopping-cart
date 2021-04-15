@@ -7,7 +7,7 @@ function verifyStatus() {
     const newEl = document.createElement('p');
     newEl.className = 'loading';
     newEl.innerText = 'loading...';
-    document.body.appendChild(newEl);
+    document.body.firstElementChild.appendChild(newEl);
   } else if (loadingStatus === false) {
     document.querySelector('.loading').remove();
   }
