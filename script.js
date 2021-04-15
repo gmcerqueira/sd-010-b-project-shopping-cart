@@ -22,8 +22,10 @@ function save() {
 }
 
 function cartItemClickListener(event) {
-  event.target.parentNode.removeChild(event.target);
-  save();
+  if (event.target.parentNode) {
+    event.target.parentNode.removeChild(event.target);
+    save();
+  }
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
