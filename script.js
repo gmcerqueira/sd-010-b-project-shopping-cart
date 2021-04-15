@@ -54,9 +54,9 @@ const getProduct = async () => {
   const getComputer = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const getResponse = await getComputer.json();
   const response = await getResponse.results;
-  return response.map((value) => {
+  return response.forEach((value) => {
     const product = { sku: value.id, name: value.title, image: value.thumbnail };
-    return document.querySelector('.items').appendChild(createProductItemElement(product));
+    document.querySelector('.items').appendChild(createProductItemElement(product));
   });
 };
 getProduct();
