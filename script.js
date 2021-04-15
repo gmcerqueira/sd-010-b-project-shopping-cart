@@ -82,7 +82,16 @@ const renderItemsCart = async () => {
   });
 };
 
+const removeAll = () => {
+  const buttomRemove = document.querySelector('.empty-cart');
+  const ol = document.querySelector('.cart__items');
+  buttomRemove.addEventListener('click', () => {
+    ol.innerHTML = '';
+  });
+};
+
 window.onload = async function onload() {
   await renderProducts();
   await renderItemsCart();
+  await removeAll();
 };
