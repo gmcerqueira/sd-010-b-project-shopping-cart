@@ -58,9 +58,11 @@ async function lista(url) {
         name: item.title,
         image: item.thumbnail,
       }
-      ));
+      )
+      )
   }
-  ))
+  )
+  )
   .catch((erro) => erro);
 }
 
