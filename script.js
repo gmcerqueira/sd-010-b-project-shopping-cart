@@ -48,6 +48,7 @@ const loadStorage = () => {
   cartItens.innerHTML = localStorage.getItem('cart');
   cartItens.forEach((item) => item.addEventListener('click', cartItemClickListener));
 };
+console.log(loadStorage);
 
 function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
@@ -98,7 +99,6 @@ document.querySelector('.empty-cart').addEventListener('click', () => {
 };
 console.log(removeItem);
 const removeLoading = () => document.querySelector('.loading').remove();
-
 
 const renderPage = async () => {
   try {
