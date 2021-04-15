@@ -9,6 +9,13 @@ const addToLocalStorage = ({ sku, name, salePrice }) => {
   }
 };
 
+const removeItemFromStorage = ({ sku, name, salePrice }) => {
+    const arrayFromStorage = JSON.parse(localStorage.getItem('cart'));
+    const arrayToRemove = [`${sku};${name};${salePrice}`];
+    arrayFromStorage.pop(arrayToRemove);
+    localStorage.setItem('cart', JSON.stringify(arrayFromStorage));
+};
+
 const sumCartItems = () => {
   const allCartItems = document.querySelectorAll('.cart__item');
   let currentPrice = 0;
@@ -47,9 +54,27 @@ const getSiblingThatContainsID = (element) => {
   return foundElement;
 };
 
+const getIdFromElement = (element) => {
+  const stringID = element.innerText.split('|')[0].split(':')[1].trim();
+  return stringID;
+};
+
+const removeElement = async (element) => {
+  const elId = getIdFromElement(element);
+  const res = await fetch(`https://api.mercadolibre.com/items/${elId}`);
+  const { id, title, price } = res.json();
+  const params = {
+    sku: id,
+    name: title,
+    salePrice: price,
+  };
+  removeItemFromStorage(params);
+  element.parentElement.removeChild(element);
+};
+
 function cartItemClickListener(event) {
-  event.target.parentElement.removeChild(event.target);
-  sumCartItems();
+  const thisElement = event.target;
+  removeElement(thisElement);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -89,10 +114,6 @@ function createProductItemElement({ sku, name, image }) {
 
   return section;
 }
-
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
 
 const renderResults = (items) => {
   const itemContainer = document.querySelector('.items');
