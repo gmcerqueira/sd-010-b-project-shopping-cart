@@ -3,7 +3,8 @@ window.onload = function onload() {
   const promiseCallback = (resolve, reject) => {
       fetch(url)
           .then((response) => {
-              if (!response.ok) throw new Error(`Erro ao executar requisição, status ${response.status}`);
+              if (!response.ok)
+                throw new Error(`Status ${response.status}`);
               return response.json();
           })
           .then(resolve)
