@@ -116,6 +116,13 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
+const renderLoading = () => {
+  const items = document.querySelector('.items');
+  const loading = createCustomElement('div', 'loading', 'loading...');
+  items.before(loading);
+  return loading;
+};
+
 const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
   const section = document.createElement('section');
   section.className = 'item';
@@ -132,11 +139,13 @@ const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) =>
 };
 
 const renderItems = async () => {
+  const loading = renderLoading();
   const results = await getItemsResults();
   const items = document.querySelector('.items');
   results.forEach((item) => {
     items.appendChild(createProductItemElement(item));
   });
+  loading.remove();
 };
 // --------------------------------------------------------------------------------------------------------------
 
