@@ -70,6 +70,11 @@ const listItem = () => {
       );
     });
   });
+  const clearButton = document.querySelector('.empty-cart');
+  const ol = document.querySelector('.cart__items');
+  clearButton.addEventListener('click', () => {
+    ol.innerHTML = '';
+  });
 };
 
 window.onload = function onload() {
