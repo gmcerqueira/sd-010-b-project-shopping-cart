@@ -80,12 +80,7 @@ async function cartBtnListener(event) {
   const prod = await getData(`https://api.mercadolibre.com/items/${prodID}`);
   loadingStatus = false;
   verifyStatus();
-
-  const newEl = createCartItemElement({
-    sku: prod.id,
-    name: prod.title,
-    salePrice: prod.price,
-  });
+  const newEl = createCartItemElement({ sku: prod.id, name: prod.title, salePrice: prod.price });
   newEl.addEventListener('click', cartItemClickListener);
   cartItems.appendChild(newEl);
   sumPrices();
