@@ -74,3 +74,13 @@
   font-size: 16pt;
   text-align: center;
 }
+
+#totalAmount {
+  display: flex;
+  background-color: whitesmoke;
+  padding: 0 10px;
+  border-radius: 5px;
+  justify-content: center;
+  color: darkgreen;
+  font-weight: 800;
+}
