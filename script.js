@@ -1,11 +1,10 @@
 window.onload = function onload() { };
 const cartItens = document.querySelector('.cart__items');
 const itens = document.querySelector('.items');
-const priceToAppend = document.querySelector('.total-price');
+// const priceToAppend = document.querySelector('.total-price');
 
 const setItens = () => {
   localStorage.setItem('cart', cartItens.innerHTML);
-  localStorage.setItem('priceCart', priceToAppend.innerHTML);
 };
 
 function createProductImageElement(imageSource) {
@@ -44,7 +43,6 @@ function cartItemClickListener(event) {
 }
 
 const loadStorage = () => {
-  priceToAppend.innerHTML = localStorage.getItem('priceCart');
   cartItens.innerHTML = localStorage.getItem('cart');
   cartItens.forEach((item) => item.addEventListener('click', cartItemClickListener));
 };
@@ -106,6 +104,7 @@ const renderPage = async () => {
     removeLoading();
     await addToCart();
     removeItem();
+    loadStorage();
   } catch (error) {
     console.log('algo aconteceu, tente novamente ;)');
   }
