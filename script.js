@@ -31,7 +31,10 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-function cartItemClickListener(_event) {}
+function cartItemClickListener(event) {
+  const cartItems = document.querySelector('.cart__items');
+  cartItems.removeChild(event.target);
+}
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
