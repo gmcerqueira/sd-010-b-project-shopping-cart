@@ -74,3 +74,17 @@
   font-size: 16pt;
   text-align: center;
 }
+
+.priceValue {
+  align-self: center;
+  background-color: rgba(64, 64, 80, 0.892);
+  border: 1px solid black;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  margin-bottom: 10px;
+  padding: 5px;
+  text-align: center;
+  width: 70%;
+}

@@ -1,4 +1,4 @@
-// Desenvolvendo Função para captura de dados da API - FETCH
+// Desenvolvendo Função para captura de dados da API - FETCH -------------------------------------------
 async function fetchPC() {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
   const response = await fetch(endpoint);
@@ -9,9 +9,10 @@ async function fetchPC() {
 
 // Definição de constantes para o Projeto
 const listCart = document.querySelector('.cart__items');
+const totalPrice = document.querySelector('.total-price');
 // -----------------------------------------------------------------------------------------------------
 
-// REQUISITO 1
+// REQUISITO 1 -----------------------------------------------------------------------------------------
 
 // Desenvolvendo Função para Criar Elementos HTML Dinamicamente
 function createCustomElement(element, className, innerText) {
@@ -58,12 +59,22 @@ async function getMLProducts() {
   });
 }
 
-// REQUISITO 3 / REQUISITO 4
+// REQUISITO 5 -----------------------------------------------------------------------------------------
+async function cartTotalPrice() {
+  const totalPrices = document.querySelector('.total-price');
+  let totalValue = 0;
+  const cartItems = document.querySelectorAll('.cart__item');
+  for (let i = 0; i < cartItems.length; i += 1) {
+    totalValue += parseFloat(cartItems[i].innerHTML.split('$')[1]);
+    totalPrices.innerHTML = ((Math.round(totalValue * 100)) / 100);
+  }
+}
+
+// REQUISITO 3 / REQUISITO 4 ----------------------------------------------------------------------------
 
 // Desenvolvendo Função para Salvar a Lista de Produtos do Carrinho no LocalStorage
 function saveCart() {
   localStorage.setItem('cart', listCart.innerHTML);
-  const totalPrice = document.querySelector('.total-price');
   localStorage.setItem('totalPrice', totalPrice.innerHTML);
 }
 
@@ -71,18 +82,20 @@ function saveCart() {
 function cartItemClickListener(event) {
   event.target.remove();
   saveCart();
+  cartTotalPrice();
 }
 
 // Desenvolvendo Função para Retornar a Lista de Produtos do LocalStorage
 function loadCart() {
   listCart.innerHTML = localStorage.getItem('cart');
-  const itemsCart = document.querySelectorAll('.cart__item');
-  for (let i = 0; i < itemsCart.length; i += 1) {
-    itemsCart[i].addEventListener('click', cartItemClickListener);
+  const itemsCarts = document.querySelectorAll('.cart__item');
+  for (let i = 0; i < itemsCarts.length; i += 1) {
+    itemsCarts[i].addEventListener('click', cartItemClickListener);
   }
+  totalPrice.innerHTML = localStorage.getItem('totalPrice');
 }
 
-// REQUISITO 2
+// REQUISITO 2 -----------------------------------------------------------------------------------------
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -116,6 +129,7 @@ function addToCart() {
     const itemCart = createCartItemElement(item);
     listCart.appendChild(itemCart);
     saveCart();
+    cartTotalPrice();
   });
 }
 
