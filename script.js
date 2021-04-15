@@ -65,11 +65,11 @@ async function showSumCart() {
 
   if (cart.lastChild.className === 'total-price') {
     const totalPrice = document.querySelector('.total-price');
-    totalPrice.innerText = `${Math.round(priceSum * 10) / 10}`;
+    totalPrice.innerText = `${Math.round(priceSum * 100) / 100}`;
   } else {
     const totalPrice = document.createElement('p');
     totalPrice.className = 'total-price';
-    totalPrice.innerText = `${Math.round(priceSum * 10) / 10}`;
+    totalPrice.innerText = `${Math.round(priceSum * 100) / 100}`;
     cart.appendChild(totalPrice);
   }
 }
