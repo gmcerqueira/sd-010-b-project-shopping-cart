@@ -59,12 +59,20 @@ const elementComputerSection = async () => {
   });
 };
 
-const addProductcart = async () => {
-  buttonAdd.addEventListener('click', () => {
-  const productAdded = apiUrl('id');
-  classOl.appendChild(createCartItemElement(productAdded));
-  });  
+const requestId = async () => {
+  const productId = await apiUrl('id');
+  const docJson = await productId.json();
+  return docJson;
 };
+
+const itemsCart = async () => {
+  buttonAdd.forEach((button) => {
+    const idProduct = button.parentElement.firstElementChild.innerText;
+    button.addEventListener('click', () => {
+      
+    });
+  });
+}
 
 window.onload = () => {
   elementComputerSection();
