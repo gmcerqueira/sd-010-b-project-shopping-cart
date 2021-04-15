@@ -82,7 +82,19 @@ function getStorageCart() {
   }
 }
 
+function emptyCart() {
+  const carrinhoAtual = document.querySelector(cart);
+  carrinhoAtual.remove();
+  localStorage.setItem('productsCart', carrinhoAtual.innerHTML = '');
+}
+
+function addClickEventToEmptyCartButton() {
+  const emptyCartButton = document.querySelector('.empty-cart');
+  emptyCartButton.addEventListener('click', emptyCart);
+}
+
 window.onload = function onload() {
 creatProductList();
 getStorageCart();
+addClickEventToEmptyCartButton();
 };
