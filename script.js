@@ -1,6 +1,6 @@
 const totalPrice = () => {
   const cart = Array.from(document.getElementsByClassName('cart__item'));
-  const total = document.getElementById('totalPrice');
+  const total = document.querySelector('.total-price');
   const valores = [];
   if (cart.length === 0) {
     total.innerHTML = 0;
