@@ -1,4 +1,4 @@
-const olOfCartShopping = '.cart__items';
+const cartShoppingClass = '.cart__items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -45,7 +45,7 @@ async function getProducts() {
 
 function cartItemClickListener(event) {
   event.target.remove();
-  const cartElement = document.querySelector(olOfCartShopping);
+  const cartElement = document.querySelector(cartShoppingClass);
   localStorage.setItem('cartShopping', JSON.stringify(cartElement.innerHTML));
 }
 
@@ -64,7 +64,7 @@ async function fetchItem(productID) {
 }
 
 async function addItemToCart(productID) {
-  const cartElement = document.querySelector(olOfCartShopping);
+  const cartElement = document.querySelector(cartShoppingClass);
   const item = await fetchItem(productID);
   cartElement.appendChild(createCartItemElement(item));
   localStorage.setItem('cartShopping', JSON.stringify(cartElement.innerHTML));
@@ -80,9 +80,9 @@ function eventListenerToAllButtons() {
 
 function loadCartShopping() {
   const savedCart = localStorage.getItem('cartShopping');
-  const cartElement = document.querySelector(olOfCartShopping);
+  const cartElement = document.querySelector(cartShoppingClass);
   cartElement.innerHTML = JSON.parse(savedCart);
-  cartElement.childNodes.forEach((item) => // childNodes return an array of child nodes
+  cartElement.childNodes.forEach((item) => // childNodes return an array with the child nodes of the element
     item.addEventListener('click', cartItemClickListener));
 }
 
