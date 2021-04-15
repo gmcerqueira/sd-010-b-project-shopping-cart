@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -7,37 +5,51 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function createCustomElement(element, className, innerText) {
-  const e = document.createElement(element);
-  e.className = className;
-  e.innerText = innerText;
-  return e;
+// ASYNC declara a função como assincrona! e assim podemos usar o AWAIT
+async function returnComputer() {
+  const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
+  const computer = await response.json();
+  // console.log(computer);
+  return computer;
 }
 
-function createProductItemElement({ sku, name, image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
+window.onload = function onload() {
+  console.log('Funcionando, corretamente.');
+  returnComputer();
+  createProductImageElement();
+};
 
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+// function createCustomElement(element, className, innerText) {
+//   const e = document.createElement(element);
+//   e.className = className;
+//   e.innerText = innerText;
+//   return e;
+// }
 
-  return section;
-}
+// function createProductItemElement({ sku, name, image }) {
+//   const section = document.createElement('section');
+//   section.className = 'item';
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+//   section.appendChild(createCustomElement('span', 'item__sku', sku));
+//   section.appendChild(createCustomElement('span', 'item__title', name));
+//   section.appendChild(createProductImageElement(image));
+//   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
+//   return section;
+// }
 
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
+
+// function cartItemClickListener(event) {
+//   // coloque seu código aqui
+// }
+
+// function createCartItemElement({ sku, name, salePrice }) {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   return li;
+// }
