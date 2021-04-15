@@ -1,6 +1,22 @@
 // const fetch = require('node-fetch');
 const puxarCartItem = () => document.querySelectorAll('.cart__item');
 
+const loadingIn = () => {
+  if (document.querySelector('.loading') === null) {
+  const h5 = document.createElement('h5');
+  h5.className = 'loading';
+  h5.innerHTML = 'loading...';
+  document.querySelector('.container').appendChild(h5);
+  }
+};
+
+const loadingOut = () => {
+  if (document.querySelector('.loading') !== null) {
+  const h5 = document.querySelector('.loading');
+  h5.parentNode.removeChild(h5);
+  }
+};
+
 const valorTotal = async () => {
   let total = 0;
   const items = puxarCartItem();
@@ -8,6 +24,7 @@ const valorTotal = async () => {
     total += parseFloat(item.innerHTML.split('PRICE: $')[1]);
   });
   document.querySelector('.total-price').innerHTML = total;
+  await loadingOut();
 };
 
 let cartStorage = [];
@@ -27,7 +44,6 @@ function createProductImageElement(imageSource) {
   img.src = imageSource;
   return img;
 }
-// exported clearCart()
 function clearCart() {
   puxarCartItem().forEach((element) => {
     element.remove();
@@ -65,6 +81,7 @@ function createProductItemElement({ sku, name, image }) {
   }
   
   const renderLocalStorage = () => {
+    loadingIn();
     const localString = localStorage.getItem('Cart');
     if (localString !== null && localString !== '') {
       const localArray = localString.split(',');
@@ -89,6 +106,7 @@ function createProductItemElement({ sku, name, image }) {
   
   //  2
   const requisicao = (elementoEmQuestao) => {
+    loadingIn();
     const itemEmQuestao = elementoEmQuestao.path[1].firstChild.innerText;
     fetch(`https://api.mercadolibre.com/items/${itemEmQuestao}`)
     .then((response) => response.json())
@@ -107,6 +125,7 @@ function createProductItemElement({ sku, name, image }) {
   
   //  1
   const fetchProduct = (QUERY) => {
+    // loadingIn();
     fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`)
     .then((response) => response.json())
     .then((products) => {
@@ -121,10 +140,12 @@ function createProductItemElement({ sku, name, image }) {
         elemento.querySelector('.item__add').addEventListener('click', requisicao);
       });
     });
-  };
+};
     
   window.onload = function onload() { 
+    setTimeout(() => loadingIn(), 500);
     renderLocalStorage();
     fetchProduct('computador');
     document.querySelector('button').addEventListener('click', clearCart);
+    setTimeout(() => loadingOut(), 1000);
   };
