@@ -25,13 +25,14 @@ function criarElementoNaTabela({ sku, name, image }) {
   encontraSection.appendChild(createCustomElement('span', 'item__sku', sku));
   encontraSection.appendChild(createCustomElement('span', 'item__title', name));
   encontraSection.appendChild(createProductImageElement(image));
-  encontraSection.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
   const informaçoesDoproduto2 = {
     sku: sku,
     name: name,
     image: image,
   };
-  encontraSection.addEventListener('click', createCartItemElement(informaçoesDoproduto2));
+  const renderedItemButton = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  renderedItemButton.addEventListener('click',  createCartItemElement);
+  encontraSection.appendChild(renderedItemButton);
   return encontraSection;
 }
 
