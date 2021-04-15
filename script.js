@@ -34,7 +34,7 @@ const sumAllPrices = (arrayOfPrices) => {
 
 const renderSummedPrices = () => {
   const totalPrice = document.querySelector('.total-price');
-  totalPrice.innerText = `R$ ${sumAllPrices(itemsPrices)}`;
+  totalPrice.innerText = sumAllPrices(itemsPrices);
 };
 
 const cartItemClickListener = (event) => {
