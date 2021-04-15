@@ -12,8 +12,6 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-//
-
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -23,6 +21,7 @@ function cartItemClickListener(event) {
   return event;
 }
 
+// Recebe um obj com 3 keys especificas e cria um elemento no carrinho:
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -31,6 +30,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// Com o ID vindo de 'getSkuFromProductItem' cria o produto especifico no carrinho de compras com a função 'createCartItemElement':
 const getProduct = (itemID) => fetch(`https://api.mercadolibre.com/items/${itemID}`)
     .then((response) => response.json())
     .then((productToCart) => {
@@ -42,6 +42,7 @@ const getProduct = (itemID) => fetch(`https://api.mercadolibre.com/items/${itemI
         document.querySelector('.cart__items').appendChild(createCartItemElement(inCart));
      });
 
+// Através de infos especificas cria elementos filhos de 'section', com auxilio de outras funções previamente criadas;
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -51,18 +52,14 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   .addEventListener('click', (event) => {
-    // console.log('oi');
     const item = event.target;
-    // console.log(getSkuFromProductItem(item.parentNode));
     getProduct(getSkuFromProductItem(item.parentNode));
-    // item.forEach((element) => element.addEventListener('click', () => {
-    //   console.log('clicado');
-    // }));
   });
 
   return section;
 }
 
+// Através da requisição da API captura uma lista de obj e, pegando infos especificas deles cria a lista de produtos com a função: 'createProductItemElement';
 function productInfo(product) {
   return fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${product}`)
   .then((response) => response.json())
@@ -77,18 +74,7 @@ function productInfo(product) {
     });
   });
 }
-
-// function addToCart(event) {
-//   console.log('oi');
-//   const item = event.target;
-//   console.log(item);
-//   // getProduct(getSkuFromProductItem(.parentNode));
-//   // item.forEach((element) => element.addEventListener('click', () => {
-//   //   console.log('clicado');
-//   // }));
-// }
         
 window.onload = function onload() { 
   productInfo('computador');
-  // addToCart();
 };
