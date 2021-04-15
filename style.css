@@ -79,3 +79,7 @@
   display: flex;
   flex-wrap: nowrap;
 }
+
+.loading {
+  display: flex;
+}
