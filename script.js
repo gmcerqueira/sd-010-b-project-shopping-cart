@@ -30,6 +30,7 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  event.target.remove();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -62,6 +63,8 @@ function renderComputers(computers) {
     const sectionItem = createProductItemElement(computer);
     itemsSection.appendChild(sectionItem);
   });
+  // usado querySectorAll pois retorna uma NodeList, senão teria que usar outro comando (Array.prototype.forEach.call)
+  // https://stackoverflow.com/questions/3871547/js-iterating-over-result-of-getelementsbyclassname-using-array-foreach
   const buttons = document.querySelectorAll('.item__add');
   console.log(buttons);
   buttons.forEach((button) => button.addEventListener('click', addToChart));
