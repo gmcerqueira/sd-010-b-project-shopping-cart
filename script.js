@@ -14,6 +14,9 @@ function createCustomElement(element, className, innerText) {
 
 let total = 0;
 
+const mostraValor = document.querySelector('.total-price');
+const valorTotal = document.createElement('span');
+
 function somaValor(price) {
   total += price;
   valorTotal.innerHTML = total;
@@ -25,22 +28,21 @@ function salvaItens() {
   localStorage.cart = itens.innerHTML;  
 }
 
-const mostraValor = document.querySelector('.total-price');
-const valorTotal = document.createElement('span');
-
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
 const produto = document.querySelector('.cart__items');
 
-function cartItemClickListener() {
-  produto.addEventListener('click', function (event) {
-    const evento = event.target;
-    evento.remove();
-    salvaItens();
-  });
-//  somaValor();
+function cartItemClickListener(event) {
+  const evento = event.target;
+  let valorSubtrai = evento.innerText.split('$')[1];    
+  total -= valorSubtrai;
+  console.log(valorSubtrai);
+  console.log(total);
+  valorTotal.innerHTML = total;
+  evento.remove();
+  salvaItens();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
