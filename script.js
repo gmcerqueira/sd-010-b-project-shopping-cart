@@ -4,6 +4,7 @@ const myObject = {
   method: 'GET',
   headers: { Accept: 'application/json' },
 };
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -34,7 +35,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   //   return item.querySelector('span.item__sku').innerText;
   // }
 
-  async function totalAdd(price) {
+  function totalAdd(price) {
     total += Math.round(price * 100) / 100;
     totalDom.innerText = total;
   }
@@ -96,13 +97,18 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     });
   }
   
-  function getItensListFromApi() {
+  async function getItensListFromApi() {
+    const shelf = document.getElementsByClassName('items')[0];
+    const div = document.createElement('div');
+    div.classList.add('loading');
+    shelf.appendChild(div);        
+    const loading = document.querySelector('.loading');
     const query = 'computador';
     const API_URL = `https://api.mercadolibre.com/sites/MLB/search?q=${query}`;
     fetch(API_URL, myObject)
     .then((response) => response.json())
     .then(({ results }) => createDom(results))
-    .then(document.getElementsByClassName('loading')[0].style.display = 'none');
+    .then(() => loading.remove());
   }
   function addEventLIstenerCartAgain() {
     const [...allLi] = document.getElementsByClassName('cart__item');
