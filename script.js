@@ -6,7 +6,7 @@ async function fetchProducts() {
 }
 
 function cartItemClickListener(event) {
-  return event;
+  event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
