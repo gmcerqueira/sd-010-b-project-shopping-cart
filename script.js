@@ -1,9 +1,17 @@
 let items; // Esta variável guarda os itens exibidos na tela;
 let orderedList; // Esta variável guarda a OL;
+let buttonClearAll;
+
+const removeAllItemsLocalHistorage = () => {
+  const itemCarrinho = document.querySelectorAll('.cart__item');
+  itemCarrinho.forEach((item) => {
+    orderedList.removeChild(item);
+  });
+  localStorage.removeItem('projectCart');
+};
 
 function recoveredItensLocalStorage() {
   const itemLocalHistorage = localStorage.getItem('projectCart');
-  console.log(itemLocalHistorage);
   orderedList.innerHTML = itemLocalHistorage;
 }
 
@@ -81,12 +89,17 @@ const clickAddEvent = () => {
     const sku = getSkuFromProductItem(props.target.parentNode);
     addProductToCart(sku);
   });
+  buttonClearAll.addEventListener('click', function () {
+    // Botão de limpar a lista de carrinho
+    removeAllItemsLocalHistorage();
+  });
 };
 
 // Função para retornar o produto com base no parâmetro
 const recoverProduct = async (product) => {
   items = document.querySelector('.items');
   orderedList = document.querySelector('.cart__items');
+  buttonClearAll = document.querySelector('.empty-cart');
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${product}`).then(
     (response) => {
       response.json().then((result) => {
