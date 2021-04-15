@@ -1,4 +1,7 @@
-window.onload = function onload() { };
+window.onload = function onload() { 
+  doGet('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+    .then(console.log).catch(console.error);
+ };
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -17,7 +20,6 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-  getComputers();
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
@@ -27,20 +29,19 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-const fetchComputers = (computerName) => fetch (`https://api.
-  mercadolibre.com/sites/MLB/search?q=${computerName}`)
-    .then((response) => response.json())
-    .then((computers) => {
-      createProductItemElement(computers[0]);
-  });
-
-const getComputers = async () => {
-  try {
-    await fetchComputers("computador");
-  } catch (error) {
-    alert('Ocorreu um erro ao buscar os dados');
+const doGet = (url) => {
+  const promiseCallback = (resolve, reject) => {
+      fetch(url)
+          .then((response) => {
+              if (!response.ok) throw new Error(`Erro ao executar requisição, status ${response.status}`);
+              return response.json();
+          })
+          .then(resolve)
+          .catch(reject);
   }
+  return new Promise(promiseCallback);
 }
+
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
