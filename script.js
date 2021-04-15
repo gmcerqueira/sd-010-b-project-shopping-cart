@@ -62,7 +62,7 @@ function cartItemClickListener(event) {
   
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
-  li.id = `${Date.now()}`;
+  li.id = `${localStorage.length}`;
   const ide = li.id;
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -102,12 +102,13 @@ const clearCart = () => {
 
 const load = () => {
   if (localStorage.length) {
+    console.log(Object.keys(localStorage));
     for (let i = 0; i < localStorage.length; i += 1) {
-      const key = localStorage.key(i);
-      const data = JSON.parse(localStorage[key]);
+      // const key = localStorage.key(i);
+      const data = JSON.parse(localStorage[i]);
       const li = document.createElement('li');
       li.innerText = `SKU: ${data.sku} | NAME: ${data.name} | PRICE: $${data.salePrice}`;
-      li.id = key;
+      li.id = i;
       li.addEventListener('click', cartItemClickListener);
       document.querySelector('ol.cart__items').appendChild(li);
     }
