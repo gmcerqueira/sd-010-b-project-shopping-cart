@@ -21,6 +21,24 @@ function save() {
   localStorage.setItem('cartList', JSON.stringify(cartItems.innerHTML));
 }
 
+function sumTotalCart() {
+  const cartItem = document.getElementsByClassName('cart__item');
+  const pricesArray = [0];
+  if (cartItem.length > 0) {
+    for (let index = 0; index < cartItem.length; index += 1) {
+      let item = cartItem[index].innerText.split('$');
+      pricesArray.push(parseFloat(item[item.length - 1]));
+    }
+    return pricesArray.reduce((acc, curr) => parseFloat((acc + curr).toPrecision(6)));
+  }
+  return 0;
+}
+
+function printTotal() {
+  const totalprice = document.getElementsByClassName('total-price')[0];
+  totalprice.innerHTML = `Preço total: $${sumTotalCart()}`;
+}
+
 function cartItemClickListener(event) {
   if (event.target.parentNode) {
     event.target.parentNode.removeChild(event.target);
@@ -77,24 +95,6 @@ function initialize() {
   const cartItems = document.getElementsByClassName('cart__items')[0];
   cartItems.innerHTML = JSON.parse(localStorage.getItem('cartList'));
   cartItems.addEventListener('click', cartItemClickListener);
-}
-
-function sumTotalCart() {
-  const cartItem = document.getElementsByClassName('cart__item');
-  let pricesArray = [0];
-  if(cartItem.length > 0) {
-    for (let index = 0; index < cartItem.length; index += 1) {
-      let item = cartItem[index].innerText.split('$');
-      pricesArray.push(parseFloat(item[item.length -1]));
-    }
-    return pricesArray.reduce((acc,curr) => acc + curr);
-  }
-  return 0;
-}
-
-function printTotal() {
-  const totalprice = document.getElementsByClassName('total-price')[0];
-  totalprice.innerHTML = `Preço total: $${sumTotalCart()}`;
 }
 
 window.onload = function onload() { 
