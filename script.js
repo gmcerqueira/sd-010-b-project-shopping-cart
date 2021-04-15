@@ -15,7 +15,7 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-  
+
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
@@ -32,12 +32,22 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
+}
+
+async function addToChart(event) {
+  // https://stackoverflow.com/questions/38481549/what-is-the-difference-between-e-target-parentnode-and-e-path1
+  const itemId = event.target.parentNode.querySelector('.item__sku').innerHTML;
+  const endpoint = 'https://api.mercadolibre.com/items/';
+  const itemToAdd = await (await fetch(`${endpoint}${itemId}`)).json();
+  const listItem = createCartItemElement(itemToAdd);
+  const shoppingList = document.querySelector('.cart__items');
+  shoppingList.appendChild(listItem);
 }
 
 async function getComputers(endpoint) {
@@ -52,9 +62,12 @@ function renderComputers(computers) {
     const sectionItem = createProductItemElement(computer);
     itemsSection.appendChild(sectionItem);
   });
+  const buttons = document.querySelectorAll('.item__add');
+  console.log(buttons);
+  buttons.forEach((button) => button.addEventListener('click', addToChart));
 }
 
-window.onload = async function onload() { 
+window.onload = async function onload() {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const computers = await getComputers(endpoint);
   console.log(computers);
