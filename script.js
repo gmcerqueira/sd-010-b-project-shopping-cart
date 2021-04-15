@@ -8,7 +8,6 @@ const totalPrice = document.querySelector('.total-price');
 const cardItems = document.querySelector('.cart__items');
 const loader = document.querySelector('.loder');
 
-// ----------------------------------------------------------
 const fetchProducts = async (item, Url) => {
   const loading = '<div class="loading">Carregando...</div>';
   loader.innerHTML = loading;
@@ -49,14 +48,13 @@ function saveCart() {
 
 function upTotalPrice(price, op) {
   if (op === '+') {
-    // ##################### Requisito 5 ###################################
-    const result = parseFloat(totalPrice.innerText) + parseFloat(price);
-    totalPrice.innerText = `${result.toFixed(2)}`;
+    totalPrice
+  .innerText = Number((parseFloat(totalPrice.innerText) + parseFloat(price)).toFixed(2));
   }
   if (op === '-') {
-    const result = parseFloat(totalPrice.innerText) - parseFloat(price);
-    totalPrice.innerText = `${result.toFixed(2)}`;
-  }  
+    totalPrice
+  .innerText = Number((parseFloat(totalPrice.innerText) - parseFloat(price)).toFixed(2));
+  }
 }
 
 function cartItemClickListener(event) {  
