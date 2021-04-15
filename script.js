@@ -108,3 +108,8 @@ async function renderProducts() {
 window.onload = function onload() {
   renderProducts();
 };
+
+const clearBtn = document.querySelector('.empty-cart');
+clearBtn.addEventListener('click', () => {
+  document.getElementsByClassName('cart__items')[0].innerHTML = '';
+});
