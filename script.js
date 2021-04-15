@@ -1,4 +1,5 @@
 let items; // Esta variável guarda os itens exibidos na tela;
+let orderedList; // Esta variável guarda a OL;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -14,6 +15,10 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+ function cartItemClickListener(event) {
+   console.log(event);
+ }
+
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -27,13 +32,27 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-const addProductToCart = (args) => {
-  const query = args;
-  fetch(`https://api.mercadolibre.com/items/${query}`).then(
+ function createCartItemElement({ sku, name, salePrice }) {
+   const li = document.createElement('li');
+   li.className = 'cart__item';
+   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+   li.addEventListener('click', cartItemClickListener);
+   return li;
+ }
+
+const addProductToCart = (args) => {  
+  fetch(`https://api.mercadolibre.com/items/${args}`)
+  .then(
     (response) => {
-      response.json().then(async (result) => {
-        const resultado = await result.results;
-        console.log(resultado, args);
+      response.json()
+  .then((result) => {
+    const resultado = result;
+    const newItem = createCartItemElement({
+      sku: resultado.id,
+      name: resultado.title,
+      salePrice: resultado.price,
+    });
+    orderedList.appendChild(newItem);
       });
     },
   );
@@ -55,6 +74,7 @@ const clickAddEvent = () => {
 // Função para retornar o produto com base no parâmetro
 const recoverProduct = async (product) => {
   items = document.querySelector('.items');
+  orderedList = document.querySelector('.cart__items');
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${product}`).then(
     (response) => {
       response.json().then((result) => {
@@ -68,20 +88,6 @@ const recoverProduct = async (product) => {
     },
   );
 };
-
-/*
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
-*/
 
 window.onload = function onload() {
   recoverProduct('computador');
