@@ -1,4 +1,3 @@
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -13,22 +12,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-async function ProducCart(QUERY) {
-  const query = 'computador';
-  const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`)
-  const { results } = await response.json();
-  return results;
-};
-
-async function renderCar(produtoCar) {
-  produtoCar.forEach((produto) => {
-    const elementsProduct = createProductItemElement(produto);
-    const item = document.querySelector('.items');
-    item.appendChild(elementsProduct)
-  });
-}
-
-function createProductItemElement({id: sku, title: name, thumbnail:image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail:image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -39,13 +23,13 @@ function createProductItemElement({id: sku, title: name, thumbnail:image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
+// function cartItemClickListener(event) {
+//   // coloque seu código aqui
+// }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -54,6 +38,22 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+async function ProducCart() {
+  const query = 'computador';
+  const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`);
+  const { results } = await response.json();
+  return results;
+}
+
+async function renderCar(produtoCar) {
+  produtoCar.forEach((produto) => {
+    const elementsProduct = createProductItemElement(produto);
+    const item = document.querySelector('.items');
+    item.appendChild(elementsProduct);
+  });
+}
+
 window.onload = async function onload() { 
   const produto = await ProducCart();
   renderCar(produto);
