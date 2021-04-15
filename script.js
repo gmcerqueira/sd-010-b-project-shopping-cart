@@ -14,6 +14,20 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// loading variable that is true before the await and false after
+let loading = false;
+
+// check the loading variable: if true, creates a paragraph; if false, removes that paragraph;
+function checkLoad() {
+  const header = document.querySelector('header');
+  console.log(header)
+  if (loading) {
+    header.appendChild(createCustomElement('p', 'loading', 'loading...'));
+  } else if (
+    document.querySelector('.loading').remove()
+  );
+} 
+
 // get the sku from the item clicked
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
@@ -27,8 +41,6 @@ function totalPrice() {
     return total + price;
   }, 0);
   
-  console.log(finalPrice);
-  
   const paragraph = document.querySelector('p.total-price');
   paragraph.innerHTML = Math.round((finalPrice + Number.EPSILON) * 100) / 100;
 }
@@ -36,7 +48,7 @@ function totalPrice() {
 // delete the product from the shopping cart when clicked
 function cartItemClickListener(event) {
   event.target.remove();
-  localStorage.setItem('cart', document.querySelector('.cart__items').innerHTML);
+  localStorage.setItem('cart', document.querySelector('ol').innerHTML);
   
   totalPrice();
 }
@@ -53,12 +65,16 @@ function createCartItemElement({ sku, name, salePrice }) {
 // after clicking on a add button, collects the id/sku of the product, fetch that product and adds that item to the shopping cart
 async function addToTheCart() {
   const productId = getSkuFromProductItem(this.parentElement);
+  loading = true;
+  checkLoad();
   const response = await fetch(`https://api.mercadolibre.com/items/${productId}`);
   const product = await response.json();
-  
+  loading = false;
+  checkLoad();
+
   const { id: sku, title: name, price: salePrice } = product;
 
-  const shoppingCart = document.querySelector('ol.cart__items');
+  const shoppingCart = document.querySelector('.cart__items');
   shoppingCart.appendChild(createCartItemElement({ sku, name, salePrice }));
   localStorage.setItem('cart', document.querySelector('ol.cart__items').innerHTML);
 
@@ -89,7 +105,12 @@ function createProductItemElement({ sku, name, image }) {
 // create the card of each product
 // uses createProductsObject() and createProductItemElement()
 async function renderProduct() {
+  loading = true;
+  checkLoad();
   const products = await getData();
+  loading = false;
+  checkLoad();
+
   const itemsSection = document.querySelector('section.items');
   products.forEach(({ id: sku, title: name, thumbnail: image }) => {
     itemsSection.appendChild(createProductItemElement({ sku, name, image }));
