@@ -48,7 +48,6 @@ const fetchPC = async () => {
   const data = await response.json();
   data.results.forEach((product) => {
     const element = document.querySelector('.items');
-    console.log('cheguei product: ', product.thumbnail);
     element.appendChild(createProductItemElement(product));
   });
 };
