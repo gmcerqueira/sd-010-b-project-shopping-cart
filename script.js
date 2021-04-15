@@ -54,13 +54,33 @@ function createListItems() {
 }
 
 function buttonEvent() {
-  const productButton = document.querySelectorAll('item__add');/* trazer uma lista dos itens adicionados. Lembrar que traz uma NodeList. */
+  const productButton = document.querySelectorAll('item__add');
   productButton.forEach((product) => {
     product.addEventListener('click', (addProduct) => {
-      const recebe = //criar filho do elemento `<ol class="cart__items">`. (span.cart__items?)
+      const id = getSkuFromProductItem(addProduct.target.parentNode);
+      fetch(`https://api.mercadolibre.com/items/${id}`)
+      .then((response) => response.json)
+      .then((list) => {
+        const item = {
+          id,
+          name: list.title,
+          salePrice: list.price,
+        };
+      });
     });
   });
 }
+  
+// function buttonEvent() {
+//   const productButton = document.querySelectorAll('item__add');
+//   productButton.forEach((product) => {
+//     product.addEventListener('click', (addProduct) => {
+//       const id = getSkuFromProductItem(addProduct.target.parentNode); 
+//       fetch(`https://api.mercadolibre.com/items/${id}`)
+//       .then((response => response.json()));      
+//     });
+//   }
+// }
 
 window.onload = function onload() {
   createListItems();
