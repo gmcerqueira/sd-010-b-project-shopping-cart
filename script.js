@@ -93,11 +93,26 @@ function executeFunctionWhenClick() {
 // requisito 5 ------------------------------------------------------------------------------------
 
 // requisito 6 ------------------------------------------------------------------------------------
+function actionCleanItemsCart() {
+  const arrayItems = document.querySelectorAll('.cart__item');  
+  arrayItems.forEach((item) => {
+    item.remove();
+  });
+}
+
+function cleanAllItemsShoppingCart() {
+  const cartButton = document.querySelector('.empty-cart');
+  cartButton.addEventListener('click', actionCleanItemsCart);
+}
 
 // requisito 7 ------------------------------------------------------------------------------------
-
+// código na linha 57 em diante
+// peguei a idéia desse requisito nesses links:
+//  stackoverflow.com/questions/53799108/how-to-add-a-loading-animation-while-fetch-data-from-api-vanilla-js
+//  stackoverflow.com/questions/36294109/how-to-check-if-a-promise-is-pending
 // ------------------------------------------------------------------------------------------------
 window.onload = async function onload() {
   await createItemElements('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   await executeFunctionWhenClick();
+  cleanAllItemsShoppingCart();
  };
