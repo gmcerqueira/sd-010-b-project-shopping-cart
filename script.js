@@ -1,11 +1,10 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
   img.src = imageSource;
-  return img
+  return img;
 }
+// createCartItemElement()
 
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
@@ -26,18 +25,44 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
+
+// function cartItemClickListener(event) {
+//   // coloque seu código aqui
+// }
+
+// function createCartItemElement({ sku, name, salePrice }) {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   li.addEventListener('click', cartItemClickListener);
+//   return li;
+// }
+
+function pegaAPI() {
+  return fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+  .then((respostaApi) => respostaApi.json())
+  .then((respostaConvertida) => {
+    console.log(respostaConvertida);
+    const { results } = respostaConvertida;
+    results.forEach((valor) => {
+      const produtos = {
+        ids: valor.id,
+        name: valor.title,
+        image: valor.thumbnail,
+      };
+      const produto = createProductItemElement(produtos);
+    document.querySelector('.items').appendChild(produto);
+    });
+  });
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+window.onload = async function onload() { 
+  try {
+   await pegaAPI();
+  } catch (_error) {
+   alert('error');
+  }
+ };
