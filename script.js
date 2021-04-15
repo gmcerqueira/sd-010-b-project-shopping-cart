@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -8,36 +6,56 @@ function createProductImageElement(imageSource) {
 }
 
 function createCustomElement(element, className, innerText) {
-  const e = document.createElement(element);
-  e.className = className;
-  e.innerText = innerText;
-  return e;
+  const elementCreated = document.createElement(element);
+  elementCreated.className = className;
+  elementCreated.innerText = innerText;
+  return elementCreated;
 }
 
-function createProductItemElement({ sku, name, image }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  // li.addEventListener('click', cartItemClickListener);
+  
+  const ordenedList = document.querySelector('.cart__items');
+  ordenedList.appendChild(li);
+}
+
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  return section;
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
+  .addEventListener('click', async () => {
+    const fetchId = await fetch(`https://api.mercadolibre.com/items/${sku}`);
+    const fetchIdJson = await fetchId.json();
+    createCartItemElement(fetchIdJson);
+  });
+  
+  const sectionFather = document.querySelector('.items');
+  sectionFather.appendChild(section);
 }
+
+const getApi = async (parameter) => {
+  const objApi = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${parameter}`);
+  const objApiJson = await objApi.json();
+  objApiJson.results
+  .forEach((element) => {
+      createProductItemElement(element);
+    }); 
+};
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-}
+// function cartItemClickListener(event) {
+// }
 
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
+window.onload = function onload() { 
+  getApi('computador');
+};
