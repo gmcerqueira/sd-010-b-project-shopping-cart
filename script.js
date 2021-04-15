@@ -21,6 +21,7 @@ function getData(url) {
     .catch((error) => error);
 }
 
+// passing the source returns an image html element
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -28,6 +29,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+// creates any html element
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -35,6 +37,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// creates a cart item default
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -43,6 +46,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// fetch the product Id by html element
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
@@ -59,6 +63,7 @@ function sumPrices() {
 }
 // REFERENCE substring and indexOf: https://www.devmedia.com.br/javascript-substring-selecionando-parte-de-uma-string/39232
 
+// removes a items from shopping cart when clicked
 function cartItemClickListener(event) {
   event.target.remove();
   sumPrices();
@@ -87,6 +92,7 @@ async function cartBtnListener(event) {
   localStorage.setItem('cartItems', cartItems.innerHTML);
 }
 
+// creates a default element for a new product
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -101,7 +107,7 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// render products on window. 
+// render products on the screen 
 async function renderProducts() {
   loadingStatus = true;
   verifyStatus();
@@ -132,6 +138,7 @@ function loadFromLocalStorage() {
   });
 }
 
+// request API and load cart items from localStorage when window loads
 window.onload = function onload() {
   renderProducts();
   loadFromLocalStorage();
