@@ -1,5 +1,26 @@
 window.onload = function onload() { };
 
+const ul = document.querySelector('.cart__items');
+const pPrice = document.querySelector('.total-price');
+
+const updateStorage = () => {
+  localStorage.setItem('cart', ul.innerHTML);
+  localStorage.setItem('priceCart', pPrice.innerHTML);
+};
+
+const sumPrices = (acc, element) => {
+  const arr = element.innerText.split('$');
+  const price = Number(arr[1]);
+  const total = acc + price;
+  return total;
+};
+
+const updatePrice = async () => {
+  const items = document.querySelectorAll('li.cart__item');
+  const totalPrice = [...items].reduce(sumPrices, 0);
+  pPrice.innerText = totalPrice;
+};
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
