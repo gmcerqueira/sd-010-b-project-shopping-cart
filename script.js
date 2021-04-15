@@ -8,10 +8,11 @@ async function amountValue() {
   const itemCarrinho = document.querySelectorAll('.cart__item');
   itemCarrinho.forEach((item) => {
     const value = parseFloat(item.innerText.split('$')[1]);
-    console.log(value);
+    const a = priceItem;
     priceItem += value;
+    console.log(`${a} + ${value} = ${priceItem}`);
   });
-  totalPrice.innerHTML = priceItem;
+  totalPrice.innerText = priceItem;
 }
 
 const removeAllItemsLocalHistorage = () => {
@@ -55,6 +56,7 @@ function createCustomElement(element, className, innerText) {
  function cartItemClickListener(event) {
    const itemCart = event.target;
    orderedList.removeChild(itemCart);
+   amountValue();
  }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
