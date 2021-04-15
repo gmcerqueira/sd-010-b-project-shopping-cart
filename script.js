@@ -33,7 +33,7 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 // function cartItemClickListener(event) {
-//   // coloque seu código aqui
+//   // coloque seu código aqui testando
 // }
 
 // function createCartItemElement({ sku, name, salePrice }) {
