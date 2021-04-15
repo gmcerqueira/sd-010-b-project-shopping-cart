@@ -18,7 +18,7 @@ const sumTotal = async () => {
     const total = [...items]
       .map((element) => element.innerText.match(/([0-9.]){1,}$/))
       .reduce((acc, curr) => acc + parseFloat(curr), 0);
-    totalPrice.innerHTML = total;
+    totalPrice.innerHTML = Math.floor(total * 100) / 100;
 };
 
 function cartItemClickListener(event) {
@@ -43,7 +43,9 @@ const createCart = (sku) => {
         const { id, title, price } = data;
         return createCartItemElement(id, title, price);
       },
-    ).then((_item) => sumTotal());
+    ).then((_item) => {
+      sumTotal();
+    });
 };
 
 function createProductItemElement(sku, name, image) {
@@ -79,7 +81,7 @@ const listItem = () => {
         createProductItemElement(id, title, thumbnail),
       );
     });
-  });
+  }).then(() => document.querySelector('.loading').remove());
   const clearButton = document.querySelector('.empty-cart');
   const ol = document.querySelector('.cart__items');
   clearButton.addEventListener('click', () => {
