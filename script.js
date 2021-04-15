@@ -29,7 +29,11 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 function cartItemClickListener(event) {
-  return event;
+  event.forEach((listItem) => {
+    listItem.addEventListener('click', (e) => {
+      listItem.remove(e.target);
+    });
+  });
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -97,3 +101,6 @@ async function appendResult() {
 window.onload = async function onload() {
   await appendResult();  
 };
+
+// Fontes: https://www.w3schools.com/jsref/met_node_removechild.asp
+// Projeto realizado em parceria com Paulo Xavier
