@@ -87,6 +87,8 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 
 const productsList = async () => {
 const result = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+const loading = document.getElementsByClassName('loading')[0];
+loading.parentNode.removeChild(loading);
 const data = await result.json();
 data.results.forEach((product) => { createProductItemElement(product); });
 };
