@@ -1,3 +1,6 @@
+const cart = '.cart__items'; // Atribuo a classe a uma constante assim posso reutilizar mais vezes quanto for pegar
+// https://eslint.org/docs/rules/prefer-const (Jonnes Bezerra)
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -16,9 +19,11 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function cartItemClickListener(event) {
-    const cartItem = event.target;
-    cartItem.remove();
+function cartItemClickListener(event) { 
+  const cartItem = document.querySelector(cart);
+  const cartItemClicked = event.target;
+  cartItemClicked.remove();
+  localStorage.setItem('productsCart', cartItem.innerHTML);
   }
   
 function createCartItemElement({ sku, name, salePrice }) {
@@ -29,17 +34,17 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
     
-function addProductToCart(event) { 
-  const cart = document.querySelector('.cart__items');
+function addProductToCart(event) {  
+  const cartAdd = document.querySelector(cart); 
   const itemsId = getSkuFromProductItem(event.target.parentNode);
   console.log(itemsId);
   const urlId = `https://api.mercadolibre.com/items/${itemsId}`;
   fetch(urlId)
   .then((response) => response.json())
   .then((data) => {
-    console.log(data);
-    cart.appendChild(createCartItemElement({ 
+    cartAdd.appendChild(createCartItemElement({ 
       sku: data.id, name: data.title, salePrice: data.price }));
+      localStorage.setItem('productsCart', cartAdd.innerHTML);
     }); 
   }
 
@@ -61,13 +66,23 @@ await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
 .then((response) => response.json())
 .then((data) => {
 const dataResults = data.results;
-console.log(dataResults);
 dataResults.forEach(({ id, title, thumbnail }) => // Henrique Clementino 
 items.appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail })));
 })
 .catch(() => alert('Não foi possível se conectar com a API '));
 }
 
+function getStorageCart() {  
+  const cartRecovered = document.querySelector(cart);
+  const storage = localStorage.getItem('productsCart');
+  if (storage !== '' && storage !== null && cartRecovered !== null) { 
+    cartRecovered.innerHTML = (localStorage.getItem('productsCart')); // pego os valores dela
+    const lis = document.querySelectorAll('li'); // pego os lis recuperados do storage
+    lis.forEach((li) => li.addEventListener('click', cartItemClickListener)); // adiciono para cada um o listener do click
+  }
+}
+
 window.onload = function onload() {
 creatProductList();
+getStorageCart();
 };
