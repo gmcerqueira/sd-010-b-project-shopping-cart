@@ -57,12 +57,9 @@ async function lista(url) {
         sku: item.id,
         name: item.title,
         image: item.thumbnail,
-      }
+      })
       )
-      )
-  }
-  )
-  )
+  }))
   .catch((erro) => erro);
 }
 
