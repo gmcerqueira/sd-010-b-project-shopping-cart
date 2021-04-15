@@ -13,12 +13,20 @@ const totalPrice = document.querySelector('.total-price');
 // -----------------------------------------------------------------------------------------------------
 
 // REQUISITO 7 -----------------------------------------------------------------------------------------
+// Desenvolvendo Função para Criar Elementos HTML Dinamicamente
+function createCustomElement(element, className, innerText) {
+  const e = document.createElement(element);
+  e.className = className;
+  e.innerText = innerText;
+  return e;
+}
+
 function createLoading() {
   // const container = document.querySelector('.container');
-  const loading = document.createElement('p');
-  loading.className = 'loading';
-  loading.innerText = 'loading...';
-  document.body.appendChild(loading);
+  const sectionItems = document.querySelector('.items');
+  const loading = createCustomElement('div', 'loading', 'loading...');
+  sectionItems.before(loading);
+  return loading;
 }
 
 function removeLoading() {
@@ -27,14 +35,6 @@ function removeLoading() {
 }
 
 // REQUISITO 1 -----------------------------------------------------------------------------------------
-
-// Desenvolvendo Função para Criar Elementos HTML Dinamicamente
-function createCustomElement(element, className, innerText) {
-  const e = document.createElement(element);
-  e.className = className;
-  e.innerText = innerText;
-  return e;
-}
 
 // Criando as Imagens dos Produtos
 function createProductImageElement(imageSource) {
