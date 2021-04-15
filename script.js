@@ -1,5 +1,18 @@
 // const fetch = require('node-fetch');
 
+// show loading while wait API response
+let loadingStatus = false;
+function verifyStatus() {
+  if (loadingStatus) {
+    const newEl = document.createElement('p');
+    newEl.className = 'loading';
+    newEl.innerText = 'loading...';
+    document.body.appendChild(newEl);
+  } else if (loadingStatus === false) {
+    document.querySelector('.loading').remove();
+  }
+}
+
 // Get data from API
 function getData() {
   return fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
@@ -40,7 +53,7 @@ function getProductId(sku) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
-
+// function to get the total value
 function sumPrices() {
   const cartItems = document.getElementsByClassName('cart__item');
   let amount = 0;
@@ -64,7 +77,11 @@ async function cartBtnListener(event) {
   const cartItems = document.getElementsByClassName('cart__items')[0];
   const parent = event.target.parentElement;
   const prodID = getSkuFromProductItem(parent);
+  loadingStatus = true;
+  verifyStatus();
   const prod = await getProductId(prodID);
+  loadingStatus = false;
+  verifyStatus();
 
   const newEl = createCartItemElement({
     sku: prod.id,
@@ -93,7 +110,11 @@ function createProductItemElement({ sku, name, image }) {
 
 // render products on window. 
 async function renderProducts() {
+  loadingStatus = true;
+  verifyStatus();
   const allProducts = await getData();
+  loadingStatus = false;
+  verifyStatus();
   allProducts.forEach((el) => {
     const newItem = createProductItemElement({
       sku: el.id,
@@ -108,7 +129,7 @@ async function renderProducts() {
 window.onload = function onload() {
   renderProducts();
 };
-
+// creates clearCart button event listener
 const clearBtn = document.querySelector('.empty-cart');
 clearBtn.addEventListener('click', () => {
   document.getElementsByClassName('cart__items')[0].innerHTML = '';
