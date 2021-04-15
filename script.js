@@ -64,7 +64,7 @@ function buttonAdd(button, sku) {
       };
       const cart = document.getElementsByClassName('cart__items')[0];
       cart.appendChild(createCartItemElement(object));
-      //somaPrice(object);
+      // somaPrice(object);
     });
   });
 }
@@ -114,11 +114,11 @@ function sacolaSalva(element) {
     });
 }
 
-function empty(){
+function empty() {
   document.querySelector('.empty-cart').addEventListener('click', () => {
     const narray = [...document.querySelector('.cart').children[2].children];
     narray.forEach((element) => element.remove());
-  })
+  });
 }
 
 window.onload = function onload() { 
