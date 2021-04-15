@@ -17,8 +17,8 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-    // coloque seu código aqui
-  
+    const cartItem = event.target;
+    cartItem.remove();
   }
   
 function createCartItemElement({ sku, name, salePrice }) {
@@ -56,7 +56,7 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 async function creatProductList() {
-const items = document.querySelector('.items');
+const items = document.querySelector('.items'); 
 await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
 .then((response) => response.json())
 .then((data) => {
