@@ -22,6 +22,7 @@ function getSkuFromProductItem(item) {
 // delete the product from the shopping cart when clicked
 function cartItemClickListener(event) {
   event.target.remove();
+  localStorage.setItem('cart', document.querySelector('.cart__items').innerHTML);
 }
 
 // create the 'li' element that will be inside the shopping cart sidebar
@@ -43,7 +44,7 @@ async function addToTheCart() {
 
   const shoppingCart = document.querySelector('ol.cart__items');
   shoppingCart.appendChild(createCartItemElement({ sku, name, salePrice }));
-  console.log(product);
+  localStorage.setItem('cart', document.querySelector('ol.cart__items').innerHTML);
 } 
 
 // get the array results from the API
@@ -66,6 +67,7 @@ function createProductItemElement({ sku, name, image }) {
   .addEventListener('click', addToTheCart);
   return section;
 }
+
 // create the card of each product
 // uses createProductsObject() and createProductItemElement()
 async function renderProduct() {
@@ -76,7 +78,17 @@ async function renderProduct() {
   });
 }
 
+function cartLoad() {
+  const cart = document.querySelector('.cart__items');
+  cart.innerHTML = localStorage.getItem('cart');
+  const products = document.querySelectorAll('li.cart__item');
+  products.forEach((product) => {
+    product.addEventListener('click', cartItemClickListener);
+  });
+}
+
 // apply the function when the window is loaded
 window.onload = async function onload() {
+  cartLoad();
   await renderProduct();
 };
