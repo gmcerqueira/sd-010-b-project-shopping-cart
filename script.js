@@ -1,7 +1,7 @@
 const sectionItems = document.getElementsByClassName('items')[0];
 const cartItems = document.getElementsByClassName('cart__items')[0];
 const emptyCartButton = document.getElementsByClassName('empty-cart')[0];
-const arrayStorage = [];
+// const arrayStorage = [];
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -38,7 +38,7 @@ function createCartItemElement({ id, title, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  arrayStorage.push({ text: li.innerText });
+  // arrayStorage.push({ text: li.innerText });
   return li;
 }
 
@@ -48,7 +48,7 @@ function requestById(event) {
   .then((response) => response.json())
   .then((obj) => createCartItemElement(obj)) 
   .then((cartElement) => cartItems.appendChild(cartElement))
-  .then(() => sendToLocalStorage(arrayStorage));
+  .then(() => sendToLocalStorage());
 }
 
 function createProductItemElement({ id, title, thumbnail }) {
