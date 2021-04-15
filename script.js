@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 /* eslint-disable sonarjs/no-duplicate-string */
-const localStorageCart = [];
+let localStorageCart = [];
+const cartItens = document.querySelector('.cart__items');
 
 async function getOrderPrice() {
   const orderPrice = document.querySelector('.total-price');
-  // orderPrice.innerText = 0;
+  orderPrice.innerText = 0;
   document.querySelector('.cart').appendChild(orderPrice);
   const cartItems = JSON.parse(localStorage.getItem('MLCartItems'));
   const finalPrice = cartItems.reduce((acc, curr) => acc + curr.salePrice, 0);
@@ -41,9 +42,8 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 function cartItemClickListener(event) {
-  document.querySelector('.cart__items').removeChild(event.target);
+  cartItens.removeChild(event.target);
   const itemToRemoveSku = event.target.innerText.split(' ')[1];
-  // eslint-disable-next-line no-const-assign
   localStorageCart = localStorageCart.filter((cartItem) => cartItem.sku !== itemToRemoveSku);
   localStorage.setItem('MLCartItems', JSON.stringify(localStorageCart));
   getOrderPrice();
@@ -58,16 +58,16 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 function carregaLoading() {
-  sectionSpan = document.querySelector('.cart');
-  spanLoading = document.createElement('span');
+  const sectionSpan = document.querySelector('.cart');
+  const spanLoading = document.createElement('span');
   spanLoading.className = 'loading';
   sectionSpan.appendChild(spanLoading);
   spanLoading.innerText = 'loading';
 }
 
 function descarregaLoading() {
-  sectionSpan = document.querySelector('.cart');
-  spanLoading = document.querySelector('.loading');
+  const sectionSpan = document.querySelector('.cart');
+  const spanLoading = document.querySelector('.loading');
   sectionSpan.removeChild(spanLoading);
 }
 
@@ -78,8 +78,7 @@ function addItemToCart(event) {
     .then((response) => response.json())
     .then((object) => {
       const param = { sku: object.id, name: object.title, salePrice: object.price };
-      document.querySelector('.cart__items')
-        .appendChild(createCartItemElement(param));
+      cartItens.appendChild(createCartItemElement(param));
       localStorageCart.push(param);
       localStorage.setItem('MLCartItems', JSON.stringify(localStorageCart));
       getOrderPrice();
@@ -89,34 +88,29 @@ function addItemToCart(event) {
 async function retriveMercadoLivreResults(term) {
   carregaLoading();
   const endpoint = `https://api.mercadolibre.com/sites/MLB/search?q=${term}`;
-
   try {
     const response = await fetch(endpoint);
     const productsObject = await response.json();
     const productsArray = Object.entries(productsObject.results);
     const refinedProductArrays = productsArray.map((product) => product[1]);
-
     refinedProductArrays.forEach((product) => {
       const param = { sku: product.id, name: product.title, image: product.thumbnail };
       const itemSection = createProductItemElement(param);
       itemSection.lastChild.addEventListener('click', addItemToCart);
       document.querySelector('.items').appendChild(itemSection);
     });
-  } catch (error) {
-    window.alert(error);
-  }
+  } catch (error) { window.alert(error); }
   descarregaLoading();
 }
 
-// eslint-disable-next-line no-unused-vars
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function clearCart() {
   const cartItems = document.querySelectorAll('.cart__item');
   cartItems.forEach((item) => {
-    document.querySelector('.cart__items').removeChild(item);
+    cartItens.removeChild(item);
   });
   localStorage.removeItem('MLCartItems');
   getOrderPrice();
