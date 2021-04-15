@@ -8,7 +8,7 @@ async function amountValue() {
   priceItem = 0;
   const itemCarrinho = document.querySelectorAll('.cart__item');
   itemCarrinho.forEach((item) => {
-    priceItem += parseFloat(item.innerText.split('$')[1]);
+    priceItem += item.innerText.split('$')[1];
   });
   totalPrice.innerHTML = priceItem;
 }
