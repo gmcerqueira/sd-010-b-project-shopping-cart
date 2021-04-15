@@ -1,5 +1,5 @@
 const savedCart = [];
-const cartList = document.querySelector('.cart__items');
+let cartList;
 // let total = 0;
 let clearButton;
 
@@ -84,6 +84,7 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 const fetchFunction = (QUERY) => {
+  cartList = document.querySelector('.cart__items');
   clearButton = document.querySelector('.empty-cart');
   clearButton.addEventListener('click', clearCart);
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`)
@@ -104,7 +105,7 @@ const getSavedCart = () => {
   if (localStorage.getItem('cart')) {
     const cartSaved = JSON.parse(localStorage.getItem('cart'));
     cartSaved.forEach((item) => {
-      document.querySelector('.cart__items').appendChild(createCartItemElement(item));
+      cartList.appendChild(createCartItemElement(item));
       // console.log(item);
     });
   }
