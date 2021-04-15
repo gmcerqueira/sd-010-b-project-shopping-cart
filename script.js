@@ -104,7 +104,6 @@ const loadStorage = () => {
   return items;  
 };
 
-// REVER A IMPLEMENTAÇÃO - no carregamento a ordem está diferente
 const populateFromStorage = (array) => {
   const father = document.querySelector(cartItem);
   array.forEach((element) => {
@@ -140,10 +139,10 @@ window.onload = function onload() {
     .then((result) => {
       populateList(result);
       addToCart();
-    });
+    })
+    .then(() => document.querySelector('.list').remove());
   if (localStorage) {
     populateFromStorage(loadStorage());
   }
   document.querySelector('.empty-cart').addEventListener('click', clearCart);
-  setTimeout(() => document.querySelector('.list').remove(), 500);
 };
