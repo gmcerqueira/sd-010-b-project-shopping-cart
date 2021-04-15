@@ -41,17 +41,6 @@
   width: 200px;
 }
 
-.item:hover {
-  border: 4px solid green;
-  border-radius: 5px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  margin: 5px;
-  width: 200px;
-}
-
 .item .item__sku {
   display: none;
 }
