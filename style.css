@@ -78,3 +78,9 @@
 ol.cart__items {
   cursor: pointer
 }
+
+.loading {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(255, 0, 0);
+}

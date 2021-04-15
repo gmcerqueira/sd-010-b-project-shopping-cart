@@ -22,15 +22,15 @@ const save = (ide, objItem) => {
   
   /* << DEFAULT >> */
   
-  function createProductImageElement(imageSource) {
-    const img = document.createElement('img');
-    img.className = 'item__image';
-    img.src = imageSource;
-    return img;
-  }
-  
-  function createCustomElement(element, className, innerText) {
-    const e = document.createElement(element);
+function createProductImageElement(imageSource) {
+  const img = document.createElement('img');
+  img.className = 'item__image';
+  img.src = imageSource;
+  return img;
+}
+
+function createCustomElement(element, className, innerText) {
+  const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
   return e;
@@ -49,22 +49,22 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 // function getSkuFromProductItem(item) {
-  //   return item.querySelector('span.item__sku').innerText;
-  // }
+//   return item.querySelector('span.item__sku').innerText;
+// }
   
-  function cartItemClickListener(event) {
-    const item = event.target;
-    const ide = item.id;
-    localStorage.removeItem(ide);
-    cartTotalPrice();
-    item.remove();
-  }
+function cartItemClickListener(event) {
+  const item = event.target;
+  const ide = item.id;
+  localStorage.removeItem(ide);
+  cartTotalPrice();
+  item.remove();
+}
   
-  function createCartItemElement({ sku, name, salePrice }) {
-    const li = document.createElement('li');
-    li.id = `${Date.now()}`;
-    const ide = li.id;
-    li.className = 'cart__item';
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.id = `${Date.now()}`;
+  const ide = li.id;
+  li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   save(ide, { sku, name, salePrice });
   li.addEventListener('click', cartItemClickListener);
@@ -118,6 +118,7 @@ const load = () => {
 
 const construct = async () => {
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  const loading = document.querySelector('.loading');
   await fetch(url)
     .then((res) => res.json())
     .then((res) => res.results)
@@ -126,6 +127,7 @@ const construct = async () => {
   btnArr.forEach((_, i) => btnArr[i].addEventListener('click', addItemToCart));
   load();
   document.querySelector('.empty-cart').addEventListener('click', clearCart);
+  loading.remove();
 };
 
 window.onload = function onload() {
