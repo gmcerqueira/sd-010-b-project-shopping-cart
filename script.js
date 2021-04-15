@@ -34,7 +34,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   }
   
   function cartItemClickListener(event) {
-   
+    event.target.parentNode.removeChild(event.target);
   }
   
   function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -59,7 +59,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     .then((results) => {
       const button = document.getElementsByClassName('item__add')[index];
       button.addEventListener('click', () => createCartItemElement(results));
-      return results;
     });
   }
   
