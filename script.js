@@ -24,13 +24,17 @@ function createCustomElement(element, className, innerText) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-function cartItemClickListener(event) {
-  event.target.remove();
-}
-
 function sendToLocalStorage(array) {
   const JSONArray = JSON.stringify(array);
   localStorage.setItem('arrayStorage', JSONArray);
+  }
+
+function cartItemClickListener(event) {
+    const getPrice = parseFloat(event.target.innerText.split('$')[1]);
+    const totalPriceNumber = parseFloat(totalPricesSon.innerText);
+    const newTotalPrice = totalPriceNumber - getPrice;
+    totalPricesSon.innerText = newTotalPrice.toString();
+    event.target.remove();
   }
 
 function createCartItemElement({ id, title, price }) {
@@ -105,6 +109,7 @@ if (parsedArray) {
 function clearCart() {
   const allCartItems = document.querySelector('.cart__items');
   allCartItems.innerHTML = '';
+  totalPricesSon.innerText = '';
   localStorage.removeItem('arrayStorage');
 }
 
