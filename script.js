@@ -1,4 +1,15 @@
 const savedCart = [];
+const cartList = document.querySelector('.cart__items');
+// let total = 0;
+let clearButton;
+
+const clearCart = () => {
+    const cart = document.querySelectorAll('.cart__item');
+    // console.log(cart);
+    cart.forEach((item) => {
+      cartList.removeChild(item);
+    });
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -19,10 +30,16 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// const totalPrice = async (itemPrice) => {
+//   total += itemPrice;
+//   console.log(total);
+// }
+
 function cartItemClickListener({ target }) {
   // coloque seu código aqui  
   savedCart.pop(target);
   localStorage.setItem('cart', JSON.stringify(savedCart));
+  // console.log(target);
   target.remove();
   // console.log(savedCart)
 }
@@ -32,6 +49,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  // totalPrice(salePrice);
   return li;
 }
 
@@ -47,7 +65,7 @@ const sendItemToCart = ({ target }) => {
         };
         savedCart.push(item);
         localStorage.setItem('cart', JSON.stringify(savedCart));
-        document.querySelector('.cart__items').appendChild(createCartItemElement(item));
+        cartList.appendChild(createCartItemElement(item));
         // console.log(savedCart);
       });
 };
@@ -66,6 +84,8 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 const fetchFunction = (QUERY) => {
+  clearButton = document.querySelector('.empty-cart');
+  clearButton.addEventListener('click', clearCart);
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`)
     .then((response) => response.json())
       .then((products) => {
@@ -93,4 +113,4 @@ const getSavedCart = () => {
 window.onload = async function onload() {
   fetchFunction('computador');
   getSavedCart();
- }; 
+}; 
