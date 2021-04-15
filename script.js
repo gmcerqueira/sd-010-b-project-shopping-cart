@@ -145,9 +145,9 @@ const recoverProduct = async (product) => {
           // Após criar os elementos na tela, aciona a função que cria o evento de clique
           clickAddEvent();
       });
+      removeLoading();
     },
   );
-  removeLoading();
 };
 
 window.onload = function onload() {  
