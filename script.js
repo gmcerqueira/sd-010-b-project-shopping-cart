@@ -54,7 +54,7 @@ const renderElement = (element) => document
   .appendChild(createProductItemElement(element));
 
 const getResult = ({ results }) => {
-  const searchResult = results.map((result) => {
+  const searchResult = results.forEach((result) => {
     const resultObject = {
       sku: result.id,
       name: result.title,
