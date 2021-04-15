@@ -14,11 +14,11 @@ const totalPrice = document.querySelector('.total-price');
 
 // REQUISITO 7 -----------------------------------------------------------------------------------------
 function createLoading() {
-  const container = document.querySelector('.container');
+  // const container = document.querySelector('.container');
   const loading = document.createElement('p');
   loading.className = 'loading';
   loading.innerText = 'loading...';
-  container.appendChild(loading);
+  document.body.appendChild(loading);
 }
 
 function removeLoading() {
