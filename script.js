@@ -5,24 +5,6 @@ const apiAcess = async () => {
   } = await response.json();
   return results;
 };
-
-const newChild = (element) => {
-  const createChild = document.getElementsByClassName('items')[0];
-  createChild.appendChild(element);
-};
-
-const makeProduct = (apiJason) => {
-  const results = apiJason.forEach((element) => {
-    const object = {
-      sku: element.id,
-      name: element.title,
-      image: element.thumbnail,
-    };
-    newChild(createProductItemElement(object));
-  });
-  return results;
-};
-
 // cria elemento img no html
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -65,7 +47,7 @@ function cartItemClickListener(event) {
 function createCartItemElement({
   sku,
   name,
-  salePrice
+  salePrice,
 }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -73,6 +55,24 @@ function createCartItemElement({
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+const newChild = (element) => {
+  const createChild = document.getElementsByClassName('items')[0];
+  createChild.appendChild(element);
+};
+
+const makeProduct = (apiJason) => {
+  const results = apiJason.forEach((element) => {
+    const object = {
+      sku: element.id,
+      name: element.title,
+      image: element.thumbnail,
+    };
+    newChild(createProductItemElement(object));
+  });
+  return results;
+};
+
 const createList = async () => {
   makeProduct(await apiAcess());
 };
