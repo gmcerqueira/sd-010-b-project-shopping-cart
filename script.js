@@ -11,14 +11,11 @@ function createProductImageElement(imageSource) {
 } */
 function totalPrice() {
   const listItens = document.querySelectorAll('li');
-  console.log(listItens);
   const prices = [];
   listItens.forEach((itens) => {
     prices.push(Number(itens.innerText.split('$')[1]));
   });
-  console.log(prices);
   const total = prices.reduce((acc, curr) => acc + curr, 0);
-  console.log(total);
   const totalValue = document.querySelector('.total-price');
   totalValue.innerText = total;
 }
@@ -88,6 +85,7 @@ function createProductItemElement({
 // Faz  requisição da API transforamando em JSON, e envia cada item para ser criado na função 'createProductItemElement' e adiciona cada item na section. 
 async function getProductsList(word) {
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${word}`);
+  await document.querySelector('.loading').remove();
   const object = await response.json();
   const {
     results,
