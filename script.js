@@ -27,7 +27,7 @@ function createProductImageElement(imageSource) {
   img.src = imageSource;
   return img;
 }
-// exported clarCart
+// exported clearCart()
 function clearCart() {
   puxarCartItem().forEach((element) => {
     element.remove();
@@ -126,4 +126,5 @@ function createProductItemElement({ sku, name, image }) {
   window.onload = function onload() { 
     renderLocalStorage();
     fetchProduct('computador');
+    document.querySelector('button').addEventListener('click', clearCart);
   };
