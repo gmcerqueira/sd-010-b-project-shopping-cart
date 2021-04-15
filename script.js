@@ -89,10 +89,16 @@ function addCart() {
 }
 
 const fetchComputer = async () => {
+  const loading = document.createElement('h1');
+  const container = document.querySelector('.container');
+  loading.className = 'loading';
+  loading.innerText = 'loading...';
+  document.body.insertBefore(loading, container);
   const apiReturn = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const jsonReturn = await apiReturn.json();
   const resultsReturn = await jsonReturn.results;
 
+  if (resultsReturn) loading.style.display = 'none';
   return resultsReturn;
 };
 
