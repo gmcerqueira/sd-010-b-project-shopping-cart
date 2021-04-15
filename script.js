@@ -1,6 +1,6 @@
 // const fetch = require('node-fetch');
 
-// const { default: fetch } = require("node-fetch");
+const strCartItems = '.cart__items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -28,10 +28,32 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
+async function calculateTotalPrice() {
+  const cartItems = document.querySelector(strCartItems);
+  const allItems = [...cartItems.children];
+  const itemsIds = allItems.map((item) => item.innerText).map((string) => 
+    string.split(' ')).map((arr) => arr[1]);
+  const prices = [];
+  itemsIds.forEach((id) => {
+    const url = `https://api.mercadolibre.com/items/${id}`;
+    fetch(url).then((response) => response.json()).then((response) => 
+    prices.push(response.price)).then(() => {
+      const priceCalculated = document.getElementById('calculated-price');
+      const totalPrice = prices.reduce((acc, curr) => acc + curr);
+      priceCalculated.innerText = totalPrice;
+    });
+  });
+  if (itemsIds.length === 0) {
+    const priceCalculated = document.getElementById('calculated-price');
+    priceCalculated.innerText = '0,00';
+  }
+}
+
 function cartItemClickListener(event) {
   const cartItems = event.target.parentElement;
   cartItems.removeChild(event.target);
   localStorage.setItem('shoppingCart', cartItems.innerHTML);
+  calculateTotalPrice();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -54,9 +76,10 @@ function addToCart() {
       const product = element.target.parentElement;
       const url = `https://api.mercadolibre.com/items/${getSkuFromProductItem(product)}`;
       fetch(url).then((response) => response.json()).then((obj) => {
-        const cartItems = document.querySelector('.cart__items');
+        const cartItems = document.querySelector(strCartItems);
         cartItems.appendChild(createCartItemElement(obj));
         localStorage.setItem('shoppingCart', cartItems.innerHTML);
+        calculateTotalPrice();
       });
     });
   }
@@ -75,13 +98,14 @@ function createElements() {
 }
 
 function setShoppingCart() {
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = document.querySelector(strCartItems);
   const localCart = localStorage.getItem('shoppingCart');
   cartItems.innerHTML = localCart;
   const items = cartItems.children;
   for (let i = 0; i < items.length; i += 1) {
     items[i].addEventListener('click', cartItemClickListener);
   }
+  calculateTotalPrice();
 }
 
 window.onload = function onload() {
