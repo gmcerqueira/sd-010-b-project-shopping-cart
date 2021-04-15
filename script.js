@@ -1,4 +1,6 @@
-window.onload = function onload() { };
+window.onload = function onload() { 
+  getListProducts();
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -71,4 +73,19 @@ const getListProducts = async () => {
   getResult(await getFetch('computador'));
 };
 
-getListProducts();
+// const addToCart = () => {
+//   const addButtons = document.getElementsByClassName('item__add');
+
+//   console.log(addButtons);
+//   addButtons.forEach((button) => {
+//     button.addEventListener('click', () => {
+//       console.log('teste');
+//     });
+//   })
+// }
+
+// const console = () => {
+//   return console.log('teste')
+// }
+
+// addToCart();
