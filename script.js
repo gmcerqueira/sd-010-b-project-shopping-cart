@@ -25,9 +25,12 @@ function cartItemClickListener(event) {
   event.target.remove();
 }
 
-function sendToLocalStorage(array) {
-  const JSONArray = JSON.stringify(array);
-  localStorage.setItem('arrayStorage', JSONArray);
+function sendToLocalStorage() {
+  // const JSONArray = JSON.stringify(array);
+  // localStorage.setItem('arrayStorage', JSONArray);
+  const item = document.querySelector('.cart ol');
+  localStorage.car = item.innerHTML; // solução com ajuda do colega henrique clementino
+  console.log(item);
   }
 
 function createCartItemElement({ id, title, price }) {
@@ -36,7 +39,6 @@ function createCartItemElement({ id, title, price }) {
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
   arrayStorage.push({ text: li.innerText });
-  sendToLocalStorage(arrayStorage);
   return li;
 }
 
@@ -45,7 +47,8 @@ function requestById(event) {
   fetch(`https://api.mercadolibre.com/items/${getTargetId.innerText}`)
   .then((response) => response.json())
   .then((obj) => createCartItemElement(obj)) 
-  .then((cartElement) => cartItems.appendChild(cartElement));
+  .then((cartElement) => cartItems.appendChild(cartElement))
+  .then(() => sendToLocalStorage(arrayStorage));
 }
 
 function createProductItemElement({ id, title, thumbnail }) {
@@ -68,12 +71,16 @@ function makeRequest() {
     sectionItems.append(createProductItemElement(element))));
 }
 
-// function getLocalStorage() {
-//   const getText = localStorage.getItem('arrayStorage');
-// }
+function getLocalStorage() {
+  const getCart = localStorage.car;
+  const item = document.querySelector('.cart ol');
+  item.innerHTML = getCart;
+  const selectCartItems = document.querySelectorAll('.cart ol li');
+  selectCartItems.forEach((cartItem) => cartItem.addEventListener('click', cartItemClickListener)); // solução com ajuda do colega henrique clementino
+}
 
 window.onload = function onload() { 
   makeRequest();
   emptyCartButton.addEventListener('click', cartItemClickListener);
-  // getLocalStorage();
+  getLocalStorage(); // solução com ajuda do colega henrique clementino
 };
