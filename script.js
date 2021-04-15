@@ -47,7 +47,6 @@ function createProductItemElement({ sku, name, image }) {
 async function getElements(QUERY) {
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`);
   const { results } = await response.json();  
-  // console.log(results);
   return results; 
 }
 
