@@ -1,3 +1,7 @@
+li {
+  cursor: pointer;
+}
+
 .top-bar {
   align-items: center;
   display: flex;
@@ -74,3 +78,5 @@
   font-size: 16pt;
   text-align: center;
 }
+
+
