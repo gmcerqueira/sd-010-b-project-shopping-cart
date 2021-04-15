@@ -1,5 +1,3 @@
-window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -26,12 +24,12 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
-  
+  return event;
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -41,3 +39,61 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+
+function appendItemCart(result) {
+  const olItems = document.querySelector('.cart__items');
+  const { id, title, price } = result;
+  olItems.appendChild(createCartItemElement({ sku: id, name: title, salePrice: price }));
+  // clearCart(olItems);
+  // pricesSum.push(price);
+  // showSumCart();  
+}
+
+const fetchSearchById = (id) => {  
+  fetch(`https://api.mercadolibre.com/items/${id}`)
+  .then((response) => {
+    response.json()
+    .then((result) => {
+      appendItemCart(result);      
+    });
+  });
+};
+
+function addCart() {
+  const itemAdd = document.querySelectorAll('.item__add');
+  itemAdd.forEach((add) => {
+    add.addEventListener('click', () => {
+      const textId = add.parentNode.querySelector('.item__sku').innerText;
+      fetchSearchById(textId);      
+    });
+  });
+}
+
+const fetchComputer = async () => {
+  const loading = document.createElement('h1');
+  const container = document.querySelector('.container');
+  loading.className = 'loading';
+  loading.innerText = 'loading...';
+  document.body.insertBefore(loading, container);
+  
+  const apiReturn = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+  const jsonReturn = await apiReturn.json();
+  const resultsReturn = await jsonReturn.results;
+
+  if (resultsReturn) document.body.removeChild(loading);
+  return resultsReturn;
+};
+
+async function appendResult() {
+  const item = document.querySelector('.items');
+  const itemResult = await fetchComputer();
+  itemResult.forEach((result) => {
+    const { id, title, thumbnail } = result;
+    item.appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail }));
+  });
+  addCart();
+}
+
+window.onload = async function onload() {
+  await appendResult();  
+};
