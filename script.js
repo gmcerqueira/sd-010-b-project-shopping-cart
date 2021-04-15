@@ -20,6 +20,10 @@ async function fethIds(id) {
   return idsProducts;
 }
 
+function cartItemClickListener(event) {
+  event.target.remove('parent');
+}  
+
 // tive ajuda do Lucas Portella;
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
@@ -27,7 +31,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   const classCartItems = document.getElementsByClassName('cart__items')[0];
   classCartItems.appendChild(li);
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
@@ -35,7 +39,6 @@ async function addCarrinho(event) {
   const id = await event.target.parentNode.firstChild.innerText;
   const response = await fethIds(id);
   await createCartItemElement(response);
-  console.log(response);
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -45,12 +48,8 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-    .addEventListener('click', addCarrinho);
-    // {
-    //   const id = event.target.parentNode.firstChild.innerText;
-    //   console.log(fethIds(id));
-    // }); // add evento nos botões de add no carrinho
-  
+    .addEventListener('click', addCarrinho); // add evento nos botões de add no carrinho
+      
     // criar addeventlistem
   // const buttons = document.querySelectorAll('.item__add');
   // buttons.forEach((button) => button.addEventListener('click', () => console.log('fui clicado')));
@@ -74,11 +73,6 @@ async function fethProdutos() {
 
 // function getSkuFromProductItem(item) {
   //   return item.querySelector('span.item__sku').innerText;
-  // }
-
-  // function cartItemClickListener(event) {
-  //   const classCartItems = document.getElementsByClassName('cart__items');
-  //   classCartItems.appendChild(createProductItemElement(idsProducts));
   // }
 
   // classItem.forEach(() =>
