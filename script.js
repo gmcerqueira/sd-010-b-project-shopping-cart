@@ -86,10 +86,11 @@ async function getProductsList(word) {
 
 function loadLocalStorage() {
   const listCart = document.querySelector('.cart__items');
-  listCart.addEventListener('click', (event) => event.target.remove());
-
+  listCart.addEventListener('click', (event) => {
+    event.target.remove();
+    localStorage.setItem('product', listCart.innerHTML);
+  });
   listCart.innerHTML = localStorage.getItem('product');
-  localStorage.setItem('product', listCart.innerHTML);
 }
 window.onload = function onload() {
   getProductsList('computador');
