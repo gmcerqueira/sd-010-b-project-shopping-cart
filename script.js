@@ -8,9 +8,7 @@ async function amountValue() {
   const itemCarrinho = document.querySelectorAll('.cart__item');
   itemCarrinho.forEach((item) => {
     const value = parseFloat(item.innerText.split('$')[1]);
-    const a = priceItem;
     priceItem += value;
-    console.log(`${a} + ${value} = ${priceItem}`);
   });
   totalPrice.innerText = priceItem;
 }
@@ -116,8 +114,23 @@ const clickAddEvent = () => {
   });
 };
 
+const createLoading = () => {
+  const containnerResult = document.querySelector('.container');
+  const elementHeader = document.createElement('div');
+  elementHeader.className = 'loading';
+  containnerResult.appendChild(elementHeader);
+  console.log('Criado');
+};
+
+const removeLoading = () => {
+  const loading = document.querySelector('.loading');
+  const containnerResult = document.querySelector('.container');
+  containnerResult.removeChild(loading);
+  console.log('Removido');
+};
+
 // Função para retornar o produto com base no parâmetro
-const recoverProduct = async (product) => {
+const recoverProduct = async (product) => {  
   items = document.querySelector('.items');
   orderedList = document.querySelector('.cart__items');
   buttonClearAll = document.querySelector('.empty-cart');
@@ -134,9 +147,11 @@ const recoverProduct = async (product) => {
       });
     },
   );
+  removeLoading();
 };
 
-window.onload = function onload() {
+window.onload = function onload() {  
+  createLoading();
   recoverProduct('computador');
   recoveredItensLocalStorage();
 };
