@@ -30,12 +30,11 @@ function createProductItemElement({ sku, name, image }) {
 
 function listItem() {
   let list = 0;
-  const totalValue = document.querySelector('.total-price');
   const cartItems = document.querySelectorAll('li');
   [...cartItems].forEach((element) => {
     list += element;
   });
-  totalValue.innerHTML = list;
+  return list;
 }
 
 async function remove(event) {
