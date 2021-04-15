@@ -48,6 +48,5 @@ window.onload = function onload() {
       createProductItemElement(element);
     });
   };
-
   fetchApi('computador');
 };
