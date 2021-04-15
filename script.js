@@ -50,6 +50,7 @@ function pegaAPI() {
   return fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((respostaApi) => respostaApi.json())
     .then((respostaConvertida) => {
+      document.querySelector('.loading').remove();
       const { results } = respostaConvertida;
       results.forEach((valor) => {
         const produtos = {
@@ -59,6 +60,7 @@ function pegaAPI() {
         };
         const produto = createProductItemElement(produtos);
         document.querySelector('.items').appendChild(produto);
+        // document.querySelector('.loading').remove();
       });
     });
 }
