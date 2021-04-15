@@ -2,19 +2,19 @@
     const itemToDelete = event.target;
     // Método por Krasimir, stackoverflow.
     // Disponível em: https://stackoverflow.com/questions/18795028/javascript-remove-li-without-removing-ul
-    console.log(itemToDelete.parentNode.children)
+    console.log(itemToDelete.parentNode.children);
     let position;
     const listOfChildren = itemToDelete.parentNode.children;
-    for (let index = 0; index < listOfChildren.length; index++) {
+    for (let index = 0; index < listOfChildren.length; index += 1) {
       if (listOfChildren[index] === itemToDelete) position = index;
     }
     itemToDelete.parentNode.removeChild(itemToDelete);
-    savedIds = localStorage.getItem('cart');
+    const savedIds = localStorage.getItem('cart');
     console.log(position);
-    const removed = savedIds.split(",").filter((item) => (savedIds.split(",").indexOf(item)) !== position)
+    const arrayIds = savedIds.split(',');
+    const removed = arrayIds.filter((item) => (arrayIds.indexOf(item)) !== position);
     localStorage.setItem('cart', (removed));
   }
-
 
 async function getProducts(search) {
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${search}`);
@@ -79,8 +79,8 @@ function renderList(products) {
 }
 
 async function restoreSavedCart() {
-  savedIds = localStorage.getItem('cart');
-  savedIds.split(",").forEach((id) => addToCart(id));
+  const savedIds = localStorage.getItem('cart');
+  savedIds.split(',').forEach((id) => addToCart(id));
 }
 
 const buttons = document.getElementsByClassName('item__add');
@@ -89,7 +89,7 @@ window.onload = async function onload() {
   console.log('Verificação onload');
   const computers = await getProducts('computador');
   renderList(computers);
-  if (localStorage.getItem('cart') !== null && localStorage.getItem('cart') !== "") {
+  if (localStorage.getItem('cart') !== null && localStorage.getItem('cart') !== '') {
     restoreSavedCart();
   }
   Object.values(buttons).forEach((button) => {
@@ -99,5 +99,4 @@ window.onload = async function onload() {
       console.log(dadId);
     });
   });
-
 };
