@@ -1,7 +1,3 @@
-window.onload = function onload() { 
-  getListProducts();
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -89,3 +85,7 @@ const getListProducts = async () => {
 // }
 
 // addToCart();
+
+window.onload = function onload() { 
+  getListProducts();
+};
