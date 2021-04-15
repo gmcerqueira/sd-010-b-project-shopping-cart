@@ -13,12 +13,14 @@ function createCustomElement(element, className, innerText) {
 }
 
 const sumTotal = async () => {
-  const items = document.querySelectorAll('.cart__item');
   const totalPrice = document.querySelector('.total-price');
+  const items = document.querySelectorAll('.cart__item');
   const total = [...items]
     .map((element) => element.innerText.match(/([0-9.]){1,}$/))
     .reduce((acc, curr) => acc + parseFloat(curr), 0);
   totalPrice.innerHTML = Math.floor(total * 100) / 100;
+  const result = totalPrice;
+  return result;
 };
 
 function cartItemClickListener(event) {
@@ -37,7 +39,7 @@ function createCartItemElement(sku, name, salePrice) {
 
 const setStorage = () => {
   const li = document.querySelectorAll('.cart__item');
-  const totalPrice = document.querySelector('.total-price');
+  const totalPrice = document.querySelector('.price');
   localStorage.setItem('price', totalPrice.innerHTML);
   for (let index = 0; index <= li.length; index += 1) {
     localStorage.setItem(index + 1, li[index].innerHTML);
@@ -94,7 +96,7 @@ const listItem = () => {
     })
     .then(() => document.querySelector('.loading').remove());
   const clearButton = document.querySelector('.empty-cart');
-  const ol = document.querySelector('.cart__items');
+  const ol = document.querySelector('.ol');
   clearButton.addEventListener('click', () => {
     ol.innerHTML = '';
   });
@@ -102,12 +104,12 @@ const listItem = () => {
 
 window.onload = function onload() {
   listItem();
-  const olPai = document.querySelector('.cart__items');
+  const ol = document.querySelector('.cart__items');
   const price = document.querySelector('.total-price');
   if (localStorage.length !== 0) {
     for (let index = 0; index < localStorage.length - 1; index += 1) {
       const li = document.createElement('li');
-      olPai.appendChild(li);
+      ol.appendChild(li);
       li.innerHTML = localStorage.getItem(index + 1);
     }
     price.innerHTML = localStorage.getItem('price');
