@@ -36,11 +36,11 @@ const produto = document.querySelector('.cart__items');
 
 function cartItemClickListener() {
   produto.addEventListener('click', function (event) {
-    const evento = event.target;    
+    const evento = event.target;
     evento.remove();
-    salvaItens();    
+    salvaItens();
   });
-  somaValor();
+//  somaValor();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -64,8 +64,8 @@ function addCartItemElement(evento) {
     };
     const item = createCartItemElement(resultElement);
     produto.appendChild(item);
-    salvaItens();
-    somaValor(response.price)
+    somaValor(response.price);
+    salvaItens(); 
   });
 }
 
@@ -103,15 +103,10 @@ const fetchItem = async () => {
   .then((response) => {
     const result = response.results;
     result.forEach((element) => {
-      const resultElement = {
-        sku: element.id,
-        name: element.title,
-        image: element.thumbnail,
-      };
+      const resultElement = {sku: element.id, name: element.title, image: element.thumbnail};
       const itemProduto = createProductItemElement(resultElement);
       const section = document.querySelector('.items');
-      section.appendChild(itemProduto);
-    }); 
+      section.appendChild(itemProduto)}); 
   });
   mensagem.remove();
   return finaliza;
