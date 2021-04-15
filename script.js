@@ -22,7 +22,7 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+ 
   return section;
 }
 
@@ -31,16 +31,17 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 // function cartItemClickListener(event) {
-//   // coloque seu código aqui
-// }
+function cartItemClickListener() {
+  // coloque seu código aqui 
+}
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+function createCartItemElement({ id, title, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
 
 const getProducts = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
@@ -58,6 +59,31 @@ const renderProducts = async () => {
   });
 };
 
+const getId = async (id) => {
+  const itemId = await fetch(`https://api.mercadolibre.com/items/${id}`);
+  const response = await itemId.json();
+  return response;
+};
+
+const eventButtomItem = async (id) => {
+  const product = await getId(id);
+  const productCart = createCartItemElement(product);
+  const ol = document.querySelector('.cart__items');
+  ol.appendChild(productCart);
+};
+
+const renderItemsCart = async () => {
+  const buttons = document.querySelectorAll('.item__add');
+  buttons.forEach((button) => {
+    const idProduct = button.parentElement.firstElementChild.innerText;
+    button.addEventListener('click', () => {
+      eventButtomItem(idProduct);
+      console.log(idProduct);
+    });
+  });
+};
+
 window.onload = async function onload() {
   await renderProducts();
+  await renderItemsCart();
 };
