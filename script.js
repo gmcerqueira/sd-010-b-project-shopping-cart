@@ -20,7 +20,6 @@ let loading = false;
 // check the loading variable: if true, creates a paragraph; if false, removes that paragraph;
 function checkLoad() {
   const header = document.querySelector('header');
-  console.log(header)
   if (loading) {
     header.appendChild(createCustomElement('p', 'loading', 'loading...'));
   } else if (
