@@ -30,10 +30,10 @@ function createProductItemElement({ sku, name, image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-function cartItemClickListener(event) {
+function cartItemClickListener() {
   // coloque seu código aqui testando
   // seleciona o a tag ul remove a tag li
-  event.target.parentNode.removeChild(event.target);
+  // event.target.parentNode.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
