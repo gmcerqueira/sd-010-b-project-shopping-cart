@@ -14,8 +14,7 @@ function createCustomElement(element, className, innerText) {
 
 function salvaItens() {
   const itens = document.querySelector('.cart__items');
-  localStorage.cart = itens.innerHTML;
-  console.log(localStorage.cart);
+  localStorage.cart = itens.innerHTML;  
 }
 
 function getSkuFromProductItem(item) {
@@ -24,10 +23,11 @@ function getSkuFromProductItem(item) {
 
 const produto = document.querySelector('.cart__items');
 
-function cartItemClickListener() {  
+function cartItemClickListener() {
   produto.addEventListener('click', function (event) {
     const evento = event.target;
     evento.remove();
+    salvaItens();
   });
 }
 
@@ -73,6 +73,7 @@ const botaoApaga = document.querySelector('.empty-cart');
 
 botaoApaga.addEventListener('click', function () {
   produto.innerHTML = '';
+  localStorage.clear();
 });
 
 const fetchItem = () => {
