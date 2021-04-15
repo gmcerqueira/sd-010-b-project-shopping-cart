@@ -68,6 +68,10 @@ const fetchProducts = ((product) => {
     const apagar = document.querySelector('.empty-cart');
     apagar.addEventListener('click', () => {
       document.getElementById('cart__itemsId').remove();
+      const ol = document.createElement('ol');
+    ol.className = 'cart__items';
+    ol.id = 'cart__itemsId';
+    document.querySelector('.cart').appendChild(ol);
     });
   };
   window.onload = () => {
