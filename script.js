@@ -14,6 +14,14 @@ function fetchItemsById(ItemID) {
   return fetchUrl(url);
 }
 
+const cart = document.querySelector('.cart__items');
+const price = document.querySelector('.total-price');
+
+function saveLocal() {
+  localStorage.setItem('salvaCarrinho', cart.innerHTML);
+  localStorage.setItem('price', price.innerHTML);
+}
+
 function priceSum() {
   let sum = 0;
   const cartOl = document.querySelectorAll('.cart__item');
@@ -61,6 +69,7 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
   event.target.remove();
   priceSum();
+  saveLocal();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -73,7 +82,7 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 function removeSavedItems() {
   const liItems = document.querySelectorAll('li');
-  liItems.forEach(li => {
+  liItems.forEach((li) => {
     li.addEventListener('click', cartItemClickListener);
     priceSum();
   });
@@ -90,9 +99,6 @@ function fetchProducts() {
 });
 }
 
-const cart = document.querySelector('.cart__items');
-const price = document.querySelector('.total-price');
-
 async function addItemsToCart() {
   const bttn = document.querySelectorAll('.item__add');
   bttn.forEach((id) => id.addEventListener('click', async function (retorno) {    
@@ -100,8 +106,7 @@ async function addItemsToCart() {
       const data = await fetchItemsById(ids);
       const { id: sku, title: name, price: salePrice } = data;
       cart.appendChild(createCartItemElement({ sku, name, salePrice }));
-      localStorage.setItem('salvaCarrinho', cart.innerHTML);
-      localStorage.setItem('price', price.innerHTML);
+      saveLocal();
       await priceSum();
     }));
 }
@@ -113,8 +118,7 @@ function emptyCart() {
   emptyButton.addEventListener('click', () => {
     cartList.innerHTML = '';
     price.innerText = 0;
-    localStorage.setItem('salvaCarrinho', cart.innerHTML);
-    localStorage.setItem('price', price.innerHTML);
+    saveLocal();
   });
 }
 
