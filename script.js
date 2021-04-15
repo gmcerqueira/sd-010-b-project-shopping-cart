@@ -35,9 +35,7 @@ function createProductItemElement({ sku, name, image }) {
 
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
-// }
-  
-// let cartContainer = [];
+// }  
 
 const pricesSum = [];
 let idxItemCart;
@@ -149,4 +147,5 @@ window.onload = async function onload() {
   await appendResult();  
 };
 
-// https://www.w3schools.com/jsref/met_node_removechild.asp 
+// https://www.w3schools.com/jsref/met_node_removechild.asp
+// Projeto realizado em parceria com Wellington Passo
