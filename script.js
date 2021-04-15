@@ -1,5 +1,8 @@
-  function cartItemClickListener() {
-   console.log('cliclou');
+  function cartItemClickListener(event) {
+    const itemToDelete = event.target;
+    // Método por Krasimir, stackoverflow.
+    // Disponível em: https://stackoverflow.com/questions/18795028/javascript-remove-li-without-removing-ul
+    itemToDelete.parentNode.removeChild(itemToDelete);
 }
 
 // const buttons = document.getElementsByClassName('item__add');
