@@ -40,7 +40,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
       ol.appendChild(createCart);
       document.querySelector('.loading').remove();
       
-      // localStorage.setItem('savedItems', JSON.stringify(ol))
+      localStorage.setItem('savedItems', JSON.stringify(ol));
   });
   return section;
 }
