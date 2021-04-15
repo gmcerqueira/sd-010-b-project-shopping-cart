@@ -29,8 +29,8 @@ const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
   return li;
 };
 
-const theProduct = async (id) => {
-  const product = await fetch(`https://api.mercadolibre.com/items/${id}`);
+const theProduct = async (item) => {
+  const product = await fetch(`https://api.mercadolibre.com/items/${item}`);
   const responseData = await product.json();
    return responseData;
 };
