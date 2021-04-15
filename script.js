@@ -1,13 +1,24 @@
-// const totalEl = document.querySelector('.total-price');
+const cartTotalPrice = (num) => {
+  const arr = [];
+  let t = 0;
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i);
+    const data = JSON.parse(localStorage[key]);
+    arr.push(data.salePrice);
+  }
 
-// const sumPrices = (arr) => {
-//   const total = arr.reduce((acc, cur) => acc + cur, 0);
-//   return total;
-// };
+  if (num) {
+    arr.push(num);
+    t = parseFloat(arr.reduce((acc, cur) => acc + cur, 0));
+    document.querySelector('.total-price').innerText = t;
+  }
+  t = parseFloat(arr.reduce((acc, cur) => acc + cur, 0));
+  document.querySelector('.total-price').innerText = t;
+};
 
 const save = (ide, objItem) => {
   localStorage.setItem(`${ide}`, `${JSON.stringify(objItem)}`);  
-  };
+};
   
   /* << DEFAULT >> */
   
@@ -45,6 +56,7 @@ function cartItemClickListener(event) {
   const item = event.target;
   const ide = item.id;
   localStorage.removeItem(ide);
+  cartTotalPrice();
   item.remove();
 }
 
@@ -72,6 +84,7 @@ const addItemToCart = async (event) => {
     const itemObj = { sku: res.id, name: res.title, salePrice: res.price };
     return itemObj;
   });
+  cartTotalPrice(addItem.salePrice);
   document.querySelector('.cart__items').appendChild(createCartItemElement(addItem));
 };
 
@@ -82,27 +95,26 @@ const setItems = (arr) => {
   }
 };
 const load = () => {
-  console.log(localStorage.length);
   if (localStorage.length) {
     for (let i = 0; i < localStorage.length; i += 1) {
       const key = localStorage.key(i);
       const data = JSON.parse(localStorage[key]);
-      console.log(data);
       const li = document.createElement('li');
       li.innerText = `SKU: ${data.sku} | NAME: ${data.name} | PRICE: $${data.salePrice}`;
       li.id = key;
       li.addEventListener('click', cartItemClickListener);
       document.querySelector('ol.cart__items').appendChild(li);
     }
+    cartTotalPrice();
   }
 };
 
 const construct = async () => {
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   await fetch(url)
-  .then((res) => res.json())
-  .then((res) => res.results)
-  .then(setItems);
+    .then((res) => res.json())
+    .then((res) => res.results)
+    .then(setItems);
   const btnArr = document.querySelectorAll('.item__add');
   btnArr.forEach((_, i) => btnArr[i].addEventListener('click', addItemToCart));
   load();
