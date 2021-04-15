@@ -5,10 +5,7 @@ let priceItem = 0;
 let totalPrice = 0;
 
 async function amountValue() {
-  const itemCarrinho = document.querySelectorAll('.cart__item');
-  itemCarrinho.forEach(() => {
-    totalPrice.innerHTML = priceItem;
-  });
+  totalPrice.innerText = priceItem;
 }
 
 const removeAllItemsLocalHistorage = () => {
@@ -71,6 +68,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
    li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
    li.addEventListener('click', cartItemClickListener);
    priceItem += salePrice;
+   amountValue(priceItem);
    return li;
  }
 
