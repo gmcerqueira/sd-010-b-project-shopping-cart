@@ -5,6 +5,16 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+function rememberCartItemsOnload() {
+  const cartItemsHTMLFather = document.querySelector('ol');
+  cartItemsHTMLFather.innerHTML = localStorage.getItem('CartHTML');
+}
+
+function setLocalStorageItemCartItems() {
+  const items = document.querySelector('ol').innerHTML;
+  localStorage.CartHTML = items;
+}
+
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -31,6 +41,7 @@ function getSkuFromProductItem(item) {
 function cartItemClickListener(event) {
   // coloque seu código aqui
   event.target.remove();
+  setLocalStorageItemCartItems();
 }
 
 async function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -81,15 +92,19 @@ function executeFunctionWhenClick() {
       .then((data) => data);
 
       getOlList.appendChild(await createCartItemElement(itemInfo));
+      setLocalStorageItemCartItems();
     });
   });
 }
 
 // requisito 3 ------------------------------------------------------------------------------------
-// código na linha 31
+// código na linha 35
 
 // requisito 4 ------------------------------------------------------------------------------------
-
+// Quando devo salvar o carrinho? Quando ele é atualizado?
+// Quando adiciono um item - V
+// Quando removo um item - V
+// Quando esvazio o carrinho - V
 // requisito 5 ------------------------------------------------------------------------------------
 
 // requisito 6 ------------------------------------------------------------------------------------
@@ -98,6 +113,7 @@ function actionCleanItemsCart() {
   arrayItems.forEach((item) => {
     item.remove();
   });
+  setLocalStorageItemCartItems();
 }
 
 function cleanAllItemsShoppingCart() {
@@ -106,12 +122,13 @@ function cleanAllItemsShoppingCart() {
 }
 
 // requisito 7 ------------------------------------------------------------------------------------
-// código na linha 57 em diante
+// código na linha 62 em diante
 // peguei a idéia desse requisito nesses links:
 //  stackoverflow.com/questions/53799108/how-to-add-a-loading-animation-while-fetch-data-from-api-vanilla-js
 //  stackoverflow.com/questions/36294109/how-to-check-if-a-promise-is-pending
 // ------------------------------------------------------------------------------------------------
 window.onload = async function onload() {
+  rememberCartItemsOnload();
   await createItemElements('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   await executeFunctionWhenClick();
   cleanAllItemsShoppingCart();
