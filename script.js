@@ -120,8 +120,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     const emptyCart = document.getElementsByClassName('empty-cart')[0];
     emptyCart.addEventListener('click', deleteAllItensInCart);
     const cart = document.getElementsByClassName('cart__items')[0];
-    cart.innerHTML = localStorage.getItem('cart');
-    totalDom.innerText += localStorage.getItem('total');    
+    cart.innerHTML = localStorage.getItem('cart');    
     total = Math.round(parseFloat(localStorage.getItem('total')) * 100) / 100;
+    if (typeof total !== 'string') total = 0;
+    totalDom.innerText = total;
     addEventLIstenerCartAgain();
    };
