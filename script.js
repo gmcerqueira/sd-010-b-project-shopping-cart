@@ -1,4 +1,22 @@
-window.onload = function onload() { };
+window.onload = async function onload() { 
+// acima tenho os computadore que busca achou!
+
+};
+
+async function getComputer() {
+  const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computer');
+  const computer = await response.json();
+  const { results } = computer;
+  // ate aqui está tudo certo estou recebendo um objeto 
+  computer.forEach ((computer) => {
+    const newComputerObject = {
+      sku: computer.id, 
+      name: computer.name,
+      image: computer.thumbnail,
+    };
+    document.querySelector('.items').appendChild(createProductItemElement(computer));
+  })
+}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
