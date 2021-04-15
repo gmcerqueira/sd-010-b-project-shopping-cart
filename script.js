@@ -64,11 +64,11 @@ async function showSumCart() {
 
   if (cart.lastChild.className === 'total-price') {
     const totalPrice = document.querySelector('.total-price');
-    totalPrice.innerText = priceSum;
+    totalPrice.innerText = `${priceSum}`;
   } else {
     const totalPrice = document.createElement('p');
     totalPrice.className = 'total-price';
-    totalPrice.innerText = priceSum;
+    totalPrice.innerText = `${priceSum}`;
     cart.appendChild(totalPrice);
   }
 }
