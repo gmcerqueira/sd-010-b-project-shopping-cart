@@ -7,6 +7,8 @@ async function fetchPC() {
   return dataResults;
 }
 
+// Definição de constantes para o Projeto
+const listCart = document.querySelector('.cart__items');
 // -----------------------------------------------------------------------------------------------------
 
 // REQUISITO 1
@@ -56,10 +58,28 @@ async function getMLProducts() {
   });
 }
 
-// REQUISITO 3
+// REQUISITO 3 / REQUISITO 4
 
+// Desenvolvendo Função para Salvar a Lista de Produtos do Carrinho no LocalStorage
+function saveCart() {
+  localStorage.setItem('cart', listCart.innerHTML);
+  const totalPrice = document.querySelector('.total-price');
+  localStorage.setItem('totalPrice', totalPrice.innerHTML);
+}
+
+// Função Remove os itens clicados / salva no Localstorage / ajusta soma total
 function cartItemClickListener(event) {
   event.target.remove();
+  saveCart();
+}
+
+// Desenvolvendo Função para Retornar a Lista de Produtos do LocalStorage
+function loadCart() {
+  listCart.innerHTML = localStorage.getItem('cart');
+  const itemsCart = document.querySelectorAll('.cart__item');
+  for (let i = 0; i < itemsCart.length; i += 1) {
+    itemsCart[i].addEventListener('click', cartItemClickListener);
+  }
 }
 
 // REQUISITO 2
@@ -93,19 +113,14 @@ function addToCart() {
       name: data.title,
       salePrice: data.price,
     };
-    const itemsCart = document.querySelector('.cart__items');
     const itemCart = createCartItemElement(item);
-    itemsCart.appendChild(itemCart); 
+    listCart.appendChild(itemCart);
+    saveCart();
   });
 }
-
-// REQUISITO 4
-
-// function saveCart(){
-
-// }
 
 window.onload = function onload() {
   getMLProducts();
   addToCart();
+  loadCart();
  };
