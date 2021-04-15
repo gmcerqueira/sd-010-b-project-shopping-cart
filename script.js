@@ -12,7 +12,7 @@ function criarImagem(imageSource) {
   return img;
 }
 
-function criarElementoNaTabela({ sku, name, image, id }) {
+function criarElementoNaTabela({ sku, name, image}) {
   const encontraSection = document.createElement('section');
   encontraSection.className = 'item';
   encontraSection.appendChild(criarElemento('span', 'item__sku', sku));
@@ -26,12 +26,22 @@ function criarElementoNaTabela({ sku, name, image, id }) {
   const criarButton = criarElemento('button', 'item__add', 'Adicionar ao carrinho!');
   criarButton.addEventListener('click',  clickElemente);
   encontraSection.appendChild(criarButton);
-  console.log(id)
   return encontraSection;
 }
 
+function getProductId(sku) {
+  return fetch(`https://api.mercadolibre.com/items/${sku}`)
+    .then((r) => r.json())
+    .then((r) => (r))
+    .catch((error) => error);
+}
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
 async function clickElemente (event) {
-  const cartItems = document.getElementsByClassName('cart__items')[0];
+  const incontrarItem = document.getElementsByClassName('cart__items')[0];
   const parent = event.target.parentElement;
   const prodID = getSkuFromProductItem(parent);
   const prod = await getProductId(prodID);
@@ -40,18 +50,8 @@ async function clickElemente (event) {
     name: prod.title,
     salePrice: prod.price,
   });
-  cartItems.appendChild(newEl);
-  sumPrices();
-  localStorage.setItem('cartItems', cartItems.innerHTML);
-}
-
-function criarArrayDeProdutos ({ sku, name, image }) {
-  const todosOsProdutos = {
-    sku: sku,
-    name: name,
-    image: image,
-  };
-  return todosOsProdutos;
+  incontrarItem.appendChild(newEl);
+  localStorage.setItem('cartItems', incontrarItem.innerHTML);
 }
 
 async function transformarUrl(url) {
@@ -68,7 +68,6 @@ async function transformarUrl(url) {
       image: index.thumbnail,
     };
     const element = criarElementoNaTabela(informaçoesDoproduto);
-    criarArrayDeProdutos(informaçoesDoproduto)
     elementos.appendChild(element);
   });
 }
