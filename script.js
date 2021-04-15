@@ -30,6 +30,11 @@ function getSkuFromProductItem(item) {
 */
 
 function cartItemClickListener(event) {
+  const idProduct = event.target.innerHTML.split(' ')[1];
+  const arrayShoppingList = JSON.parse(localStorage.getItem('productsSave'));
+  const arrayFilted = arrayShoppingList.filter(({ sku }) => sku !== idProduct);
+
+  localStorage.setItem('productsSave', JSON.stringify(arrayFilted));
   event.target.remove();
 }
 
@@ -46,6 +51,19 @@ function fetchData(url, header) {
   .then((promise) => promise.json())
   .catch((err) => err);
 }
+function saveLocalStorage(objProduct) {
+  if (localStorage.getItem('productsSave') === null) {
+    localStorage.setItem('productsSave', JSON.stringify([objProduct]));
+  } else {
+    localStorage.setItem(
+      'productsSave', 
+      JSON.stringify([
+        ...JSON.parse(localStorage.getItem('productsSave')), 
+        objProduct,
+      ]),
+    );
+  }
+}
 
 const addEventBtn = (section, objProduct) => {
   section.getElementsByClassName('item__add')[0].addEventListener('click', async () => {
@@ -57,7 +75,7 @@ const addEventBtn = (section, objProduct) => {
     const obj = { sku: objResponse.id, name: objResponse.title, salePrice: objResponse.price };
 
     document.getElementsByClassName('cart__items')[0].appendChild(createCartItemElement(obj));
-    console.log(objResponse);
+    saveLocalStorage(obj);
   });
 };
 
@@ -78,6 +96,18 @@ async function listProduct() {
   console.log(products);
 }
 
+function recoverShoppingList() {
+  const JSONListProducts = localStorage.getItem('productsSave');
+  if (JSONListProducts !== null) {
+    const arrayListProducts = JSON.parse(JSONListProducts);
+    arrayListProducts.forEach((obj) => {
+      document.getElementsByClassName('cart__items')[0]
+      .appendChild(createCartItemElement(obj));
+    });
+  }  
+}
+
 window.onload = () => {
   listProduct();
+  recoverShoppingList();
 };
