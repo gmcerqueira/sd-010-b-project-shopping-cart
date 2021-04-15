@@ -82,6 +82,16 @@ function getStorageCart() {
   }
 }
 
+async function cartTotalPrice() {
+  const productsInCart = document.querySelector(cart);
+  const totalPrice = document.querySelector('.total-price');
+  await creatProductList;
+  const listOfProducts = productsInCart.childNodes;
+  listOfProducts.forEach((item) => console.log(item));
+  console.log();
+  console.log(totalPrice);
+}
+
 function emptyCart() {
   const carrinhoAtual = document.querySelector(cart);
   carrinhoAtual.remove();
@@ -97,4 +107,5 @@ window.onload = function onload() {
 creatProductList();
 getStorageCart();
 addClickEventToEmptyCartButton();
+cartTotalPrice();
 };
