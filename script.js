@@ -10,7 +10,6 @@ const updatePrices = async () => {
     pricesArray.push(Number(price));
   });
   const totalPrice = pricesArray.reduce((acc, curr) => acc + curr, 0);
-  console.log(totalPrice);
   const pricePlace = document.querySelector('.total-price');
   pricePlace.innerText = `${totalPrice}`;
 };
