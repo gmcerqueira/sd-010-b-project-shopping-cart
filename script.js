@@ -9,8 +9,10 @@ function createProductImageElement(imageSource) {
   return item.querySelector('span.item__sku').innerText;
 }
 */
-function cartItemClickListener() {
-  // coloque seu código aqui
+function cartItemClickListener(event) {
+  const alvo = event.target;
+  const listCart = document.querySelector('.cart__items');
+  listCart.removeChild(alvo);
 }
 
 function createCartItemElement({
