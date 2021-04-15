@@ -15,19 +15,21 @@ function createCustomElement(element, className, innerText) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
-
+// saveitemsCart salva os itens no localStorage
+// usando JSON.stringify 'aula do leandro' transforma dados em string
+// para depois converter com JSON.parse para object
 function saveItemsCart() {
   const cartItems = document.getElementsByClassName('cart__items')[0];
   localStorage.setItem('cartList', JSON.stringify(cartItems.innerHTML));
 }
-
+// cartitemClickListener remove os itens salvos no carrinho
 function cartItemClickListener(event) {
   if (event.target.parentNode) {
     event.target.parentNode.removeChild(event.target);
     saveItemsCart();
   }
 }
-
+// cria as li destruturando id, title, price
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const cartItems = document.getElementsByClassName('cart__items')[0];
   const li = document.createElement('li');
@@ -38,6 +40,10 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
+// moveItemsToCart adiciono produto ao carrinho
+// crio a const sku chamando o getSkuFromProductItem sku = id
+// passo um fetch da api dos itens (readme)
+// reaproveito a funct createCartitemElement no .then e as salvo
 function moveItemsToCart(button) {
   button.addEventListener('click', (event) => {
     const sku = getSkuFromProductItem(event.target.parentNode);
@@ -65,6 +71,10 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
+// createItemsList refatorei um pouco usando async, pois dava erro
+// no localStorage
+// seleciono a classe 'loading' e a removo apos a api carregar
+// passo um forEach do result destruturando o createProductItemElement
 const createItemsList = async () => {
 const result = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
 const loading = document.getElementsByClassName('loading')[0];
@@ -73,6 +83,20 @@ const data = await result.json();
 data.results.forEach((product) => { createProductItemElement(product); });
 };
 
+// emptyCart faco um querySelector do button
+// seleciono as ol e apago chamando a func saveitemsCart
+function emptyCart() {
+  const button = document.querySelector('.empty-cart');
+  const cart = document.querySelector('.cart__items');
+  button.addEventListener('click', () => {
+    cart.innerHTML = '';
+    saveItemsCart();
+  });
+}
+// loadCartItems carrego a lista salva no localStorage chamando o
+// cartList da func saveItemsCart no localStorage
+// uso JSON.parse para transformar string em object
+// reaproveito a func cartitemClickListener
 function loadCartItems() {
   const cartItems = document.getElementsByClassName('cart__items')[0];
   cartItems.innerHTML = JSON.parse(localStorage.getItem('cartList'));
@@ -82,4 +106,5 @@ function loadCartItems() {
 window.onload = function onload() { 
   createItemsList();
   loadCartItems();
+  emptyCart();
 };
