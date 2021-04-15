@@ -76,7 +76,7 @@ function removeAllItems() {
   const cartItems = document.querySelector('.cart__items');
   const btnRemove = document.querySelector('.empty-cart');
   btnRemove.addEventListener('click', () => {
-    cartItems.remove();
+    cartItems.innerHTML = '';
   });
 }
 
