@@ -1,12 +1,3 @@
-function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  return section;
-}
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -19,6 +10,15 @@ function createCustomElement(element, className, innerText) {
   e.className = className;
   e.innerText = innerText;
   return e;
+}
+function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+  const section = document.createElement('section');
+  section.className = 'item';
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  return section;
 }
 
 /* function getSkuFromProductItem(item) {
@@ -36,7 +36,7 @@ function cartItemClickListener(event) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 } */
-async function produtos() {
+async function getprodutos() {
   const query = 'computador'; // com ajuda do Aluno Dangelo
   const produto = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`);
   const produtojson = await produto.json();
@@ -53,6 +53,6 @@ produtos.forEach((produto) => {
 }
 
 window.onload = async function onload() {
-  const produto = await produtos();
+  const produto = await getprodutos();
   renderProdutos(produto);
   };
