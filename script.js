@@ -39,7 +39,7 @@ const RenderTotalPrice = async () => {
     totalPrice += priceItem;
   });
   // console.log(totalPrice);
-  total.innerText = `Preço Total: $${totalPrice}`;
+  total.innerText = totalPrice;
 };
 
 function cartItemClickListener({ target }) {
