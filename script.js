@@ -22,8 +22,9 @@ function priceSum() {
     const value = cartItem.innerText.substr(index + 1);
     sum += Number(value);
   });
-  const totalPriceSpan = document.querySelector('.total__price');
+  const totalPriceSpan = document.querySelector('.total-price');
   totalPriceSpan.innerText = sum;
+  return sum;
 }
 
 function createProductImageElement(imageSource) {
@@ -70,6 +71,14 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+function removeSavedItems() {
+  const liItems = document.querySelectorAll('li');
+  liItems.forEach(li => {
+    li.addEventListener('click', cartItemClickListener);
+    priceSum();
+  });
+}
+
 function fetchProducts() {
   const mainItems = document.querySelector('.items');
   fetchComputers().then((data) => {
@@ -81,34 +90,39 @@ function fetchProducts() {
 });
 }
 
+const cart = document.querySelector('.cart__items');
+const price = document.querySelector('.total-price');
+
 async function addItemsToCart() {
   const bttn = document.querySelectorAll('.item__add');
-  const cart = document.querySelector('.cart__items');
   bttn.forEach((id) => id.addEventListener('click', async function (retorno) {    
       const ids = getSkuFromProductItem(retorno.target.parentNode);
       const data = await fetchItemsById(ids);
       const { id: sku, title: name, price: salePrice } = data;
       cart.appendChild(createCartItemElement({ sku, name, salePrice }));
       localStorage.setItem('salvaCarrinho', cart.innerHTML);
+      localStorage.setItem('price', price.innerHTML);
       await priceSum();
     }));
-    await console.log(`Button: ${JSON.stringify(bttn)}`);
 }
 
 function emptyCart() {
   const emptyButton = document.querySelector('.empty-cart');
   const cartList = document.querySelector('ol');
-  const price = document.querySelector('.total__price');
+  
   emptyButton.addEventListener('click', () => {
     cartList.innerHTML = '';
     price.innerText = 0;
+    localStorage.setItem('salvaCarrinho', cart.innerHTML);
+    localStorage.setItem('price', price.innerHTML);
   });
 }
-
-
 
 window.onload = function onload() {
   fetchProducts();
   emptyCart();
+  setTimeout(() => removeSavedItems(), 300);
   setTimeout(() => addItemsToCart(), 300);
+  cart.innerHTML = localStorage.getItem('salvaCarrinho');
+  price.innerHTML = localStorage.getItem('price');
  };
