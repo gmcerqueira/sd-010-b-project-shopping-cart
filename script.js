@@ -49,13 +49,15 @@ async function getComputer() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computer');
   const computers = await response.json();
   const { results } = computers;
+  console.log(results);
   // ate aqui está tudo certo estou recebendo um objeto 
   results.forEach((computer) => {    
     const newComputerObject = {
       sku: computer.id, 
-      name: computer.name,
+      name: computer.title,
       image: computer.thumbnail,
     };
+    // onde desejo adicionar os computadores que serão filhos da section
     document.querySelector('.items').appendChild(createProductItemElement(newComputerObject));
   });
 }
