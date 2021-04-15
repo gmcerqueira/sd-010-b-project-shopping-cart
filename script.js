@@ -17,7 +17,8 @@ function saveProductIdOnLocalStorage(product) {
 
 function removeProductIdOnLocalStorage(id) {
   const localStorageArr = JSON.parse(storage.getItem('products'));
-  const index = localStorageArr.indexOf(id);
+  const productObj = localStorageArr.find((product) => product.id === id);
+  const index = localStorageArr.indexOf(productObj);
   localStorageArr.splice(index, 1);
   storage.setItem('products', JSON.stringify(localStorageArr));
 }
@@ -26,21 +27,24 @@ async function updateTotalPrice() {
   const totalPriceTag = document.querySelector('.total-price');
   try {
     const arrProducts = await JSON.parse(storage.getItem('products'));
-    const totalRes = (arrProducts.reduce((result, acc) => result + acc.base_price, 0));
+    const totalRes = (arrProducts.reduce((result, acc) => result + acc.price, 0));
     totalPriceTag.innerText = Math.round(totalRes * 100) / 100;
   } catch (error) {
     console.log(error); 
   }
 }
 
-function cartItemClickListener(event) {
+async function cartItemClickListener(event) {
   const item = event.target;
   const itemId = item.innerText.match(/MLB\d*/g)[0];
   const cartList = document.querySelector(cartClass);
-
-  removeProductIdOnLocalStorage(itemId);
-  updateTotalPrice();
-  cartList.removeChild(item);
+  try {
+    removeProductIdOnLocalStorage(itemId);
+    await updateTotalPrice();
+    cartList.removeChild(item);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function createCartItemElement({ id, title, price }) {
@@ -54,10 +58,14 @@ function createCartItemElement({ id, title, price }) {
 async function loadProductCartFromLocalStorage() {
   const cartList = document.querySelector(cartClass);
   const ids = await JSON.parse(storage.getItem('products'));
-  if (!ids) return;
-  ids.map((id) => 
-    cartList.appendChild(createCartItemElement(id)));
-  updateTotalPrice();
+  try {
+    if (!ids) return;
+    ids.map((id) => 
+      cartList.appendChild(createCartItemElement(id)));
+    await updateTotalPrice();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function createProductImageElement(imageSource) {
