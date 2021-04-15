@@ -1,5 +1,16 @@
 // const fetch = require('node-fetch');
 
+const puxarCartItem = () => document.querySelectorAll('.cart__item');
+
+const valorTotal = async () => {
+  let total = 0;
+  const items = puxarCartItem();
+  await items.forEach((item) => {
+    total += parseFloat(item.innerHTML.split('PRICE: $')[1]);
+  });
+  document.querySelector('.total-price').innerHTML = total;
+};
+
 let cartStorage = [];
 
 const updateLocalStorage = () => {
@@ -7,14 +18,8 @@ const updateLocalStorage = () => {
   for (let i = 0; i < cartStorageArray.length; i += 1) {
     cartStorageArray[i] = cartStorageArray[i].innerHTML;
   }
-  // console.log(cartStorageArray);
-  // document.querySelector('.cart__items').appendChild(cartStorageArray[0]);
   localStorage.setItem('Cart', cartStorageArray);
-  // const blabla = localStorage.getItem('Cart');
-  // console.log(blabla.split(','));
-  // localStorage.getItem('Cart').forEach((item) => {
-  //   console.log(item);
-  // })
+  valorTotal();
 };
 
 function createProductImageElement(imageSource) {
@@ -49,13 +54,13 @@ function createProductItemElement({ sku, name, image }) {
   
   function cartItemClickListener(event) {
     event.path[0].remove();
-    cartStorage = document.querySelectorAll('.cart__item');
+    cartStorage = puxarCartItem();
     updateLocalStorage();
   }
   
   const renderLocalStorage = () => {
     const localString = localStorage.getItem('Cart');
-    if (localString !== null) {
+    if (localString !== null && localString !== '') {
     const localArray = localString.split(',');
     localArray.forEach((item) => {
       const li = document.createElement('li');
@@ -65,6 +70,7 @@ function createProductItemElement({ sku, name, image }) {
       document.querySelector('.cart__items').appendChild(li);
     });
   }
+  valorTotal();
   };
   
   function createCartItemElement({ sku, name, salePrice }) {
@@ -88,7 +94,7 @@ const requisicao = (elementoEmQuestao) => {
     };
     const cartItemLi = createCartItemElement(objetoFino);
     document.querySelector('.cart__items').appendChild(cartItemLi);
-    cartStorage = document.querySelectorAll('.cart__item');
+    cartStorage = puxarCartItem();
     updateLocalStorage();
   });
 };
