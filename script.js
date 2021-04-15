@@ -94,11 +94,12 @@ const fetchComputer = async () => {
   loading.className = 'loading';
   loading.innerText = 'loading...';
   document.body.insertBefore(loading, container);
+
   const apiReturn = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const jsonReturn = await apiReturn.json();
   const resultsReturn = await jsonReturn.results;
 
-  if (resultsReturn) loading.style.display = 'none';
+  if (resultsReturn) document.body.removeChild(loading);
   return resultsReturn;
 };
 
