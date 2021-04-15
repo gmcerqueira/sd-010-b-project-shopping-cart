@@ -1,5 +1,4 @@
 // const fetch = require('node-fetch');
-
 // -FETCH--------------------------------------------------------------------------------------------------------
 const getItemsResults = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
@@ -18,8 +17,8 @@ const getItemById = async (id) => {
 // --------------------------------------------------------------------------------------------------------------
 
 // -ARRAY DE OBEJETOS SALVOS NO LOCAL STORAGE--------------------------------------------------------------------
-const savedCartItems = [];
-const itemsPrices = [];
+let savedCartItems = [];
+let itemsPrices = [];
 // --------------------------------------------------------------------------------------------------------------
 
 // -CARD ITEMS---------------------------------------------------------------------------------------------------
@@ -38,7 +37,7 @@ const renderSummedPrices = () => {
 };
 
 const cartItemClickListener = (event) => {
-  // Basicamente ele obtem todos os irmãos do elemento clicado, cria um array, retorna o index do elemento clicado desse array, remove esse mesmo index do 'savedCartItems' e salva no localStorage.
+  // Basicamente ele obtem todos os irmãos do elemento clicado, cria um array, retorna o index do elemento clicado desse array, remove esse mesmo index do 'savedCartItems' e 'itemsPrices' e salva no localStorage.
   let cartItemsList = event.target.parentNode.children;
   cartItemsList = [...cartItemsList];
   const cartItemIndex = cartItemsList.reduce((acc, element, index) => {
@@ -67,6 +66,23 @@ const renderCardItem = (item) => {
   cartItems.appendChild(cardItem);
 };
 
+const removeCartItems = () => {
+  const cartItems = document.querySelector('.cart__items');
+  const cartItemsChildren = [...cartItems.childNodes];
+  cartItemsChildren.forEach((element) => element.remove());
+};
+
+const emptyCartList = () => {
+  const button = document.querySelector('.empty-cart');
+  button.addEventListener('click', () => {
+    removeCartItems();
+    itemsPrices = [];
+    savedCartItems = [];
+    renderSummedPrices();
+    localStorage.clear(); 
+  });
+};
+
 // --------------------------------------------------------------------------------------------------------------
 
 // -ITEM LIST----------------------------------------------------------------------------------------------------
@@ -79,7 +95,6 @@ const itemClickListener = async (event) => {
   const itemObj = await getItemById(getSkuFromProductItem(item));
   const { price } = itemObj;
   itemsPrices.push(price);
-  console.log(itemsPrices);
   savedCartItems.push(itemObj);
   // Salva no localStorage o objeto como string.
   localStorage.setItem('cartItems', JSON.stringify(savedCartItems));
@@ -141,4 +156,5 @@ const restoreSavedCartItems = () => {
 window.onload = async () => {
   await renderItems();
   restoreSavedCartItems();
+  emptyCartList();
 };
