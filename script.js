@@ -36,7 +36,7 @@ const produto = document.querySelector('.cart__items');
 
 function cartItemClickListener(event) {
   const evento = event.target;
-  let valorSubtrai = evento.innerText.split('$')[1];    
+  const valorSubtrai = evento.innerText.split('$')[1];    
   total -= valorSubtrai;
   console.log(valorSubtrai);
   console.log(total);
@@ -93,10 +93,11 @@ botaoApaga.addEventListener('click', function () {
   total = 0;
 });
 
-const fetchItem = async () => {
-  const container = document.querySelector('.container');
-  const mensagem = document.createElement('span');
-  mensagem.classList.add('loading');
+const container = document.querySelector('.container');
+const mensagem = document.createElement('span');
+
+const fetchItem = async () => {  
+  mensagem.classList = 'loading';
   mensagem.textContent = 'loading...';
   container.appendChild(mensagem);
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
@@ -105,10 +106,11 @@ const fetchItem = async () => {
   .then((response) => {
     const result = response.results;
     result.forEach((element) => {
-      const resultElement = {sku: element.id, name: element.title, image: element.thumbnail};
+      const resultElement = { sku: element.id, name: element.title, image: element.thumbnail };
       const itemProduto = createProductItemElement(resultElement);
       const section = document.querySelector('.items');
-      section.appendChild(itemProduto)}); 
+      section.appendChild(itemProduto);
+    }); 
   });
   mensagem.remove();
   return finaliza;
