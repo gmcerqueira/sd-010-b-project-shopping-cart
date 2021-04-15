@@ -1,5 +1,3 @@
-/* const consButton = document.querySelectorAll('.item__add'); */
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -15,7 +13,6 @@ function createCustomElement(element, className, innerText) {
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
-  console.log();
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -34,13 +31,14 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   // coloque seu código aqui
 } */
 
-/* function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-} */
+// function createCartItemElement({ sku, name, salePrice }) {
+//   const li = document.createElement('li');
+//   li.className = 'cart__item';
+//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+//   console.log('object');
+//   /* li.addEventListener('click', cartItemClickListener); */
+//   return li;
+// }
 
 /* const add = (mercados) => {
   const deconstruct = mercados.results;
@@ -50,22 +48,35 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   });
 }; */
 
-const start = ($QUERY) => {
+const getId = (event) => {
+  const Id = event.parentNode.firstChild.innerText;
+};
+
+const newCart = () => {
+  const consButton = document.querySelectorAll('.item__add');
+  consButton.forEach((event) => {
+    console.log('object');
+    event.addEventListener('click', () => {
+      getId(event);
+    });
+  });
+};
+
+const getPc = async ($QUERY) => {
  fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${$QUERY}`)
   .then((response) => {
     response.json()
       .then((mercados) => {
           document.querySelector('.loading').remove();
-        const deconstruct = mercados.results;
-        const items = document.querySelector('.items');
-        deconstruct.forEach((element) => {
+          const deconstruct = mercados.results;
+          const items = document.querySelector('.items');
+          deconstruct.forEach((element) => {
           items.appendChild(createProductItemElement(element));
         });
+        newCart();
       });
   });
 };
-
-/* consButton.addEventListener('click', createCartItemElement); */
 
 const clear = () => {
   const consClear = document.querySelector('.empty-cart');
@@ -75,7 +86,7 @@ const clear = () => {
   });
 };
 
-window.onload = function onload() {
-  start('computador');
+window.onload = async function onload() {
+  getPc('computador');
   clear();
 };
