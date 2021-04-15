@@ -15,14 +15,12 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
-
+// Remover os itens com o clique
 function cartItemClickListener(event) {
   event.target.remove();
 }
 
+// Estrututa dos itens na tela
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -31,6 +29,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// Estrutura dos itens no carrinho de compras
 const addProductToCart = (itemId) => {
   fetch(`https://api.mercadolibre.com/items/${itemId}`)
   .then((response) => response.json())
@@ -42,10 +41,12 @@ const addProductToCart = (itemId) => {
   });
 };
 
+// Captura o id de cada item
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// Cria os elementos do carrinho e captura seus elementos, com ajuda da função getSkuFromProductItem
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -58,13 +59,13 @@ function createProductItemElement({ sku, name, image }) {
     const getItem = event.target;
     addProductToCart(getSkuFromProductItem(getItem.parentNode));
   });
-  
   return section;
 }
 
-const getProduct = () => fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-  .then((response) => response.json())
-  .then(({ results }) => {
+const getProduct = async () => {
+  const product = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+  const result = await product.json();
+  const { results } = result;
     const resultsApi = results.map(({ id, title, thumbnail }) => 
       createProductItemElement({ sku: id, name: title, image: thumbnail }));
 
@@ -73,14 +74,7 @@ const getProduct = () => fetch('https://api.mercadolibre.com/sites/MLB/search?q=
     resultsApi.forEach((element) => {
       selectItem.appendChild(element);
     });
-});
-
-const execGetProducts = async () => {
-  try {
-    await getProduct();
-  } catch (error) {
-    console.log('Error');
-  }
+    console.log(result);
 };
 
-execGetProducts();
+window.onload = () => getProduct();
