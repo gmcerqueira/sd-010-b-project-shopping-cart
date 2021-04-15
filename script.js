@@ -1,3 +1,13 @@
+function createLocalStorage(li) {
+  const id = li.split(' ');
+  localStorage.setItem(id[1], (li));
+}
+
+function deleteItemLocalStorage(li) {
+  const id = li.split(' ');
+  localStorage.removeItem(id[1]);
+}
+
 // cria uma tag de imgem e atribui informções a partir dos parâmetros.
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -14,11 +24,9 @@ function createProductImageElement(imageSource) {
 // Quando um item da lista do carrinho de compras é clicado o mesmo é removido da lista.
 function cartItemClickListener(event) {
   const alvo = event.target;
-  const listCart = document.querySelector('.cart__items');
+  const listCart = document.querySelector('ol');
   listCart.removeChild(alvo);
-
-  const local = localStorage.getItem('product', alvo.innerHTML);
-  console.log(local);
+  deleteItemLocalStorage(alvo.innerText);
 }
 
 // Recebe um objeto desconstrói pegando apenas id,title e price, cria um elemento li com informações do objeto recebido, adiciona um escutador de eventos com a função 'cartItemClickListener' e retorna o elemento li.
@@ -31,6 +39,7 @@ function createCartItemElement({
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  createLocalStorage(li.innerText);
   return li;
 }
 
@@ -43,6 +52,14 @@ function addToCart(product) {
     const listCart = document.querySelector('.cart__items');
     listCart.appendChild(createCartItemElement(element));
   });
+}
+
+function loadLocalStorage(item) {
+  if (localStorage.getItem(item.id)) {
+    console.log(item);
+    const listCart = document.querySelector('.cart__items');
+    listCart.appendChild(createCartItemElement(item));
+  }
 }
 
 // Cria e adiciona informações ao elemento de acordo com parâmetros passados.
@@ -83,11 +100,10 @@ async function getProductsList(word) {
   results.forEach((item) => {
     // Dica do PR da Ana Gomes 
     section.appendChild(createProductItemElement(item));
+    loadLocalStorage(item);
   });
 }
 
 window.onload = function onload() {
   getProductsList('computador');
-
-  /*  const listStorage = localStorage.getItem('product'); */
 };
