@@ -1,7 +1,7 @@
 window.onload = function onload() { };
 const cartItens = document.querySelector('.cart__items');
 const itens = document.querySelector('.items');
-const priceToAppend = document.querySelector('.price');
+const priceToAppend = document.querySelector('.total-price');
 
 const setItens = () => {
   localStorage.setItem('cart', cartItens.innerHTML);
@@ -40,7 +40,14 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   event.target.remove();
+  setItens();
 }
+
+const loadStorage = () => {
+  priceToAppend.innerHTML = localStorage.getItem('priceCart');
+  cartItens.innerHTML = localStorage.getItem('cart');
+  cartItens.forEach((item) => item.addEventListener('click', cartItemClickListener));
+};
 
 function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
@@ -90,11 +97,15 @@ document.querySelector('.empty-cart').addEventListener('click', () => {
 });
 };
 console.log(removeItem);
+const removeLoading = () => document.querySelector('.loading').remove();
+
 
 const renderPage = async () => {
   try {
     renderProducts(await fetchProduct());
+    removeLoading();
     await addToCart();
+    removeItem();
   } catch (error) {
     console.log('algo aconteceu, tente novamente ;)');
   }
