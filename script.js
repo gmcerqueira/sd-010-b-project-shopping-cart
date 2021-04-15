@@ -6,15 +6,13 @@ function retirarItem(valor) {
 }
 
 function cartItemClickListener(event) {
-  if (event.target.parentElement.parentElement.tagName === 'LI') {
-    if(event.target.parentElement.firstChild.innerHTML !== null) {
-      retirarItem(event.target.parentElement.firstChild.innerHTML.split(' ')[1]);
-    }
+  const one = event.target;
+  const one1 = one.parentElement;
+  if (one1.parentElement.tagName === 'LI' || one1.firstChild.innerHTML !== null) {
+    retirarItem(one.parentElement.firstChild.innerHTML.split(' ')[1]);
     event.target.parentElement.parentElement.remove();
-  } else {
-    if(event.target.firstChild.firstChild.innerHTML !== null) {
-      retirarItem(event.target.firstChild.firstChild.innerHTML.split(' ')[1]);
-    }
+  } else if (one.firstChild.firstChild.innerHTML !== null) {
+    retirarItem(one.firstChild.firstChild.innerHTML.split(' ')[1]);
     event.target.remove();
   }
 }
