@@ -6,6 +6,9 @@ const urlProduct = 'https://api.mercadolibre.com/items/';
 
 const fetchProducts = (item, Url) => fetch(`${Url}${item}`).then((resp) => resp.json());
 
+const totalPrice = document.querySelector('.total-price');
+const cardItems = document.querySelector('.cart__items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -25,26 +28,37 @@ function dellCartsSaveds() {
 }
 
 function saveCart() {
-  const itemsToSave = [];
+  const infosToSave = [];
   dellCartsSaveds();
   const allItemsNow = document.querySelectorAll('.cart__item');
   allItemsNow.forEach((item) => {
     const itemObj = { item: item.innerText };
-    itemsToSave.push(itemObj);
+    infosToSave.push(itemObj);
   });
-  localStorage.setItem('CartItemsToSave', JSON.stringify(itemsToSave));
+  infosToSave.push(totalPrice.innerText);
+  localStorage.setItem('CartItemsToSave', JSON.stringify(infosToSave));
 }
 
-const cardItems = document.querySelector('.cart__items');
+function upTotalPrice(price, op) {
+  if (op === '+') {
+    // ##################### Requisito 5 ###################################
+    const result = parseFloat(totalPrice.innerText) + parseFloat(price);
+    totalPrice.innerText = `${result.toFixed(2)}`;
+  }
+  if (op === '-') {
+    const result = parseFloat(totalPrice.innerText) - parseFloat(price);
+    totalPrice.innerText = `${result.toFixed(2)}`;
+  }  
+}
 
 function cartItemClickListener(event) {  
+  const allOptionText = event.srcElement.innerText;
+  upTotalPrice(allOptionText.substr(allOptionText.lastIndexOf('$') + 1), '-');
   cardItems.removeChild(event.srcElement);
   saveCart();
 }
 
 function updateCart(itemsCard) {
-  // const cardItems = document.querySelector('.cart__items');
-
   itemsCard.forEach((itemCard) => {
     const li = document.createElement('li');
     li.className = 'cart__item';
@@ -57,13 +71,13 @@ function updateCart(itemsCard) {
 function loadCart() {
   const itemsCard = [];
   const toLoadItems = JSON.parse(localStorage.getItem('CartItemsToSave'));
-  console.log(!toLoadItems);
   if (toLoadItems) {
-    for (let item = 0; item < toLoadItems.length; item += 1) {
+    for (let item = 0; item < toLoadItems.length - 1; item += 1) {
       itemsCard.push(toLoadItems[item].item);
     }
-    console.log(`Carregado ${itemsCard}`);
+    // console.log(`Carregado ${itemsCard}`);
     updateCart(itemsCard);
+    upTotalPrice(toLoadItems[toLoadItems.length - 1], '+');
   } else {
     console.log('Vasio');
   }
@@ -80,7 +94,6 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
@@ -88,10 +101,10 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     .appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   buttonAdd.addEventListener('click', async () => {
-    const cardItemsNow = document.querySelector('.cart__items');
     const idItem = buttonAdd.parentNode.firstChild.innerText;
     const itemInfo = await fetchProducts(idItem, urlProduct);
-    cardItemsNow.appendChild(createCartItemElement(itemInfo));
+    cardItems.appendChild(createCartItemElement(itemInfo));
+    upTotalPrice(itemInfo.price, '+');
     saveCart();
   });
 
@@ -109,6 +122,16 @@ const mountItems = async (product) => {
   arrItens.results.forEach((item) => conteinerItems.appendChild(createProductItemElement(item)));
 };
 
+function reviverButtonClear() {
+  const buttonClearCart = document.querySelector('.empty-cart');
+  buttonClearCart.addEventListener('click', () => {
+    cardItems.innerHTML = '';
+    upTotalPrice(totalPrice.innerText, '-');
+    saveCart();
+  }); 
+}
+
 mountItems('computador');
 loadCart();
+reviverButtonClear();
 // setTimeout(() => reviveButtons(), 500);
