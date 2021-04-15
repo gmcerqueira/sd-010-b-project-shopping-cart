@@ -19,10 +19,26 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+// get the sum of all items inside the cart
+function totalPrice() {
+  const cartItems = Array.from(document.getElementsByClassName('cart__item'));
+  const finalPrice = cartItems.reduce((total, product) => {
+    const price = parseFloat(product.innerText.substring(product.innerText.indexOf('$') + 1));
+    return total + price;
+  }, 0);
+  
+  console.log(finalPrice);
+  
+  const paragraph = document.querySelector('p.total-price');
+  paragraph.innerHTML = Math.round((finalPrice + Number.EPSILON) * 100) / 100;
+}
+
 // delete the product from the shopping cart when clicked
 function cartItemClickListener(event) {
   event.target.remove();
   localStorage.setItem('cart', document.querySelector('.cart__items').innerHTML);
+  
+  totalPrice();
 }
 
 // create the 'li' element that will be inside the shopping cart sidebar
@@ -45,6 +61,8 @@ async function addToTheCart() {
   const shoppingCart = document.querySelector('ol.cart__items');
   shoppingCart.appendChild(createCartItemElement({ sku, name, salePrice }));
   localStorage.setItem('cart', document.querySelector('ol.cart__items').innerHTML);
+
+  totalPrice();
 } 
 
 // get the array results from the API
@@ -78,6 +96,7 @@ async function renderProduct() {
   });
 }
 
+// gets all selected products from localStorage and creates an event for each one
 function cartLoad() {
   const cart = document.querySelector('.cart__items');
   cart.innerHTML = localStorage.getItem('cart');
@@ -85,6 +104,8 @@ function cartLoad() {
   products.forEach((product) => {
     product.addEventListener('click', cartItemClickListener);
   });
+
+  totalPrice();
 }
 
 // apply the function when the window is loaded
