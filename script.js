@@ -39,14 +39,16 @@ const listOfProducts = async () => {
 const fetchCarItems = async (itemID) => {
   const product = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const response = await product.json();
-  console.log(response);
+  // console.log(response);
   return response;
 };
 
 function cartItemClickListener(event) {
   const getTargetId = event.target.id;
-  console.log(getTargetId);
+  // console.log(getTargetId);
   const response = fetchCarItems(getTargetId);
+  const getOL = document.getElementsByClassName('cart__items')[0];
+  getOL.removeChild(event.target);
   return response;
  }
 
