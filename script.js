@@ -22,12 +22,15 @@ function removeProductIdOnLocalStorage(id) {
   storage.setItem('products', JSON.stringify(localStorageArr));
 }
 
-async function totalPrice() {
+async function updateTotalPrice() {
   const totalPriceTag = document.querySelector('.total-price');
-  const arrProducts = await JSON.parse(storage.getItem('products'));
-  const totalRes = (arrProducts.reduce((result, acc) => result + acc.base_price, 0));
-  totalPriceTag.innerHTML = totalRes;
-  return totalRes;
+  try {
+    const arrProducts = await JSON.parse(storage.getItem('products'));
+    const totalRes = (arrProducts.reduce((result, acc) => result + acc.base_price, 0));
+    totalPriceTag.innerText = Math.round(totalRes * 100) / 100;
+  } catch (error) {
+    console.log(error); 
+  }
 }
 
 function cartItemClickListener(event) {
@@ -36,7 +39,7 @@ function cartItemClickListener(event) {
   const cartList = document.querySelector(cartClass);
 
   removeProductIdOnLocalStorage(itemId);
-  totalPrice();
+  updateTotalPrice();
   cartList.removeChild(item);
 }
 
@@ -54,7 +57,7 @@ async function loadProductCartFromLocalStorage() {
   if (!ids) return;
   ids.map((id) => 
     cartList.appendChild(createCartItemElement(id)));
-  totalPrice();
+  updateTotalPrice();
 }
 
 function createProductImageElement(imageSource) {
@@ -88,9 +91,9 @@ async function addProductToCart(event) {
     const data = await res.json();
     cartList.appendChild(createCartItemElement(data));
     saveProductIdOnLocalStorage(data);
-    totalPrice();
-  } catch (err) {
-    console.log(err);
+    updateTotalPrice();
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -110,11 +113,18 @@ function createProductItemElement({ id, title, thumbnail }) {
 
 async function createProductList() {
   const productList = document.querySelector('.items');
-  await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-    .then((res) => res.json())
-    .then((res) => res.results
-      .forEach((product) => productList.appendChild(createProductItemElement(product))))
-    .catch((err) => console.log(err));
+  const container = document.querySelector('.container');
+  const loading = document.querySelector('.loading');
+
+  try {
+    const res = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+    const data = await res.json();
+    container.removeChild(loading);
+    data.results
+      .forEach((product) => productList.appendChild(createProductItemElement(product)));
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function clearCart() {
