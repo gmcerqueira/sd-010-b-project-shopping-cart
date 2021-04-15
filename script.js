@@ -5,7 +5,6 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-// Criando as Imagens dos Produtos
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -13,12 +12,6 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-// //Capturando o ID dos Produtos
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
-
-// Criando os Elementos do Produto no HTML
 function criarElementoNaTabela({ sku, name, image }) {
   const encontraSection = document.createElement('section');
   encontraSection.className = 'item';
@@ -36,7 +29,6 @@ function criarElementoNaTabela({ sku, name, image }) {
   return encontraSection;
 }
 
-// Desenvolvendo a Lista de Produtos
 async function transformarUrl(url) {
   const pegarIformacoesDaUrl = await fetch(url);
 // passar para obejeto
