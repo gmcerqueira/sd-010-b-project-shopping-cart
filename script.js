@@ -41,8 +41,21 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function sumPrices() {
+  const cartItems = document.getElementsByClassName('cart__item');
+  let amount = 0;
+  for (let i = 0; i < cartItems.length; i += 1) {
+    const value = cartItems[i].innerText.substring(cartItems[i].innerText.indexOf('$') + 1);
+    amount += parseFloat(value);
+  }
+  const amountEl = document.querySelector('.total-price');
+  amountEl.innerText = Math.round(amount * 100) / 100;
+}
+// REFERENCE substring and indexOf: https://www.devmedia.com.br/javascript-substring-selecionando-parte-de-uma-string/39232
+
 function cartItemClickListener(event) {
   event.target.remove();
+  sumPrices();
   localStorage.setItem('cartItems', document.querySelector('.cart__items').innerHTML);
 }
 
@@ -53,9 +66,14 @@ async function cartBtnListener(event) {
   const prodID = getSkuFromProductItem(parent);
   const prod = await getProductId(prodID);
 
-  const newEl = createCartItemElement({ sku: prod.id, name: prod.title, salePrice: prod.price });
+  const newEl = createCartItemElement({
+    sku: prod.id,
+    name: prod.title,
+    salePrice: prod.price,
+  });
   newEl.addEventListener('click', cartItemClickListener);
   cartItems.appendChild(newEl);
+  sumPrices();
   localStorage.setItem('cartItems', cartItems.innerHTML);
 }
 
