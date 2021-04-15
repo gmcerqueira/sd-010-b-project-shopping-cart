@@ -29,35 +29,47 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 // function cartItemClickListener(event) {
-  // coloque seu código aqui
-  // const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-  // fetch(API_URL, myObject)
-  //   .then(response => response.json())
-  //   .then(data => console.log(data));
+// coloque seu código aqui
 // }
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  // li.addEventListener('click', cartItemClickListener);
+  return li;
+}
 
-function createList() {
+function addObject(sku) {
+  fetch(`https://api.mercadolibre.com/items/${sku}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const addCar = {
+        sku: data.id,
+        name: data.title,
+        salePrice: data.price,
+      };
+      const cart = document.getElementsByClassName('cart__items')[0];
+      cart.appendChild(createCartItemElement(addCar));
+    });
+}
+
+window.onload = function onload() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
     .then((data) => {
-      data.results.forEach((element) => {
+      data.results.forEach((item) => {
         const computer = createProductItemElement({
-          sku: element.id,
-          name: element.title,
-          image: element.thumbnail,
+          sku: item.id,
+          name: item.title,
+          image: item.thumbnail,
         });
         document.querySelector('.items').appendChild(computer);
       });
+    })
+    .then(() => {
+      document.querySelectorAll('.item__add').forEach((addItem) => 
+        addItem.addEventListener('click', () => addObject(addItem
+        .parentElement.querySelector('span.item__sku').innerText)));
     });
-  }
-  window.onload = function onload() { 
-    createList();
-  };
+};
