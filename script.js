@@ -12,8 +12,10 @@ function cartItemClickListener(event) {
     retirarItem(one.parentElement.firstChild.innerHTML.split(' ')[1]);
     event.target.parentElement.parentElement.remove();
   } else if (one.firstChild.firstChild.innerHTML !== null) {
-    retirarItem(one.firstChild.firstChild.innerHTML.split(' ')[1]);
-    event.target.remove();
+      retirarItem(one.firstChild.firstChild.innerHTML.split(' ')[1]);
+      event.target.remove();
+  } else {
+      console.log(event.target);
   }
 }
 
