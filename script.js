@@ -18,7 +18,7 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  return event;
+  return event.target.remove();
 }
 
 // Recebe um obj com 3 keys especificas e cria um elemento no carrinho:
