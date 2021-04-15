@@ -1,6 +1,17 @@
 let items; // Esta variável guarda os itens exibidos na tela;
 let orderedList; // Esta variável guarda a OL;
 
+function recoveredItensLocalStorage() {
+  const itemLocalHistorage = localStorage.getItem('projectCart');
+  console.log(itemLocalHistorage);
+  orderedList.innerHTML = itemLocalHistorage;
+}
+
+function addLocalHistorage() {
+  const listItems = document.querySelector('.cart__items');
+  localStorage.setItem('projectCart', listItems.innerHTML);  
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -41,7 +52,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
    return li;
  }
 
-const addProductToCart = (args) => {  
+const addProductToCart = (args) => {    
   fetch(`https://api.mercadolibre.com/items/${args}`)
   .then(
     (response) => {
@@ -54,6 +65,7 @@ const addProductToCart = (args) => {
       salePrice: resultado.price,
     });
     orderedList.appendChild(newItem);
+    addLocalHistorage();
   });
     },
   );
@@ -92,4 +104,5 @@ const recoverProduct = async (product) => {
 
 window.onload = function onload() {
   recoverProduct('computador');
+  recoveredItensLocalStorage();
 };
