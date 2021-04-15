@@ -1,7 +1,7 @@
 const sectionItems = document.getElementsByClassName('items')[0];
 const cartItems = document.getElementsByClassName('cart__items')[0];
 const emptyCartButton = document.getElementsByClassName('empty-cart')[0];
-// const arrayStorage = [];
+let arrayStorage = [];
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -25,12 +25,9 @@ function cartItemClickListener(event) {
   event.target.remove();
 }
 
-function sendToLocalStorage() {
-  // const JSONArray = JSON.stringify(array);
-  // localStorage.setItem('arrayStorage', JSONArray);
-  const item = document.querySelector('.cart ol');
-  localStorage.car = item.innerHTML; // solução com ajuda do colega henrique clementino
-  console.log(item);
+function sendToLocalStorage(array) {
+  const JSONArray = JSON.stringify(array);
+  localStorage.setItem('arrayStorage', JSONArray);
   }
 
 function createCartItemElement({ id, title, price }) {
@@ -38,7 +35,7 @@ function createCartItemElement({ id, title, price }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  // arrayStorage.push({ text: li.innerText });
+  arrayStorage.push({ text: li.innerText });
   return li;
 }
 
@@ -48,7 +45,7 @@ function requestById(event) {
   .then((response) => response.json())
   .then((obj) => createCartItemElement(obj)) 
   .then((cartElement) => cartItems.appendChild(cartElement))
-  .then(() => sendToLocalStorage());
+  .then(() => sendToLocalStorage(arrayStorage));
 }
 
 function createProductItemElement({ id, title, thumbnail }) {
@@ -72,15 +69,24 @@ function makeRequest() {
 }
 
 function getLocalStorage() {
-  const getCart = localStorage.car;
-  const item = document.querySelector('.cart ol');
-  item.innerHTML = getCart;
-  const selectCartItems = document.querySelectorAll('.cart ol li');
-  selectCartItems.forEach((cartItem) => cartItem.addEventListener('click', cartItemClickListener)); // solução com ajuda do colega henrique clementino
+if (localStorage) {
+  arrayStorage = [];
+  const getCartItems = document.querySelector('.cart__items');
+  const getArray = localStorage.getItem('arrayStorage');
+  const parsedArray = JSON.parse(getArray);
+if (parsedArray) {
+  parsedArray.forEach((obj) => {
+    const cartItem = document.createElement('li');
+    cartItem.innerText = obj.text;
+    arrayStorage.push({ text: obj.text });
+    getCartItems.appendChild(cartItem);
+  });
+}
+}
 }
 
 window.onload = function onload() { 
   makeRequest();
   emptyCartButton.addEventListener('click', cartItemClickListener);
-  getLocalStorage(); // solução com ajuda do colega henrique clementino
+  getLocalStorage();
 };
