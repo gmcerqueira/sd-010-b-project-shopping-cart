@@ -108,8 +108,19 @@ function setShoppingCart() {
   calculateTotalPrice();
 }
 
+const clearCart = () => {
+  const emptyCartBtn = document.getElementsByClassName('empty-cart')[0];
+  console.log(emptyCartBtn);
+  emptyCartBtn.addEventListener('click', () => {
+    const cartItems = document.querySelector(strCartItems);
+    cartItems.innerHTML = '';
+    calculateTotalPrice();
+  });
+};
+
 window.onload = function onload() {
   createElements();
   setShoppingCart();
+  clearCart();
 };
 // #VQV
