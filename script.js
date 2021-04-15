@@ -1,14 +1,15 @@
 let items; // Esta variável guarda os itens exibidos na tela;
 let orderedList; // Esta variável guarda a OL;
 let buttonClearAll;
-let priceItem = 0;
 let totalPrice = 0;
 
 async function amountValue() {
-  priceItem = 0;
+  let priceItem = 0;
   const itemCarrinho = document.querySelectorAll('.cart__item');
   itemCarrinho.forEach((item) => {
-    priceItem += item.innerText.split('$')[1];
+    const value = parseFloat(item.innerText.split('$')[1]);
+    console.log(value);
+    priceItem += value;
   });
   totalPrice.innerHTML = priceItem;
 }
@@ -20,8 +21,7 @@ const removeAllItemsLocalHistorage = () => {
     orderedList.removeChild(item);
   });
   localStorage.removeItem('projectCart');
-  priceItem = 0;
-  totalPrice.innerHTML = priceItem;
+  totalPrice.innerHTML = 0;
   }
 };
 
@@ -74,7 +74,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
    li.className = 'cart__item';
    li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
    li.addEventListener('click', cartItemClickListener);
-   priceItem += salePrice;
    return li;
  }
 
