@@ -1,8 +1,3 @@
-window.onload = async function onload() { 
-// acima tenho os computadore que busca achou!
-
-};
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -61,4 +56,8 @@ async function getComputer() {
     document.querySelector('.items').appendChild(createProductItemElement(newComputerObject));
   });
 }
-getComputer();
+
+window.onload = async function onload() { 
+  // acima tenho os computadore que busca achou!
+  getComputer();
+  };
