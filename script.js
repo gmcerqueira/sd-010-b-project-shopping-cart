@@ -96,6 +96,14 @@ async function renderProduct() {
   });
 }
 
+function emptyCart() {
+  const list = document.querySelector('ol.cart__items');
+  list.innerHTML = '';
+  localStorage.setItem('cart', '');
+
+  totalPrice();
+}
+
 // gets all selected products from localStorage and creates an event for each one
 function cartLoad() {
   const cart = document.querySelector('.cart__items');
@@ -104,6 +112,9 @@ function cartLoad() {
   products.forEach((product) => {
     product.addEventListener('click', cartItemClickListener);
   });
+
+  const empty = document.querySelector('.empty-cart');
+  empty.addEventListener('click', emptyCart);
 
   totalPrice();
 }
