@@ -33,9 +33,9 @@ function createProductItemElement({ sku, name, image }) {
 function cartItemClickListener(event) {
   // coloque seu código aqui testando
   // seleciona o a tag ul 
-  const eventTargetParentNode = event.target.parentNode.nodeName;
+  const parentNode = event.target.parentNode;
   // remove a tag li 
-  eventTargetParentNode.removeChild(event.target);
+  parentNode.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
