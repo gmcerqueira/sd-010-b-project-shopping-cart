@@ -7,10 +7,14 @@ function retirarItem(valor) {
 
 function cartItemClickListener(event) {
   if (event.target.parentElement.parentElement.tagName === 'LI') {
-    retirarItem(event.target.parentElement.firstChild.innerHTML.split(' ')[1]);
+    if(event.target.parentElement.firstChild.innerHTML !== null) {
+      retirarItem(event.target.parentElement.firstChild.innerHTML.split(' ')[1]);
+    }
     event.target.parentElement.parentElement.remove();
   } else {
-    retirarItem(event.target.firstChild.firstChild.innerHTML.split(' ')[1]);
+    if(event.target.firstChild.firstChild.innerHTML !== null) {
+      retirarItem(event.target.firstChild.firstChild.innerHTML.split(' ')[1]);
+    }
     event.target.remove();
   }
 }
