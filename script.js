@@ -22,11 +22,9 @@ function createCustomElement(element, className, innerText) {
 }
 
 function createLoading() {
-  // const container = document.querySelector('.container');
-  const sectionItems = document.querySelector('.items');
+  const container = document.querySelector('.container');
   const loading = createCustomElement('div', 'loading', 'loading...');
-  sectionItems.before(loading);
-  return loading;
+  container.appendChild(loading);
 }
 
 function removeLoading() {
@@ -60,7 +58,6 @@ function createProductItemElement({ sku, name, image }) {
 // Desenvolvendo a Lista de Produtos
 async function getMLProducts() {
   const answer = await fetchPC();
-  createLoading();
   const itemsElements = document.querySelector('.items');
 
   answer.forEach((result) => {
@@ -165,10 +162,10 @@ function clearCart() {
   }
 });
 }
-
 window.onload = function onload() {
   getMLProducts();
   addToCart();
   loadCart();
   clearCart();
+  createLoading();
  };
