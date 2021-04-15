@@ -12,10 +12,21 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+let total = 0;
+
+function somaValor(price) {
+  total += price;
+  valorTotal.innerHTML = total;
+  mostraValor.appendChild(valorTotal);
+}
+
 function salvaItens() {
   const itens = document.querySelector('.cart__items');
   localStorage.cart = itens.innerHTML;  
 }
+
+const mostraValor = document.querySelector('.total-price');
+const valorTotal = document.createElement('span');
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
@@ -25,10 +36,11 @@ const produto = document.querySelector('.cart__items');
 
 function cartItemClickListener() {
   produto.addEventListener('click', function (event) {
-    const evento = event.target;
+    const evento = event.target;    
     evento.remove();
-    salvaItens();
+    salvaItens();    
   });
+  somaValor();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -53,7 +65,8 @@ function addCartItemElement(evento) {
     const item = createCartItemElement(resultElement);
     produto.appendChild(item);
     salvaItens();
-  });  
+    somaValor(response.price)
+  });
 }
 
 function createProductItemElement({ sku, name, image }) {
@@ -74,11 +87,18 @@ const botaoApaga = document.querySelector('.empty-cart');
 botaoApaga.addEventListener('click', function () {
   produto.innerHTML = '';
   localStorage.clear();
+  valorTotal.innerText = '';
+  total = 0;
 });
 
-const fetchItem = () => {
+const fetchItem = async () => {
+  const container = document.querySelector('.container');
+  const mensagem = document.createElement('span');
+  mensagem.classList.add('loading');
+  mensagem.textContent = 'loading...';
+  container.appendChild(mensagem);
   const url = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-  fetch(url)
+  const finaliza = await fetch(url)
   .then((response) => response.json())
   .then((response) => {
     const result = response.results;
@@ -91,8 +111,10 @@ const fetchItem = () => {
       const itemProduto = createProductItemElement(resultElement);
       const section = document.querySelector('.items');
       section.appendChild(itemProduto);
-    });
+    }); 
   });
+  mensagem.remove();
+  return finaliza;
 };
 
 window.onload = function onload() {
