@@ -1,3 +1,17 @@
+const totalPrice = () => {
+  const cart = Array.from(document.getElementsByClassName('cart__item'));
+  const total = document.getElementById('totalPrice');
+  const valores = [];
+  if (cart.length === 0) {
+    total.innerHTML = 0;
+  } else {
+  cart.forEach((item) => {
+  valores.push(parseFloat(item.innerHTML.split('$')[1]));
+  });
+  total.innerHTML = valores.reduce((acc, current) => acc + current);
+}
+};
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -9,11 +23,6 @@ function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
   e.innerText = innerText;
-
-  // if (element === 'button') {
-  //   e.addEventListner('click', cartItemClickListener(event));
-  // }
-
   return e;
 }
 
@@ -37,9 +46,17 @@ function createProductItemElement({
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-function cartItemClickListener(_event) {
+function clearCart() {
   const ol = document.querySelector('ol');
   while (ol.firstChild) ol.removeChild(ol.firstChild);
+  totalPrice();
+}
+
+function cartItemClickListener(event) {
+ const itemRemover = event.target;
+ const pai = itemRemover.parentNode;
+ pai.removeChild(itemRemover);
+ totalPrice();
 }
 
 function createCartItemElement({
@@ -75,15 +92,6 @@ function pegarCompra() {
   }
   localStorage.clear();
 }
-const totalPrice = () => {
-  const cart = Array.from(document.getElementsByClassName('cart__item'));
-  const total = document.getElementById('totalPrice');
-  const valores = [];
-  cart.forEach((item) => {
-  valores.push(parseFloat(item.innerHTML.split('$')[1]));
-  });
-  total.innerHTML = valores.reduce((acc, current) => acc + current);
-};
 
 function chamafunc(event) {
   const id = ((event.target.parentNode).firstChild).innerText;
@@ -112,7 +120,7 @@ const fetchItem = () =>
       arrBtn[i].addEventListener('click', chamafunc);
     }
     const empBtn = document.querySelector('.empty-cart');
-    empBtn.addEventListener('click', cartItemClickListener);
+    empBtn.addEventListener('click', clearCart);
   });
 
 // const saveAll = async () => {
