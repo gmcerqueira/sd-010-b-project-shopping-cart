@@ -117,6 +117,8 @@ window.onload = function onload() {
     .then((value) => value.json())
     .then((result) => Object.assign(data, result))
     .then(() => {
+      const loading = document.querySelector('.loading');
+      loading.remove();
       renderItems();
       buffer = JSON.parse(localStorage.getItem('cart'));
       if (buffer !== null) {
