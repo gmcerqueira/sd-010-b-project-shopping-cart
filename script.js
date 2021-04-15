@@ -38,8 +38,12 @@ function listItem() {
   totalValue.innerHTML = list;
 }
 
+async function remove(event) {
+  await event.target.remove();
+}
+
 function cartItemClickListener(event) {
-  if (event != null) event.target.remove();
+  remove(event);
   listItem();
 }
 
