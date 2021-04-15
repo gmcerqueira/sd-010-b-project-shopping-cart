@@ -16,7 +16,8 @@ function createCustomElement(element, className, innerText) {
 }
 
  function cartItemClickListener(event) {
-   console.log(event);
+   const itemCart = event.target;
+   orderedList.removeChild(itemCart);
  }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -53,7 +54,7 @@ const addProductToCart = (args) => {
       salePrice: resultado.price,
     });
     orderedList.appendChild(newItem);
-      });
+  });
     },
   );
 };
