@@ -36,7 +36,7 @@ function sumTotalCart() {
 
 function printTotal() {
   const totalprice = document.getElementsByClassName('total-price')[0];
-  totalprice.innerHTML = `Preço total: $${sumTotalCart()}`;
+  totalprice.innerHTML = sumTotalCart();
 }
 
 function cartItemClickListener(event) {
