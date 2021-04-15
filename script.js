@@ -1,6 +1,5 @@
 const array = [];
 function retirarItem(valor) {
-  console.log(valor);
     const element = array.find((el) => el === valor);
     array.splice(array.indexOf(element), 1);
     localStorage.setItem('IDS', JSON.stringify(array));
@@ -8,10 +7,10 @@ function retirarItem(valor) {
 
 function cartItemClickListener(event) {
   if (event.target.parentElement.parentElement.tagName === 'LI') {
-    retirarItem(event.target.parentElement.firstChild.innerText.split(' ')[1]);
+    retirarItem(event.target.parentElement.firstChild.innerHTML.split(' ')[1]);
     event.target.parentElement.parentElement.remove();
   } else {
-    retirarItem(event.target.firstChild.firstChild.innerText.split(' ')[1]);
+    retirarItem(event.target.firstChild.firstChild.innerHTML.split(' ')[1]);
     event.target.remove();
   }
 }
@@ -100,6 +99,7 @@ function verifiedFetch(url) {
 }
 
 function sacolaSalva(element) {
+    array.push(element);
     const $ItemID = element;
     fetch(`https://api.mercadolibre.com/items/${$ItemID}`)
     .then((g) => g.json())
