@@ -73,7 +73,7 @@ function initialize() {
   const cartItems = document.getElementsByClassName('cart__items')[0];
   cartItems.innerHTML = JSON.parse(localStorage.getItem('cartList'));
   cartItems.addEventListener('click', cartItemClickListener);
-};
+}
 
 window.onload = function onload() { 
   productsList();
