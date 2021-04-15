@@ -40,9 +40,31 @@ function createProductItemElement({ sku, name, image }) {
 // let cartContainer = [];
 
 const pricesSum = [];
+let idxItemCart;
+
+function sumCart() {  
+  const fixedPrice = pricesSum.reduce((acc, cur) => acc + cur, 0).toFixed(2);
+  return fixedPrice;
+}
 
 function cartItemClickListener(event) {
   const olItems = document.querySelector('.cart__items');
+  idxItemCart = 2;
+  olItems.childNodes.forEach((item, idx) => {
+    if (item === event.target) {
+      idxItemCart = idx;
+    }
+  });
+  for (let i = 0; i < pricesSum.length; i += 1) {
+    if (i === idxItemCart) {      
+      pricesSum.splice(i, 1);
+
+      const priceSum = sumCart();
+      const totalPrice = document.querySelector('.total-price');
+      totalPrice.innerText = `${Math.round(priceSum * 100) / 100}`;
+    }
+  }
+
   olItems.removeChild(event.target);
 }
 
@@ -54,12 +76,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function sumCart() {  
-  const fixedPrice = pricesSum.reduce((acc, cur) => acc + cur, 0).toFixed(2);
-  return fixedPrice;
-}
-
-async function showSumCart() {
+async function showSumCart() {  
   const cart = document.querySelector('.cart');
   const priceSum = await sumCart();
 
@@ -71,7 +88,7 @@ async function showSumCart() {
     totalPrice.className = 'total-price';
     totalPrice.innerText = `${Math.round(priceSum * 100) / 100}`;
     cart.appendChild(totalPrice);
-  }
+  }  
 }
 
 function appendItemCart(result) {
@@ -80,19 +97,10 @@ function appendItemCart(result) {
   olItems.appendChild(createCartItemElement({ sku: id, name: title, salePrice: price }));
   clearCart(olItems);
   pricesSum.push(price);
-  // cartContainer.push(olItems.lastChild.outerHTML);   
-  // localStorage.setItem('cart-item', cartContainer); 
-  // cartLocalStorage()
-  showSumCart();
+  showSumCart();  
 }
 
-// function cartLocalStorage() {
-  //   const getItemLocalStorage = localStorage.getItem('cart-item');
-  //   const olItems = document.querySelector('.cart__items');  
-  //   olItems.innerHTML = getItemLocalStorage;  
-  // }
-
-  const fetchSearchById = (id) => {  
+const fetchSearchById = (id) => {  
   fetch(`https://api.mercadolibre.com/items/${id}`)
   .then((response) => {
     response.json()
