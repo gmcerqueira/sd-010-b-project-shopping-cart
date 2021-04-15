@@ -55,7 +55,8 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 function sumCart() {  
-  return pricesSum.reduce((acc, cur) => acc + cur, 0);
+  const fixedPrice = pricesSum.reduce((acc, cur) => acc + cur, 0);
+  return fixedPrice.toFixed(1)
 }
 
 async function showSumCart() {
