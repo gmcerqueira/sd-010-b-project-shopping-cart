@@ -11,7 +11,8 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
-function cartItemClickListener(_event) {
+function cartItemClickListener(event) {
+  event.target.parentNode.removeChild(event.target);
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
