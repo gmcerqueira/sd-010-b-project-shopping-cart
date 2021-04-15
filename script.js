@@ -1,10 +1,3 @@
-// for (const key in itens.results) {
-//   console.log(key);
-//   const { id } = key;
-//   const { title } = key;
-//   const image = key.thumbnail;
-// createProductItemElement({ id, title, image });
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -19,69 +12,80 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function getSkuFromProductItem() {
+  const cartList = document.querySelector('ol');
+  localStorage.setItem('cart', cartList.innerHTML);
+}
 
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-// }
+function cartItemClickListener(event) {
+  const deleta = event.target.parentElement;
+  event.target.remove();
+  localStorage.cart = deleta.innerHTML;
+  // document.querySelector('.cart__items')
+  // .addEventListener('click', (event) => event.target.remove());
+  // getSkuFromProductItem();
+} // Agradecimentos ao Lucas Martins;
 
-function createCartItemElement({ sku, name, price: salePrice }) {
+function cartSaved() {
+  const cartList = document.querySelector('ol');
+  cartList.innerHTML = localStorage.getItem('cart');
+  const shopItens = document.querySelectorAll('li');
+  shopItens.forEach((cart) => cart.addEventListener('click', cartItemClickListener));
+}
+
+function createCartItemElement({
+  sku,
+  name,
+  price: salePrice,
+}) {
   const ol = document.querySelector('ol');
   const li = document.createElement('li');
   ol.appendChild(li);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
-// function cart({ sku }) {
-//   return fetch(`https://api.mercadolibre.com/items/${sku}`)
-//   .then((response) => response.json()).then((iten) => {
-//   const { id, title, price } = iten;
-//   const element = {
-//     sku: id,
-//     name: title,
-//     price,
-//   };
-//   return createCartItemElement(element);
-// });
-// }
-function createProductItemElement({ sku, name, image }) { // poderia fazer id: sku, title: name, thumbnail: image
+
+function createProductItemElement({
+  sku,
+  name,
+  image,
+}) { // poderia fazer id: sku, title: name, thumbnail: image
   const section = document.createElement('section');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-  .addEventListener('click', () => {
-    fetch(`https://api.mercadolibre.com/items/${sku}`)
-  .then((response) => response.json()).then((iten) => {
-  const { price } = iten;
-  const element = {
-    sku,
-    name,
-    price,
-  }; return createCartItemElement(element);
-  });
-});
-return section;
-}
+    .addEventListener('click', () => {
+      fetch(`https://api.mercadolibre.com/items/${sku}`).then((res) => res.json()).then((iten) => {
+        const { price } = iten;
+        createCartItemElement({ sku, name, price });
+        getSkuFromProductItem();
+      });
+    });
+  return section;
+} // agradecimentos ao Pedro Henrique por me ajudar com o eventlistener
 
 window.onload = () => {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-  .then((response) => response.json())
-  .then((itens) => {
-     itens.results.forEach((iten) => {
-      const { id, title, thumbnail } = iten;
-      const products = {
-        sku: id,
-        name: title,
-        image: thumbnail,
-      }; 
-      const createItens = createProductItemElement(products);
-      document.getElementsByClassName('items')[0].appendChild(createItens);
+    .then((response) => response.json())
+    .then((itens) => {
+      itens.results.forEach((iten) => {
+        const {
+          id,
+          title,
+          thumbnail,
+        } = iten;
+        const createItens = createProductItemElement({
+          sku: id,
+          name: title,
+          image: thumbnail,
+        });
+        document.getElementsByClassName('items')[0].appendChild(createItens);
+      });
     });
-});
+  cartSaved();
 };
+// agradecimentos ao professor Eduardo por ajudar na função fetch
