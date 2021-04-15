@@ -51,7 +51,7 @@ function addToCart(product) {
     const id = product.children[0].innerText;
     const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
     const element = await response.json();
-    const listCart = document.querySelector('.cart__items');
+    const listCart = document.querySelector('ol');
     listCart.appendChild(createCartItemElement(element));
     totalPrice();
     localStorage.setItem('product', listCart.innerHTML);
