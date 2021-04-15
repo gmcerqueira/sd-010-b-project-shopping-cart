@@ -64,4 +64,5 @@ fetchPC();
 
 window.onload = function onload() {
   fetchPC();
+  createProductItemElement();
 };
