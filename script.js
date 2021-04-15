@@ -20,20 +20,20 @@ function getSkuFromProductItem(item) {
 }
 
 // delete the product from the shopping cart when clicked
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-// }
+function cartItemClickListener(event) {
+  event.target.remove();
+}
 
 // create the 'li' element that will be inside the shopping cart sidebar
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
-// after clicking on a add button, adds that item to the shopping cart
+// after clicking on a add button, collects the id/sku of the product, fetch that product and adds that item to the shopping cart
 async function addToTheCart() {
   const productId = getSkuFromProductItem(this.parentElement);
   const response = await fetch(`https://api.mercadolibre.com/items/${productId}`);
@@ -54,22 +54,8 @@ async function getData() {
   return products;
 }
 
-// create each product object containing sku, name, img and salePrice
-// uses getData()
-async function createProductsObject() {
-  const products = await getData();
-  return products.reduce((accumulator, product) => 
-    [...accumulator,
-      {
-        sku: product.id,
-        name: product.title,
-        image: product.thumbnail,
-      },
-    ], []);
-}
-
 // create the product in a 'section' element with the className 'item'. that 'section' has the 'sku', 'name', 'img' (all 3 from the API) and a button.
-// also add an eventListener on the created button, to 
+// also add an eventListener on the created button, to add that product to the shopping cart
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -83,9 +69,9 @@ function createProductItemElement({ sku, name, image }) {
 // create the card of each product
 // uses createProductsObject() and createProductItemElement()
 async function renderProduct() {
-  const products = await createProductsObject();
+  const products = await getData();
   const itemsSection = document.querySelector('section.items');
-  products.forEach(({ sku, name, image }) => {
+  products.forEach(({ id: sku, title: name, thumbnail: image }) => {
     itemsSection.appendChild(createProductItemElement({ sku, name, image }));
   });
 }
