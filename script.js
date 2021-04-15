@@ -34,7 +34,7 @@ function sumTotalCart() {
   return 0;
 }
 
-function printTotal() {
+async function printTotal() {
   const totalprice = document.getElementsByClassName('total-price')[0];
   totalprice.innerHTML = sumTotalCart();
 }
@@ -91,6 +91,18 @@ const data = await result.json();
 data.results.forEach((product) => { createProductItemElement(product); });
 };
 
+function clearCart() {
+  const clearbtn = document.getElementsByClassName('empty-cart')[0];
+  clearbtn.addEventListener('click', () => {
+    const cartList = document.getElementsByClassName('cart__item');
+    while (cartList.length > 0) {
+      cartList[0].parentNode.removeChild(cartList[0]);
+    }
+    printTotal();
+    save();
+  });
+}
+
 function initialize() {
   const cartItems = document.getElementsByClassName('cart__items')[0];
   cartItems.innerHTML = JSON.parse(localStorage.getItem('cartList'));
@@ -101,4 +113,5 @@ window.onload = function onload() {
   productsList();
   initialize();
   printTotal();
+  clearCart();
 };
