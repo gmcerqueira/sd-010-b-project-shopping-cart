@@ -32,10 +32,10 @@ function createProductItemElement({ sku, name, image }) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui testando
-  // seleciona o a tag ul 
-  const parentNode = event.target.parentNode;
+  // seleciona o a tag ul
+  const selectedUl = event.target.parentNode;
   // remove a tag li 
-  parentNode.removeChild(event.target);
+  selectedUl.removeChild(event.target); 
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
