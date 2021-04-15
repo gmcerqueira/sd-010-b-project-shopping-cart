@@ -27,16 +27,22 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 // function getSkuFromProductItem(item) {
   //   return item.querySelector('span.item__sku').innerText;
   // }
+
+  function deleteAllItensInCart() {
+    const cart = document.getElementsByClassName('cart__items')[0];
+    while (cart.firstChild) (cart.removeChild(cart.lastChild));
+  }
   
   function cartItemClickListener(event) {
-    // coloque seu código aqui
+   
   }
   
   function createCartItemElement({ id: sku, title: name, price: salePrice }) {
     const li = document.createElement('li');
-    const cart = document.getElementsByClassName('cart_items')[0];
+    const cart = document.getElementsByClassName('cart__items')[0];
     cart.appendChild(li);
     li.className = 'cart__item';
+    li.id = sku;
     li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
     li.addEventListener('click', cartItemClickListener);
     return li;
@@ -52,11 +58,12 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     .then((response) => response.json())
     .then((results) => {
       const button = document.getElementsByClassName('item__add')[index];
-      button.addEventListener('click', createCartItemElement(results));
+      button.addEventListener('click', () => createCartItemElement(results));
+      return results;
     });
   }
   
-  function criaDom(itens) {
+  function createDom(itens) {
     const shelf = document.getElementsByClassName('items')[0];
     itens.forEach((item, index) => {
       const placeOfItem = document.createElement('div');
@@ -78,9 +85,11 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     };
     fetch(API_URL, myObject)
     .then((response) => response.json())
-    .then(({ results }) => criaDom(results));
+    .then(({ results }) => createDom(results));
   }
   
   window.onload = function onload() {
     getItensListFromApi();
+    const emptyCart = document.getElementsByClassName('empty-cart')[0];
+    emptyCart.addEventListener('click', deleteAllItensInCart);
    };
