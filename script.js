@@ -55,8 +55,8 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 function sumCart() {  
-  const fixedPrice = pricesSum.reduce((acc, cur) => acc + cur, 0);
-  return Math.round(fixedPrice * 100) / 100;
+  const fixedPrice = pricesSum.reduce((acc, cur) => acc + cur, 0).toFixed(2);
+  return fixedPrice;
 }
 
 async function showSumCart() {
@@ -65,11 +65,11 @@ async function showSumCart() {
 
   if (cart.lastChild.className === 'total-price') {
     const totalPrice = document.querySelector('.total-price');
-    totalPrice.innerText = `${priceSum}`;
+    totalPrice.innerText = `${Math.round(priceSum * 10) / 10}`;
   } else {
     const totalPrice = document.createElement('p');
     totalPrice.className = 'total-price';
-    totalPrice.innerText = `${priceSum}`;
+    totalPrice.innerText = `${Math.round(priceSum * 10) / 10}`;
     cart.appendChild(totalPrice);
   }
 }
