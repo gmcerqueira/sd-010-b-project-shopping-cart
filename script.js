@@ -39,18 +39,21 @@ const listOfProducts = async () => {
 const fetchCarItems = async (itemID) => {
   const product = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const response = await product.json();
-  // console.log(response);
   return response;
 };
 
 function cartItemClickListener(event) {
   const getTargetId = event.target.id;
-  // console.log(getTargetId);
   const response = fetchCarItems(getTargetId);
   const getOL = document.getElementsByClassName('cart__items')[0];
   getOL.removeChild(event.target);
+  cartItemsList.forEach((item, index) => {
+    if (item.id === getTargetId) cartItemsList.splice(index);
+  });
   return response;
  }
+
+ // Fonte para eliminar um item de uma array: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -61,7 +64,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const renderCartItems = () => {
+const createCartItems = () => {
   const carOL = document.getElementsByClassName('cart__items')[0];
   carOL.innerHTML = '';
   cartItemsList.forEach((itm) => {
@@ -80,7 +83,7 @@ const renderItems = (getResults) => {
       const carProduct = cartItemsList.find((item) => item.id === el.id);
       if (!carProduct) cartItemsList.push(el);
       localStorage.setItem('carShop', JSON.stringify(cartItemsList));
-      renderCartItems();    
+      createCartItems(); 
     });
    });
   };
@@ -94,4 +97,5 @@ window.onload = async function onload() {
   createCartItemElement(getResult);
   const itemsStorageString = localStorage.getItem('carShop');
   cartItemsList = itemsStorageString ? JSON.parse(itemsStorageString) : [];
+  createCartItems();
 };
