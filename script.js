@@ -3,6 +3,13 @@
 // const lista = document.getElementsByClassName('cart__items');
 // lista.appendChild(p)
 
+function getProductId(sku) {
+  return fetch(`https://api.mercadolibre.com/items/${sku}`)
+    .then((r) => r.json())
+    .then((r) => (r))
+    .catch((error) => error);
+}
+
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -31,22 +38,10 @@ function criarElementoNaTabela({ sku, name, image }) {
   encontraSection.appendChild(criarElemento('span', 'item__sku', sku));
   encontraSection.appendChild(criarElemento('span', 'item__title', name));
   encontraSection.appendChild(criarImagem(image));
-  const informaçoesDoproduto2 = {
-    sku: sku,
-    name: name,
-    image: image,
-  };
   const criarButton = criarElemento('button', 'item__add', 'Adicionar ao carrinho!');
   criarButton.addEventListener('click', clickElemente);
   encontraSection.appendChild(criarButton);
   return encontraSection;
-}
-
-function getProductId(sku) {
-  return fetch(`https://api.mercadolibre.com/items/${sku}`)
-    .then((r) => r.json())
-    .then((r) => (r))
-    .catch((error) => error);
 }
 
 function getSkuFromProductItem(item) {
