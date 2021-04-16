@@ -37,7 +37,6 @@ const listOfProducts = async () => {
 // }
 
 const sumItemsPrices = async () => cartItemsList.reduce((acc, curr) => acc + curr.price, 0);
-
 const appendValue = async (sumReturn) => {
   const createH2 = document.createElement('h2');
   const selectDiv = document.getElementsByClassName('total-price')[0];
@@ -113,6 +112,8 @@ const renderItems = (getResults) => {
 window.onload = async function onload() { 
   console.log('Ok!!! Ready');
   const getResult = await listOfProducts();
+  const getLoadEl = document.querySelector('.loading');
+  getLoadEl.parentNode.removeChild(getLoadEl);
   renderItems(getResult);
   createCartItemElement(getResult);
   const itemsStorageString = localStorage.getItem('carShop');
