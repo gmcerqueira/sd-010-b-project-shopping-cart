@@ -14,11 +14,12 @@ let arrCarts = [];
 async function totalPrice(arr) {
   // const response = await getTotalPrice(arrCarts)
   let total = 0;
-  const elementSpan = document.querySelector('#price');
+  // const elementSpan = document.querySelector('#price');
+  const elementSection = document.querySelector('.total-price');
     arr.forEach((elem) => {
     total += elem.salePrice;
   });
-  elementSpan.innerHTML = total;
+  elementSection.innerHTML = total;
 }
 
 function createProductImageElement(imageSource) {
