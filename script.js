@@ -44,8 +44,13 @@ async function getProducts() {
   const result = products.results;
   return (result);
 }
+// função assincrona, envia requisição ao API com a busca por computador
+// aguarda com o await o retorno desta requisição e guarda na const response
+// na const products armazena o resultado de response transformado em json
+// a const result guarda especificamente o array results do arquivo json
+// retorna o array com 50 itens - result
 
-async function renderProducts(_) {
+async function renderProducts(getProducts) {
   getProducts.forEach((product) => { 
     const elementProduct = createProductItemElement(product);
     const item = document.querySelector('.items');
