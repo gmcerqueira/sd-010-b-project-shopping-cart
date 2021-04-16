@@ -32,6 +32,10 @@ function criarImagem(imageSource) {
   return img;
 }
 
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
 async function clickElemente(event) {
   const incontrarItem = document.getElementsByClassName('cart__items')[0];
   const parent = event.target.parentElement;
@@ -57,10 +61,6 @@ function criarElementoNaTabela({ sku, name, image }) {
   criarButton.addEventListener('click', clickElemente);
   encontraSection.appendChild(criarButton);
   return encontraSection;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
 }
 
 // function calcPreço(price){
