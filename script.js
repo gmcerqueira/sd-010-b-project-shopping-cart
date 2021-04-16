@@ -65,10 +65,12 @@ const getId = async (id) => {
   return response;
 };
 
+const cartItems = '.cart__items';
+
 const eventButtomItem = async (id) => {
   const product = await getId(id);
   const productCart = createCartItemElement(product);
-  const ol = document.querySelector('.cart__items');
+  const ol = document.querySelector(cartItems);
   ol.appendChild(productCart);
   localStorage.setItem('Cart', ol.innerHTML);
 };
@@ -85,7 +87,7 @@ const renderItemsCart = async () => {
 
 const removeAll = () => {
   const buttomRemove = document.querySelector('.empty-cart');
-  const ol = document.querySelector('.cart__items');
+  const ol = document.querySelector(cartItems);
   buttomRemove.addEventListener('click', () => {
     ol.innerHTML = '';
   });
@@ -93,7 +95,8 @@ const removeAll = () => {
 
 const saveCart = () => {
   const saveItems = localStorage.getItem('Cart');
-  document.querySelector('.cart__items').innerHTML = saveItems;
+  const ol = document.querySelector(cartItems);
+  ol.innerHTML = saveItems;
 };
 
 window.onload = async function onload() {
