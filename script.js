@@ -5,6 +5,12 @@ async function fetchProducts() {
   return computers;
 }
 
+const cartItems = [];
+
+function saveCartItems() {
+  localStorage.setItem('cart', JSON.stringify(cartItems));
+}
+
 function cartItemClickListener(event) {
   event.target.remove();
 }
@@ -14,7 +20,21 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  saveCartItems();
   return li;
+}
+
+function renderCartProducts(idInfos) {
+  const item = createCartItemElement(idInfos);
+  const cartOl = document.querySelector('.cart__items');
+  cartOl.appendChild(item);
+}
+
+function getSavedCartItems() {
+  const items = JSON.parse(localStorage.getItem('cart'));
+  items.forEach((item) => {
+    renderCartProducts(item);
+  });
 }
 
 async function fetchById(event) {
@@ -27,9 +47,8 @@ async function fetchById(event) {
     name: idInfos.title,
     salePrice: idInfos.price,
   };
-  const item = createCartItemElement(idObject);
-  const cartOl = document.querySelector('.cart__items');
-  cartOl.appendChild(item);
+  cartItems.push(idObject);
+  renderCartProducts(idObject);
 }
 
 function createProductImageElement(imageSource) {
@@ -76,6 +95,7 @@ function renderProducts(computersList) {
 window.onload = async function onload() {
   const computers = await fetchProducts();
   renderProducts(computers);
+  getSavedCartItems();
 };
 
 // function getSkuFromProductItem(item) {
