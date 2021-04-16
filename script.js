@@ -96,8 +96,17 @@ function appendElements(results) {
   });
 }
 
+function buttonEmpty() {
+  const emptyButton = document.querySelector('.empty-cart');
+  emptyButton.addEventListener('click', () => {
+    document.getElementsByTagName('ol')[0].innerHTML = '';
+    localStorage.setItem('cart', '');
+  });
+}
+
 window.onload = async function onload() {
   const products = await fetchProdutcs();
   appendElements(products);
   document.querySelector('.cart__items').innerHTML = localStorage.getItem('cart');
+  buttonEmpty();
 };
