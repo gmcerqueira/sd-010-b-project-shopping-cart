@@ -11,18 +11,41 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
+// const addProduct = document.querySelector('.cart_item');
+// addProduct.appendChild(createdItem);
+
+const cartItemClickListener = () => {
+
+};
+
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  const button = section
+  .appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  button.addEventListener('click', async () => {
+    const add = await fetch(`https://api.mercadolibre.com/items/${sku}`);
+    const buy = await add.json();
+    const createdItem = createCartItemElement(buy);
+    const addProduct = document.querySelector('.cart__items');
+    addProduct.appendChild(createdItem);
+  });
   return section;
 }
+// Alan me ajudou nesta questão;
+
+// const Productsadded = document.querySelector('.cart_item');
 
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
@@ -40,20 +63,9 @@ async function renderComputers() {
   const first = document.querySelector('.items');
 shopp.forEach((shop) => {
     first.appendChild(createProductItemElement(shop));
+    // first.addEventListener('click', )
   });
  }
-
-// const cartItemClickListener = async () => {
-
-// };
-
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
 
 window.onload = async function onload() { 
   renderComputers();
