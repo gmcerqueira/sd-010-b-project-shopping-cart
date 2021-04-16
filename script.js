@@ -36,19 +36,30 @@ const listOfProducts = async () => {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
+const sumItemsPrices = async () => cartItemsList.reduce((acc, curr) => acc + curr.price, 0);
+
+const appendValue = async (sumReturn) => {
+  const createH2 = document.createElement('h2');
+  const selectDiv = document.getElementsByClassName('total-price')[0];
+  selectDiv.innerHTML = '';
+  createH2.innerHTML = await sumReturn;
+  selectDiv.appendChild(createH2);
+};
+
 const fetchCarItems = async (itemID) => {
   const product = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const response = await product.json();
+  await appendValue(sumItemsPrices());
   return response;
 };
 
-function cartItemClickListener(event) {
+function cartItemClickListener(event) {  
   const getTargetId = event.target.id;
   const response = fetchCarItems(getTargetId);
   const getOL = document.getElementsByClassName('cart__items')[0];
   getOL.removeChild(event.target);
   cartItemsList.forEach((item, index) => {
-    if (item.id === getTargetId) cartItemsList.splice(index);
+    if (item.id === getTargetId) cartItemsList.splice(index, 1);
     localStorage.setItem('carShop', JSON.stringify(cartItemsList));
   });
   return response;
@@ -65,9 +76,10 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const createCartItems = () => {
+const createCartItems = async () => {
   const carOL = document.getElementsByClassName('cart__items')[0];
   carOL.innerHTML = '';
+  await appendValue(sumItemsPrices());
   cartItemsList.forEach((itm) => {
     const creatLi = createCartItemElement({ sku: itm.id, name: itm.title, salePrice: itm.price });
     carOL.appendChild(creatLi);
@@ -84,22 +96,11 @@ const renderItems = (getResults) => {
       const carProduct = cartItemsList.find((item) => item.id === el.id);
       if (!carProduct) cartItemsList.push(el);
       localStorage.setItem('carShop', JSON.stringify(cartItemsList));
-      createCartItems(); 
+      createCartItems();
     });
    });
   };
-
-  const sumItemsPrices = async () => {
-    const itemsSum = cartItemsList.reduce((acc, curr) => acc + curr.price, 0);
-    const createh2 = document.createElement('h2');
-    const selectDiv = document.getElementsByClassName('total-price')[0];
-    createh2.innerHTML = '';
-    createh2.innerHTML = await itemsSum;
-    createh2.id = 'totalPrice';
-    createh2.classList.add('total-price');
-    selectDiv.appendChild(createh2);
-  };
-
+  
   // Tive ajuda do instrutor Eduardo para finalizar o requisito 1.
 
 window.onload = async function onload() { 
@@ -110,5 +111,4 @@ window.onload = async function onload() {
   const itemsStorageString = localStorage.getItem('carShop');
   cartItemsList = itemsStorageString ? JSON.parse(itemsStorageString) : [];
   createCartItems();
-  sumItemsPrices();
-  };
+};
