@@ -1,3 +1,28 @@
+window.onload = async function onload() {
+  const product = await getProducts();
+  renderProducts(product);
+ };
+
+ async function getProducts() {
+  const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+  const products = await response.json();
+  const result = products.results;
+  return (result);
+}
+// função assincrona, envia requisição ao API com a busca por computador
+// aguarda com o await o retorno desta requisição e guarda na const response
+// na const products armazena o resultado de response transformado em json
+// a const result guarda especificamente o array results do arquivo json
+// retorna o array com 50 itens - result
+ 
+async function renderProducts(getProducts) {
+  getProducts.forEach((product) => { 
+    const elementProduct = createProductItemElement(product);
+    const item = document.querySelector('.items');
+    item.appendChild(elementProduct); 
+  }); 
+}
+
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -37,28 +62,3 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 //   li.addEventListener('click', cartItemClickListener);
 //   return li;
 // }
-
-async function getProducts() {
-  const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
-  const products = await response.json();
-  const result = products.results;
-  return (result);
-}
-// função assincrona, envia requisição ao API com a busca por computador
-// aguarda com o await o retorno desta requisição e guarda na const response
-// na const products armazena o resultado de response transformado em json
-// a const result guarda especificamente o array results do arquivo json
-// retorna o array com 50 itens - result
-
-async function renderProducts(getProducts) {
-  getProducts.forEach((product) => { 
-    const elementProduct = createProductItemElement(product);
-    const item = document.querySelector('.items');
-    item.appendChild(elementProduct); 
-  }); 
-}
-
-window.onload = async function onload() {
-  const product = await getProducts();
-  renderProducts(product);
- };
