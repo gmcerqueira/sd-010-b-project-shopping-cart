@@ -45,7 +45,7 @@ function createProductItemElement({ sku, name, image }) {
     const filho = createCartItemElement(requisicaoJson);
     document.querySelector('.cart__items').appendChild(filho);
     const pai = document.querySelector('ol');
-    localStorage.setItem('chave', pai.innerText);
+    localStorage.setItem('chave', pai.innerHTML);
   });
   return section;
 }
@@ -75,10 +75,11 @@ async function apaga() {
   });
 }
 
- function localStoranges() {
+// OBS: recebi a ajuda do Thiago Felipe para resolução desse requisito
+ function renderStorange() {
   const ol = document.querySelector('ol');
-  if (localStorage.getItem('chave')) {
-    ol.innerText = localStorage.chave;
+  if (localStorage.chave) {
+    ol.innerHTML = localStorage.chave;
   }
 }
 
@@ -86,7 +87,7 @@ window.onload = async function onload() {
   try {
     await pegaAPI();
     await apaga();
-    await localStoranges();
+    await renderStorange();
   } catch (_error) {
     alert('error');
   }
