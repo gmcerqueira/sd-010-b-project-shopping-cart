@@ -8,7 +8,7 @@ function retirarItem(valor) {
 function cartItemClickListener(event) {
   const one = event.target;
   const one1 = one.parentElement;
-  if (one1.parentElement.tagName === 'LI' ) {
+  if (one1.parentElement.tagName === 'LI') {
     retirarItem(one.parentElement.firstChild.innerHTML.split(' ')[1]);
     event.target.parentElement.parentElement.remove();
   } else {
