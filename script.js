@@ -38,7 +38,8 @@ function createProductItemElement({ sku, name, image }) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  return event;
+  const removeItem = event.target;
+  removeItem.parentNode.removeChild(removeItem);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
