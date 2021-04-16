@@ -1,3 +1,5 @@
+let cartShoppingIds = [];
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -30,6 +32,10 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  const id = event.target.innerHTML.split(' ')[1];
+  console.log(id);
+  cartShoppingIds.splice(cartShoppingIds.indexOf(id), 1);
+  localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
   event.target.remove();
 }
 
@@ -38,12 +44,16 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  cartShoppingIds.push(sku);
+  console.log(cartShoppingIds);
+  localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
   return li;
 }
 
-async function addToChart(event) {
+async function addToCart(event) {
   // https://stackoverflow.com/questions/38481549/what-is-the-difference-between-e-target-parentnode-and-e-path1
-  const itemId = event.target.parentNode.querySelector('.item__sku').innerHTML;
+  let itemId = event.target;
+  itemId = itemId ? itemId.parentNode.querySelector('.item__sku').innerHTML : event;
   const endpoint = 'https://api.mercadolibre.com/items/';
   const itemToAdd = await (await fetch(`${endpoint}${itemId}`)).json();
   const listItem = createCartItemElement(itemToAdd);
@@ -66,13 +76,25 @@ function renderComputers(computers) {
   // usado querySectorAll pois retorna uma NodeList, senão teria que usar outro comando (Array.prototype.forEach.call)
   // https://stackoverflow.com/questions/3871547/js-iterating-over-result-of-getelementsbyclassname-using-array-foreach
   const buttons = document.querySelectorAll('.item__add');
-  console.log(buttons);
-  buttons.forEach((button) => button.addEventListener('click', addToChart));
+  buttons.forEach((button) => button.addEventListener('click', addToCart));
+}
+
+function renderCart() {
+  localStorage.removeItem('computers');
+  const oldCartShoppingIds = cartShoppingIds;
+  console.log(oldCartShoppingIds);
+  cartShoppingIds = [];
+  oldCartShoppingIds.forEach((id) => {
+    addToCart(id);
+  });
 }
 
 window.onload = async function onload() {
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const computers = await getComputers(endpoint);
-  console.log(computers);
+  const cartShopString = localStorage.getItem('computers');
+  // JSON.parse foi visto no plantão do dia 14/04 (primeiro dia do projeto)
+  cartShoppingIds = cartShopString ? JSON.parse(cartShopString) : [];
   renderComputers(computers);
+  renderCart();
 };
