@@ -82,10 +82,13 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 function verifiedFetch(url) {
+  const p = document.querySelector('.loading');
+  p.innerHTML = 'loading...';
   fetch(url)
     .then((r) => r.json())
     .then((r) => {
       r.results.forEach((element) => {
+        p.remove();
         const object = {
           sku: element.id, 
           name: element.title, 
