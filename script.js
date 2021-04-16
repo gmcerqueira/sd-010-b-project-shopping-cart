@@ -30,6 +30,7 @@ function createProductItemElement({ sku, name, image }) {
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  return event;
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -52,7 +53,7 @@ const fetchProduct = async (itemId) => {
   const dataProductJason = await dataProduct.json();
 
   return dataProductJason;
-}
+};
 
 const renderElement = (element) => document
   .querySelector('.items')
@@ -77,17 +78,13 @@ const getResultProduct = (results) => {
     sku: results.id,
     name: results.title,
     salePrice: results.price,
-  }
+  };
   
   return resultObject;
 };
 
 const getListProducts = async () => {
   getResult(await getFetch('computador'));
-};
-
-const getProductFetch = async (itemId) => {
-  return getResultProduct(await fetchProduct(itemId));
 };
 
 const addShoppingCart = () => {
@@ -109,5 +106,5 @@ window.onload = function onload() {
   getListProducts()
   .then(() => {
     addShoppingCart();
-  })
+  });
 };
