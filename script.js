@@ -70,9 +70,9 @@ function createProductItemElement({ sku, name, image }) {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
-function lista(url) {
+function lista(http) {
   const itens = document.querySelector('.items');
-  funcFetch(url)
+  funcFetch(http)
   .then((coisa) => coisa.results.forEach((item) => {
     itens.appendChild(
       createProductItemElement({
