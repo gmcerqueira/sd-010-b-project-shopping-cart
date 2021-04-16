@@ -96,8 +96,10 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-  .addEventListener('click', addToTheCart);
+  const button = createCustomElement('button', 'item__add', 'Adicionar ao carrinho! ');
+  section.appendChild(button);
+  button.addEventListener('click', addToTheCart);
+  button.appendChild(createCustomElement('i', 'fas fa-cart-plus', ''));
   return section;
 }
 

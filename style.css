@@ -1,16 +1,22 @@
-header {
-  height: 40px;
-  display: flex;
-  justify-content: center;
+body {
+  background-color: rgb(230, 230, 230);
+  font-family: Lato;
+  margin: 0;
 }
 
 .top-bar {
+  background-color: rgb(117, 117, 117);
   align-items: center;
   display: flex;
-  height: 100px;
+  height: 70px;
   justify-content: space-around;
-  margin-bottom: 10px;
+  margin: 0 0 10px 0;
   width: 100%;
+}
+
+
+.fa-opencart {
+  justify-self: flex-start;
 }
 
 .top-bar .input-name-group {
@@ -21,6 +27,12 @@ header {
 .top-bar .input-terms-group {
   align-items: flex-start;
   display: flex;
+}
+
+.icon {
+  color: black;
+  height: 50px;
+  width: 50px;
 }
 
 .container {
@@ -37,14 +49,20 @@ header {
 }
 
 .item {
-  border: 2px solid blue;
+  background-color: rgb(255, 255, 255);
   border-radius: 5px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   height: auto;
-  margin: 5px;
+  margin: 8px;
   width: 200px;
+  box-shadow: 2px 4px 4px 2px rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+.item:hover {
+  box-shadow: 4px 8px 8px 4px rgba(0,0,0,0.2);
 }
 
 .item .item__sku {
@@ -55,6 +73,8 @@ header {
   flex-grow: 1;
   padding: 10px;
   text-align: center;
+  font-weight: 300;
+  font-size: 18px
 }
 
 .item .item__image {
@@ -62,27 +82,61 @@ header {
 }
 
 .item .item__add {
-  background-color: green;
+  background-image: linear-gradient(to bottom right, rgb(27, 228, 27), rgb(47, 161, 47));
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  height: 35px;
   border: 0;
   cursor: pointer;
   margin: 0;
   padding: 5px;
+  font-weight: 700;
+  font-size: 14px;
+  color: rgb(51, 51, 51);
 }
 
 .cart {
+  margin-right: 15px;
+  background-color: white;
   display: flex;
   flex-basis: 30%;
   flex-flow: column wrap;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 2px 4px 4px 2px rgba(0,0,0,0.2);
 }
 
 .cart .cart__title {
   flex-basis: 1;
-  font-size: 16pt;
+  font-size: 40px;
   text-align: center;
+  font-weight: 800;
+}
+
+.empty-cart {
+  background-image: linear-gradient(to bottom right, rgb(218, 102, 35), rgb(212, 48, 19));
+  margin: 5px 0;
+  height: 35px;
+  width: 60%;
+  align-self: center;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 18px;
+  border: 0;
+  border-radius: 5px;
+}
+
+.final-price {
+  display: flex;
+}
+
+.price {
+  font-size: 24px;
+  margin: 0 10px;
 }
 
 .total-price {
   font-size: 24px;
   font-weight: bold;
-  margin: 20px;
+  margin: 0;
 }
