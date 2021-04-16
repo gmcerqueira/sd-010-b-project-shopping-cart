@@ -32,6 +32,21 @@ function criarImagem(imageSource) {
   return img;
 }
 
+async function clickElemente(event) {
+  const incontrarItem = document.getElementsByClassName('cart__items')[0];
+  const parent = event.target.parentElement;
+  const prodID = getSkuFromProductItem(parent);
+  const prod = await getProductId(prodID);
+  const newEl = createCartItemElement({
+    sku: prod.id,
+    name: prod.title,
+    salePrice: prod.price,
+  });
+  // calcPreço(prod.price);
+  incontrarItem.appendChild(newEl);
+  localStorage.setItem('cartItems', incontrarItem.innerHTML);
+}
+
 function criarElementoNaTabela({ sku, name, image }) {
   const encontraSection = document.createElement('section');
   encontraSection.className = 'item';
@@ -46,21 +61,6 @@ function criarElementoNaTabela({ sku, name, image }) {
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
-}
-
-async function clickElemente(event) {
-  const incontrarItem = document.getElementsByClassName('cart__items')[0];
-  const parent = event.target.parentElement;
-  const prodID = getSkuFromProductItem(parent);
-  const prod = await getProductId(prodID);
-  const newEl = createCartItemElement({
-    sku: prod.id,
-    name: prod.title,
-    salePrice: prod.price,
-  });
-  // calcPreço(prod.price);
-  incontrarItem.appendChild(newEl);
-  localStorage.setItem('cartItems', incontrarItem.innerHTML);
 }
 
 // function calcPreço(price){
