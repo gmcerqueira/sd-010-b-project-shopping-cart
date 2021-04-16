@@ -1,4 +1,5 @@
 let cartShoppingIds = [];
+let totalPrice = 0;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -30,10 +31,19 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+async function totalOrder(price) {
+  totalPrice = Math.round((totalPrice + price) * 100) / 100;
+  const totalPriceElement = document.querySelector('.total-price');
+  totalPriceElement.innerHTML = `TOTAL: ${totalPrice}`;
+}
+
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const id = event.target.innerHTML.split(' ')[1];
+  const price = event.target.innerHTML.split('$')[1];
   console.log(id);
+  console.log(price);
+  totalOrder(-price);
   cartShoppingIds.splice(cartShoppingIds.indexOf(id), 1);
   localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
   event.target.remove();
@@ -57,6 +67,10 @@ async function addToCart(event) {
   const endpoint = 'https://api.mercadolibre.com/items/';
   const itemToAdd = await (await fetch(`${endpoint}${itemId}`)).json();
   const listItem = createCartItemElement(itemToAdd);
+  const { price } = itemToAdd;
+  console.log(price);
+  await totalOrder(price);
+  console.log(price);
   const shoppingList = document.querySelector('.cart__items');
   shoppingList.appendChild(listItem);
 }
@@ -95,6 +109,9 @@ window.onload = async function onload() {
   const cartShopString = localStorage.getItem('computers');
   // JSON.parse foi visto no plantão do dia 14/04 (primeiro dia do projeto)
   cartShoppingIds = cartShopString ? JSON.parse(cartShopString) : [];
+  const cart = document.querySelector('.cart__title');
+  const totalCart = `TOTAL: ${totalPrice}`;
+  cart.insertAdjacentElement('afterend', createCustomElement('span', 'total-price', totalCart));
   renderComputers(computers);
   renderCart();
 };
