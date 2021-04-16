@@ -1,4 +1,4 @@
-const cartItemsList = [];
+let cartItemsList = [];
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -78,7 +78,8 @@ const renderItems = (getResults) => {
     selectSection.appendChild(pc);
     pc.addEventListener('click', () => {
       const carProduct = cartItemsList.find((item) => item.id === el.id);
-      if (!carProduct) cartItemsList.push(el);      
+      if (!carProduct) cartItemsList.push(el);
+      localStorage.setItem('carShop', JSON.stringify(cartItemsList));
       renderCartItems();    
     });
    });
@@ -91,4 +92,6 @@ window.onload = async function onload() {
   const getResult = await listOfProducts();
   renderItems(getResult);
   createCartItemElement(getResult);
+  const itemsStorageString = localStorage.getItem('carShop');
+  cartItemsList = itemsStorageString ? JSON.parse(itemsStorageString) : [];
 };
