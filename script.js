@@ -73,6 +73,7 @@ function insert(event) {
     };
     const ol = document.querySelector('.cart__items');
     ol.appendChild(createCartItemElement(objIdPrduct));
+    localStorage.setItem('cart', ol.innerHTML);
   };
   return insertItem();
 }
@@ -94,7 +95,13 @@ const removeAllItemsFromCart = () => {
   });
 };
 
+const getSaveCartIems = () => {
+  const saveCartItems = localStorage.getItem('cart');
+  document.querySelector('.cart__items').innerHTML = saveCartItems;
+};
+
 window.onload = async function onload() { 
+  getSaveCartIems();
   console.log('Ok,Starts!');
   const products = await getProducts();
   renderProducts(products);
