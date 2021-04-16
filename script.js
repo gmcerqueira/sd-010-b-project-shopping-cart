@@ -17,14 +17,15 @@ function cartItemClickListener(event) {
   const removeItemID = item.id;
   localStorage.removeItem(removeItemID);
   document.querySelector('.cart__items')
-  .addEventListener('click', (event2) => event2.target.remove());
+    .addEventListener('click', (event2) => event2.target.remove());
   item.remove();
 }
 
- // desafio 4
+// desafio 4
 function saveLocalStorage(id, objItem) {
   localStorage.setItem(`${id}`, JSON.stringify(objItem));
 }
+
 function createCartItemElement({
   id: sku,
   title: name,
@@ -37,14 +38,20 @@ function createCartItemElement({
   ol.appendChild(li);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  saveLocalStorage(liContainID, { sku, name, salePrice });
+  saveLocalStorage(liContainID, {
+    sku,
+    name,
+    salePrice,
+  });
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
 // desafio 4
-function createProductItemElement({ id: sku, title: name,
-thumbnail: image }) {
-  // const searchOL = document.querySelector('ol');
+function createProductItemElement({
+  id: sku,
+  title: name,
+  thumbnail: image,
+}) {
   const section = document.createElement('section');
   section.className = 'item';
   const sectionItems = document.querySelector('.items');
@@ -65,11 +72,21 @@ function loadingLocalStorage() {
   for (let index = 0; index < localStorage.length; index += 1) {
     const ol = document.querySelector('ol');
     const value = JSON.parse(localStorage[index]);
-    const li = document.createElement('li');  
+    const li = document.createElement('li');
     li.innerText = `SKU: ${value.sku} | NAME: ${value.name} | PRICE: $${value.salePrice}`;
     li.addEventListener('click', cartItemClickListener);
     ol.appendChild(li);
     li.id = `${index}`;
+    li.className = 'cart__item';
+  }
+}
+
+function deleteButton() {
+  const cartItem = document.querySelectorAll('.cart__item');
+  localStorage.clear();
+  console.log('funciona?');
+  for (let index = 0; index < cartItem.length; index += 1) {
+    cartItem[index].remove();
   }
 }
 
@@ -81,7 +98,9 @@ window.onload = function onload() {
       data.results.forEach((element) =>
         createProductItemElement(element));
     });
-    loadingLocalStorage();
+  loadingLocalStorage();
+
+  document.querySelector('.empty-cart').addEventListener('click', deleteButton);
 };
 
 // 1° Desafio
@@ -106,6 +125,18 @@ window.onload = function onload() {
 // 1° criar um local storage generico x
 // 1.1 selecionar os item que será mandado ao localStorage x
 // 1.2 mandar para o localStorage x
-// 2° acessar as informações contidas no localStorage
-// 2.1 adicionar elas ao windows on load
-// Agradecimentos ao Alan Tanaka por ter me auxiliado no desafio 4
+// 2° acessar as informações contidas no localStorage x
+// 2.1 adicionar elas ao windows on load x
+// 2.2 criar as div x
+// 2.3 adicionar o texto no li x
+// 2.4 adicionar id's x
+// 3° excluir no click
+// 3.1 selecionar a div pelo ID
+// 3.2 excluir o ID
+// 5° Desafio
+// Baby Steps:
+// 1° localizar o valor
+// 2° somar os valores
+// 3° Preparar o  ambiente para adicionar a soma 
+// 4° transformar a função em assincrona
+// Agradecimentos ao Alan Tanaka Turma 10 tribo B - Henrique Zozimo Turma 10 Tribo B - Daniel ROberto Turma 10 Tribo B - Thiago Marchini por ter me auxiliado nos desafios.
