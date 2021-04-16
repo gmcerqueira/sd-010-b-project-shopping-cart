@@ -49,6 +49,7 @@ function cartItemClickListener(event) {
   getOL.removeChild(event.target);
   cartItemsList.forEach((item, index) => {
     if (item.id === getTargetId) cartItemsList.splice(index);
+    localStorage.setItem('carShop', JSON.stringify(cartItemsList));
   });
   return response;
  }
@@ -88,6 +89,18 @@ const renderItems = (getResults) => {
    });
   };
 
+  const sumItemsPrices = async () => {
+    const value = await cartItemsList.reduce((acc, curr) => acc + curr.price, 0);
+    const createh2 = document.createElement('h2');
+    const selectDiv = document.getElementsByClassName('total-price')[0];
+    createh2.innerText = await value;
+    createh2.id = 'totalPrice';
+    selectDiv.appendChild(createh2);
+    console.log(value);
+    
+    return value;
+  };
+
   // Tive ajuda do instrutor Eduardo para finalizar o requisito 1.
 
 window.onload = async function onload() { 
@@ -98,4 +111,5 @@ window.onload = async function onload() {
   const itemsStorageString = localStorage.getItem('carShop');
   cartItemsList = itemsStorageString ? JSON.parse(itemsStorageString) : [];
   createCartItems();
+  sumItemsPrices();
 };
