@@ -12,26 +12,30 @@ function saveCartItems() {
 }
 
 function cartItemClickListener(event) {
+  const { id } = event.target;
+  cartItems.splice(id, 1);
+  saveCartItems();
   event.target.remove();
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ sku, name, salePrice }, index) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.id = index;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
-function renderCartProducts(idInfos) {
-  const item = createCartItemElement(idInfos);
+function renderCartProducts(idInfos, index) {
+  const item = createCartItemElement(idInfos, index);
   const cartOl = document.querySelector('.cart__items');
   cartOl.appendChild(item);
 }
 
 function getSavedCartItems(items) {
-    items.forEach((item) => {
-      renderCartProducts(item);
+    items.forEach((item, index) => {
+      renderCartProducts(item, index);
     });
 }
 
