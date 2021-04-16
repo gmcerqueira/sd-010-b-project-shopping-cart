@@ -42,7 +42,7 @@ async function getProducts() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const products = await response.json();
   const result = products.results;
-  return result;
+  return (result);
 }
 
 async function renderProducts(getProducts) {
@@ -54,6 +54,6 @@ async function renderProducts(getProducts) {
 }
 
 window.onload = async function onload() {
-  const productItems = await getProducts();
-  await renderProducts(getProducts);
-  };
+  const product = await getProducts();
+  renderProducts(product);
+ };
