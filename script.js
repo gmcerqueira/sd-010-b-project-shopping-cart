@@ -48,8 +48,13 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 }; */
 
 const localS = () => {
-  const aux = document.querySelector('ol');
-  localStorage.setItem('keyss', aux.innerText);
+  const arr = Array.from(document.querySelectorAll('li'));
+  const keyy = {};
+  arr.forEach((li, index) => {
+    keyy[index] = li.innerText;
+    console.log(keyy);
+  });
+  localStorage.setItem('keyss', JSON.stringify(keyy));
 };
 
 const addLi = (li) => {
@@ -68,7 +73,6 @@ const getId = (event) => {
         addLi(li);
       });
     });
-  console.log(Id);
 };
 
 const newCart = () => {
@@ -107,11 +111,13 @@ const clear = () => {
 
 const recoverStorage = () => {
   const ol = document.querySelector('.cart__items');
-  const li = document.createElement('li');
   if (localStorage.getItem('keyss')) {
-    console.log(localStorage.length);
-    li.innerText = localStorage.keyss;
-    ol.appendChild(li);
+    const aux = Object.values(JSON.parse(localStorage.getItem('keyss')));
+    aux.forEach((value) => {
+      const li = document.createElement('li');
+      li.innerText = value;
+      ol.appendChild(li);
+    });
   }
 };
 
