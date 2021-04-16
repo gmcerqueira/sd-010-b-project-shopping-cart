@@ -90,15 +90,14 @@ const renderItems = (getResults) => {
   };
 
   const sumItemsPrices = async () => {
-    const value = await cartItemsList.reduce((acc, curr) => acc + curr.price, 0);
+    const itemsSum = cartItemsList.reduce((acc, curr) => acc + curr.price, 0);
     const createh2 = document.createElement('h2');
     const selectDiv = document.getElementsByClassName('total-price')[0];
-    createh2.innerText = await value;
+    createh2.innerHTML = '';
+    createh2.innerHTML = await itemsSum;
     createh2.id = 'totalPrice';
-    createh2.classList('total-price');
+    createh2.classList.add('total-price');
     selectDiv.appendChild(createh2);
-    console.log(value);    
-    return value;
   };
 
   // Tive ajuda do instrutor Eduardo para finalizar o requisito 1.
@@ -112,4 +111,4 @@ window.onload = async function onload() {
   cartItemsList = itemsStorageString ? JSON.parse(itemsStorageString) : [];
   createCartItems();
   sumItemsPrices();
-};
+  };
