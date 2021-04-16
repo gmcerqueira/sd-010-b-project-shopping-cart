@@ -12,7 +12,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
+function createProductItemElement({ id: sku, title: name, thumbnail: image }, callback) {
   const section = document.createElement('section');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
@@ -20,21 +20,39 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createProductImageElement(image));
   section.appendChild(
     createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'),
-  );
+  ).addEventListener('click', () => {
+    callback(sku);
+  });
   const productItems = document.querySelector('.items');
   productItems.appendChild(section);
 
   return section;
 }
 
-async function requisitionAPI(product) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  // li.addEventListener('click', cartItemClickListener);
+  const containerItems = document.querySelector('.cart__items');
+  containerItems.appendChild(li);
+  return li;
+}
+
+async function requisitionIdIProduct(sku) {
+  const responseId = await fetch(`https://api.mercadolibre.com/items/${sku}`);
+  const responseIdJson = await responseId.json();
+  createCartItemElement(responseIdJson);
+}
+
+async function requisitionProduct(product) {
   const response = await fetch(
     `https://api.mercadolibre.com/sites/MLB/search?q=${product}`,
   );
   const responseJson = await response.json();
   const { results } = responseJson;
   results.forEach((value) => {
-    createProductItemElement(value);
+    createProductItemElement(value, requisitionIdIProduct);
   });
 }
 
@@ -46,14 +64,6 @@ async function requisitionAPI(product) {
 //   // coloque seu código aqui
 // }
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
-
 window.onload = function onload() {
-  requisitionAPI('computador');
+  requisitionProduct('computador');
 };
