@@ -30,23 +30,24 @@ function createProductItemElement({ sku, name, image }) {
   return item.querySelector('span.item__sku').innerText;
 } */
 
-/* function cartItemClickListener(event) {
-  // coloque seu código aqui
+ function cartItemClickListener(event) {
+  
 }
- */
-/* function createCartItemElement({ sku, name, salePrice }) {
+
+ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  return li;
-} */
-
+  const ol = document.getElementsByClassName('cart__items')[0];
+  ol.appendChild(li);
+} 
 // Primeira modificação
 
 async function getElements(QUERY) {
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`);
   const { results } = await response.json();  
+
   return results; 
 }
 
@@ -64,10 +65,39 @@ const renderProduct = (prodctJson) => {
   });
 };
 
-const allProductsChamada = async () => {
- renderProduct(await getElements('computador')); 
+async function fechFavoriteProduct(addIdProduct) {
+  const response = await fetch(`https://api.mercadolibre.com/items/${addIdProduct}`);
+  const responseResult = await response.json(); 
+  const objt = {
+    sku: responseResult.id,
+    name: responseResult.title, 
+    salePrice: responseResult.price,
+  };
+  createCartItemElement(objt);
+  return responseResult; 
+} 
+
+const addProduct = () => {
+  const button = document.querySelectorAll('.item__add'); 
+  button.forEach((elementButt) => {
+    elementButt.addEventListener('click', (event) => {
+     const item = event.target.parentNode.firstChild.innerHTML;
+     fechFavoriteProduct(item);
+    });
+  });
+  return button;
 };
 
-window.onload = function onload() { 
-  allProductsChamada();
+const allProductsChamada = async () => {
+ renderProduct(await getElements('computador')); 
+ 
 };
+
+
+
+window.onload = function onload() { 
+  allProductsChamada()
+  .then(() => {
+    addProduct();
+  });
+};  
