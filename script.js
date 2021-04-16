@@ -1,4 +1,4 @@
-const cartClass = '.cart__items';
+const cartItemClass = '.cart__items';
 
 const btn = document.querySelector('.empty-cart');
 btn.addEventListener('click', () => {
@@ -40,26 +40,20 @@ function createCartItemElement({ sku, name, salePrice }) {
 // document.getElementById('oi');
 
 // Salva a lista de produtos no carrinho:
-function saveCartList() {
-  const ol = document.querySelector(cartClass);
-  [...ol.children].map((children, index) => {
-    const cartList = {
-      sku: children.id,
-      name: children.title,
-      salePrice: children.price,
-      };
-    // Salva no localstorage: o indice da tarefa(keyName do LS) e seu obj respectivo transformado em string(keyValue do LS);
-    localStorage.setItem(`${index}`, JSON.stringify(cartList));
+async function saveCartList() {
+  const ol = document.querySelector(cartItemClass);
+  await [...ol.children].map((children, index) => {
+    localStorage.setItem(`${index}`, children);
     return true; // Lint: 'Expected to return a value in arrow function.'
   });
 }
 
 function loadCartList() {
   for (let i = 0; i < localStorage.length; i += 1) {
-    const obj = JSON.parse(localStorage[i]);
+    const obj = localStorage[i];
     const cartItemLoad = document.createElement('li');
-    cartItemLoad.innerHTML = `${console.log(obj)}`;
-    document.querySelector(cartClass).appendChild(cartItemLoad);
+    cartItemLoad.innerText = `${obj}`;
+    document.querySelector(cartItemClass).appendChild(cartItemLoad);
   }
 }
 
@@ -72,7 +66,7 @@ const getProduct = (itemID) => fetch(`https://api.mercadolibre.com/items/${itemI
         name: productToCart.title,
         salePrice: productToCart.price,
         };
-        document.querySelector(cartClass).appendChild(createCartItemElement(inCart));
+        document.querySelector(cartItemClass).appendChild(createCartItemElement(inCart));
     })
     .then(saveCartList);
 
