@@ -1,3 +1,5 @@
+const selectItem = document.querySelector('.cart__items');
+
 /* eslint-disable max-lines-per-function */
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -37,7 +39,6 @@ const addProductToCart = async (itemId) => {
   const { id, title, price } = cartItem;
   const product = { sku: id, name: title, salePrice: price };
 
-  const selectItem = document.querySelector('.cart__items');
   selectItem.appendChild(createCartItemElement(product));
 
   getPcInfos.push(product);
@@ -71,20 +72,20 @@ const getProduct = async () => {
   const result = await product.json();
   const { results } = result;
   const resultsApi = results.map(({ id, title, thumbnail }) => 
-      createProductItemElement({ sku: id, name: title, image: thumbnail }));
+  createProductItemElement({ sku: id, name: title, image: thumbnail }));
       
-    const selectItem = document.querySelector('.items');
-    
-    resultsApi.forEach((element) => {
-      selectItem.appendChild(element);
-    });
+  const allSelectItem = document.querySelector('.items');
+  
+  resultsApi.forEach((element) => {
+    allSelectItem.appendChild(element);
+  });
 };
 
 // Armazena itens no localStorage
 function localStorageCache() {
   const getPcInfosLocalStorage = localStorage.getItem('pcs');
   getPcInfos = getPcInfosLocalStorage ? JSON.parse(getPcInfosLocalStorage) : [];
-  const selectItem = document.querySelector('.cart__items');
+  // const selectItem = document.querySelector('.cart__items');
 
   getPcInfos.map(({ sku, name, salePrice }) => {
     const li = document.createElement('li');
@@ -96,8 +97,17 @@ function localStorageCache() {
   });
 }
 
+const clearCart = () => {
+  const buttonClear = document.querySelector('.empty-cart');
+  const cartItems = document.querySelector('.cart__items');
+  buttonClear.addEventListener('click', () => {
+    cartItems.innerHTML = '';
+    localStorage.removeItem('pcs');
+  });
+};
+
 window.onload = () => {
   localStorageCache();
-
+  clearCart();
   getProduct();
 };
