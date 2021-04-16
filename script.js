@@ -31,7 +31,7 @@ function createProductItemElement({ sku, name, image }) {
 } */
 
  function cartItemClickListener(event) {
-  
+  return event;
 }
 
  function createCartItemElement({ sku, name, salePrice }) {
@@ -89,11 +89,8 @@ const addProduct = () => {
 };
 
 const allProductsChamada = async () => {
- renderProduct(await getElements('computador')); 
- 
+ renderProduct(await getElements('computador'));  
 };
-
-
 
 window.onload = function onload() { 
   allProductsChamada()
