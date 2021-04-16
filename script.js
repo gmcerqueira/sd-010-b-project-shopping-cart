@@ -1,3 +1,4 @@
+let savingS;
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,10 +13,22 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+const localSave = () => {
+  const toBesaved = savingS.innerHTML;
+  localStorage.setItem('keyy', toBesaved);
+};
+
+const refreshPage = () => {
+ const searchLocal = localStorage.getItem('keyy');
+ console.log(searchLocal);
+ savingS.innerHTML = searchLocal;
+};
+
 const cartItemClickListener = (event) => {
-    const clickedItem = event.target;
-    clickedItem.remove();
-    };
+  const clickedItem = event.target;
+  clickedItem.remove();
+  localSave();
+};
 // Lucas me ajudou a entender que eu poderia aproveitar a função adicionada com clique na linha 26.
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -23,11 +36,16 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  localSave();
   return li;
 }
+// const totalPrice = () => {
+//   const individualChartFilled = document.querySelector('.cart__item');
+// };
+
 const removeElement = () => {
-const chartFilled = document.querySelector('.cart__items');
-chartFilled.innerHTML = '';
+  savingS.innerHTML = '';
+  localSave();
 };
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -42,10 +60,11 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     const add = await fetch(`https://api.mercadolibre.com/items/${sku}`);
     const buy = await add.json();
     const createdItem = createCartItemElement(buy);
-    const addProduct = document.querySelector('.cart__items');
-    addProduct.appendChild(createdItem);
+    const saving = document.querySelector('.cart__items');
+    saving.appendChild(createdItem);
     const bttnClick = document.querySelector('.empty-cart');
 bttnClick.addEventListener('click', removeElement);
+localSave();
   });
   return section;
 }
@@ -71,6 +90,8 @@ shopp.forEach((shop) => {
   });
  }
 
-window.onload = async function onload() { 
+window.onload = async function onload() {
+  savingS = document.querySelector('.cart__items');
   renderComputers();
+  refreshPage();
 };
