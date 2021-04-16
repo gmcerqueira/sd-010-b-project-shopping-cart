@@ -13,12 +13,15 @@ function createCustomElement(element, className, innerText) {
 }
 
 function cartItemClickListener(event) {
+  const liIdRemove = event.target.dataset.id;
+  localStorage.removeItem(liIdRemove);
   event.target.remove();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.setAttribute('data-id', sku);
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -48,14 +51,37 @@ const fetchItem = async (sku) => {
   return data;
 };
 
+// Ao clicar no botão limpa carrinho de compras.
+// const eventButtonClear = () => {
+//   const getButton = document.querySelector('empty-cart');
+//   console.log(getButton);
+//   getButton.addEventListener('click', () => {
+//     console.log('oi');
+//     // const getOl = document.querySelector('.cart__items');
+//     // const getLi = document.querySelectorAll('li');
+    
+//     // getOl.removeChild(getLi);
+//   });
+// };
+// eventButtonClear();
+
+// Adiciona carrinho no LocalStorage
+const saveItemCart = () => {
+  const listItemCart = document.querySelectorAll('li');
+  for (let index = 0; index < listItemCart.length; index += 1) {
+    localStorage.setItem(listItemCart[index].dataset.id, listItemCart[index].innerText);
+  }
+};
+
 // Captura ol e adiciona li ao licar no card adicioando o item no carrinho;
 const addItemCart = async (sku) => {
   const getOl = document.querySelector('.cart__items');
   const data = await fetchItem(sku);
   getOl.appendChild(createCartItemElement(data));
+  saveItemCart();
 };
 
-// Faz a listagem dos computadores, chama a função que cria os cards aicionano evento nele. Em seguida pega o id e chama função adItemCart;
+// Faz a listagem dos computadores, chama a função que cria os cards aicionando evento de click nele. Em seguida pega o id e chama função adItemCart;
 const createListProduct = (data) => {
   data.results.forEach((product) => {
     const classItens = document.querySelector('.items');
@@ -70,7 +96,7 @@ const createListProduct = (data) => {
 
 // Faz requisição de todos os computadores na API.
 const fetchPC = async () => {
-  // referencia https://www.youtube.com/watch?v=Zl_jF7umgcs&ab_channel=RogerMelo
+  // referência https://www.youtube.com/watch?v=Zl_jF7umgcs&ab_channel=RogerMelo
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const data = await response.json();
   await createListProduct(data);
@@ -78,4 +104,5 @@ const fetchPC = async () => {
 
 window.onload = function onload() {
   fetchPC();
+  // eventButtonClear();
 };
