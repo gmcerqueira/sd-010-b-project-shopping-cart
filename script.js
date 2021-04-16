@@ -43,8 +43,10 @@ let soma = 0;
 async function somaPrice(object) {
   const p = document.querySelector('.total-price');
   soma += object.salePrice;
-  p.innerText = soma;
-  console.log(soma);  
+  if (p.innerText !== null) {
+    p.innerText = soma;
+    console.log(soma);  
+  }
 }
 
 function buttonAdd(button, sku) {
