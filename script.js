@@ -1,3 +1,4 @@
+const save = [];
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -15,8 +16,17 @@ function createCustomElement(element, className, innerText) {
 function cartItemClickListener() {
   document.querySelector('.cart__items')
   .addEventListener('click', (event) => event.target.remove());
-}
+  localStorage.removeItem('teste');
+};
 
+ // desafio 4
+function saveLocalStorage(sku, name, salePrice) {
+  // save.push(`SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`);
+  // const searchOL = document.querySelector('ol');
+  // localStorage.setItem(sku, searchOL.innerHTML);
+// versão 2 
+  // localStorage.setItem('teste', JSON.stringify(save));
+}
 function createCartItemElement({
   id: sku,
   title: name,
@@ -28,14 +38,13 @@ function createCartItemElement({
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  // saveLocalStorage(sku, name, salePrice);
   return li;
 }
-
-function createProductItemElement({
-  id: sku,
-  title: name,
-  thumbnail: image,
-}) {
+// desafio 4
+function createProductItemElement({ id: sku, title: name,
+thumbnail: image }) {
+  // const searchOL = document.querySelector('ol');
   const section = document.createElement('section');
   section.className = 'item';
   const sectionItems = document.querySelector('.items');
@@ -51,10 +60,21 @@ function createProductItemElement({
     });
   return sectionItems.appendChild(section);
 }
-
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+// Desafio 4
+function loadingLocalStorage() {
+  
+  let savee = localStorage.getItem('teste');
+  savee = JSON.parse(savee);
+  console.log(savee);
+savee.forEach((huf) => {
+  const ol = document.querySelector('ol');
+  const li = document.createElement('li');
+  li.innerText = huf;
+  ol.appendChild(li);
+  li.addEventListener('click', cartItemClickListener);
+});
+save.push(...savee);
+}
 
 window.onload = function onload() {
   const API_URL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
@@ -64,7 +84,9 @@ window.onload = function onload() {
       data.results.forEach((element) =>
         createProductItemElement(element));
     });
+    // loadingLocalStorage();
 };
+
 // 1° Desafio
 // Baby Steps: 
 // 1° informação
@@ -79,5 +101,14 @@ window.onload = function onload() {
 // 2°Desafio
 // Baby Steps:
 // 1° Criar evento no botão 'Adicionar ao carrinho" x
-// 2° acessar as informações da API
-// 2.1 
+// 2° acessar as informações da API x
+// 2.1 apos capturado, percorrer a info necessária
+// 2.2 
+// 4 °Desafio
+// Baby Steps:
+// 1° criar um local storage generico x
+// 1.1 selecionar os item que será mandado ao localStorage x
+// 1.2 mandar para o localStorage x
+// 2° acessar as informações contidas no localStorage
+// 2.1 adicionar elas ao windows on load
+// Agradecimentos ao Alan Tanaka por ter me auxiliado no desafio 4
