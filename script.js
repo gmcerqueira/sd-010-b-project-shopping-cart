@@ -3,11 +3,15 @@
 // const lista = document.getElementsByClassName('cart__items');
 // lista.appendChild(p)
 
+// function cartItemClickListener(event) {
+//   console.log('entrou na lista');
+// }
+
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  //li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
@@ -86,10 +90,6 @@ async function transformarUrl(url) {
     const element = criarElementoNaTabela(informaçoesDoproduto);
     elementos.appendChild(element);
   });
-}
-
-  function cartItemClickListener(event) {
-   console.log('entrou na lista');
 }
 
 window.onload = function onload() {
