@@ -30,8 +30,8 @@ function createProductItemElement({ sku, name, image }) {
   return item.querySelector('span.item__sku').innerText;
 } */
 
- function cartItemClickListener(event) {
-  return event;
+function cartItemClickListener() { 
+  
 }
 
  function createCartItemElement({ sku, name, salePrice }) {
