@@ -66,19 +66,22 @@ const fetchSearchId = async (id) => {
   console.log(response);
   return response;
 };
-
-// fetchSearchId('MLB1341706310');
-
-// Cria o item a ser adicionado no carrinho.
-const createProductCart = async () => {
-  const itemId = await fetchSearchId('MLB1341706310');
+// Cria o item a ser adicionado no carrinho. Codigo ajustado com a ajuda de Herique Clementino.
+const createProductCart = async (id) => {
+  const itemId = await fetchSearchId(id);
   classOl.appendChild(createCartItemElement(itemId));
 };
 
-// const addProductCart = buttonAdd.addEventListener()
+const addProductCart = async () => {
+  buttonAdd.addEventListener('click', (event) => {
+    const click = event.target;
+    createProductCart(click);
+  });
+};
 
-createProductCart();
+createProductCart('MLB1341706310');
 
-window.onload = () => {
+window.onload = async () => {
   elementComputerSection();
+  await addProductCart();
 };
