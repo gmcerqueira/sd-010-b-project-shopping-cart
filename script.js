@@ -29,41 +29,50 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-  const getButton = document.querySelectorAll('button');
+  section.setAttribute('data-id', sku);
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
-  getButton.addEventListener('click', async () => {
-    const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
-    const product = await response.json();
-    const getOlElement = document.querySelector('.cart_items');
-    const funcCreatCart = createCartItemElement(product);
-    getOlElement.appendChild(funcCreatCart);
-  });
-
+  
   return section;
 }
 
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
+const fetchItem = async (sku) => {
+  const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
+  const data = await response.json();
+  return data;
+};
+
+const addItemCart = async (sku) => {
+  const getOl = document.querySelector('.cart__items');
+  const data = await fetchItem(sku);
+  getOl.appendChild(createCartItemElement(data));
+};
+
+const createListProduct = (data) => {
+  data.results.forEach((product) => {
+    const classItens = document.querySelector('.items');
+    const cardProduct = createProductItemElement(product);
+    cardProduct.addEventListener('click', (event) => {
+      const section = event.target.parentNode;
+      addItemCart(section.dataset.id);
+    });
+    classItens.appendChild(cardProduct);
+  });
+};
 
 const fetchPC = async () => {
   // referencia https://www.youtube.com/watch?v=Zl_jF7umgcs&ab_channel=RogerMelo
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const data = await response.json();
-  data.results.forEach((product) => {
-    const element = document.querySelector('.items');
-    element.appendChild(createProductItemElement(product));
-  });
+  await createListProduct(data);
 };
-fetchPC();
 
 window.onload = function onload() {
   fetchPC();
-  createProductItemElement();
-  createCartItemElement();
 };
