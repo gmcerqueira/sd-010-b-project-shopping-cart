@@ -1,4 +1,3 @@
-const save = [];
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -13,19 +12,18 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener() {
+function cartItemClickListener(event) {
+  const item = event.target;
+  const removeItemID = item.id;
+  localStorage.removeItem(removeItemID);
   document.querySelector('.cart__items')
-  .addEventListener('click', (event) => event.target.remove());
-  localStorage.removeItem('teste');
-};
+  .addEventListener('click', (event2) => event2.target.remove());
+  item.remove();
+}
 
  // desafio 4
-function saveLocalStorage(sku, name, salePrice) {
-  // save.push(`SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`);
-  // const searchOL = document.querySelector('ol');
-  // localStorage.setItem(sku, searchOL.innerHTML);
-// versão 2 
-  // localStorage.setItem('teste', JSON.stringify(save));
+function saveLocalStorage(id, objItem) {
+  localStorage.setItem(`${id}`, JSON.stringify(objItem));
 }
 function createCartItemElement({
   id: sku,
@@ -34,11 +32,13 @@ function createCartItemElement({
 }) {
   const ol = document.querySelector('ol');
   const li = document.createElement('li');
+  li.id = `${localStorage.length}`;
+  const liContainID = li.id;
   ol.appendChild(li);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  saveLocalStorage(liContainID, { sku, name, salePrice });
   li.addEventListener('click', cartItemClickListener);
-  // saveLocalStorage(sku, name, salePrice);
   return li;
 }
 // desafio 4
@@ -62,18 +62,15 @@ thumbnail: image }) {
 }
 // Desafio 4
 function loadingLocalStorage() {
-  
-  let savee = localStorage.getItem('teste');
-  savee = JSON.parse(savee);
-  console.log(savee);
-savee.forEach((huf) => {
-  const ol = document.querySelector('ol');
-  const li = document.createElement('li');
-  li.innerText = huf;
-  ol.appendChild(li);
-  li.addEventListener('click', cartItemClickListener);
-});
-save.push(...savee);
+  for (let index = 0; index < localStorage.length; index += 1) {
+    const ol = document.querySelector('ol');
+    const value = JSON.parse(localStorage[index]);
+    const li = document.createElement('li');  
+    li.innerText = `SKU: ${value.sku} | NAME: ${value.name} | PRICE: $${value.salePrice}`;
+    li.addEventListener('click', cartItemClickListener);
+    ol.appendChild(li);
+    li.id = `${index}`;
+  }
 }
 
 window.onload = function onload() {
@@ -84,7 +81,7 @@ window.onload = function onload() {
       data.results.forEach((element) =>
         createProductItemElement(element));
     });
-    // loadingLocalStorage();
+    loadingLocalStorage();
 };
 
 // 1° Desafio
