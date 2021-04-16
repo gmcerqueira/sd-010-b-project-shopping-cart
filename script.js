@@ -29,6 +29,26 @@ function getSkuFromProductItem(item) {
 }
 */
 
+async function fetchData(url, header) {
+  return fetch(url, header)
+  .then((promise) => promise.json())
+  .catch((err) => err);
+}
+
+async function somePrice() {
+  const totalPrice = document.getElementsByClassName('total-price')[0];
+  const cadItem = document.querySelectorAll('.cart__item');
+  const ids = [...cadItem].map((e) => e.innerText.split(' ')[1]);
+  const Products = await fetchData('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
+    .then((data) => data.results);
+  const arrayPrices = ids.map((id) => Products
+    .find((product) => product.id === id).price);
+
+  const total = (arrayPrices.reduce((acc, current) => acc + current, 0));
+  console.log(arrayPrices);
+  totalPrice.innerText = total;
+}
+
 function cartItemClickListener(event) {
   const idProduct = event.target.innerHTML.split(' ')[1];
   const arrayShoppingList = JSON.parse(localStorage.getItem('productsSave'));
@@ -36,6 +56,7 @@ function cartItemClickListener(event) {
 
   localStorage.setItem('productsSave', JSON.stringify(arrayFilted));
   event.target.remove();
+  somePrice();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -46,11 +67,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function fetchData(url, header) {
-  return fetch(url, header)
-  .then((promise) => promise.json())
-  .catch((err) => err);
-}
 function saveLocalStorage(objProduct) {
   if (localStorage.getItem('productsSave') === null) {
     localStorage.setItem('productsSave', JSON.stringify([objProduct]));
@@ -73,9 +89,10 @@ const addEventBtn = (section, objProduct) => {
       .catch((err) => console.log(err));
     
     const obj = { sku: objResponse.id, name: objResponse.title, salePrice: objResponse.price };
-
+    
     document.getElementsByClassName('cart__items')[0].appendChild(createCartItemElement(obj));
     saveLocalStorage(obj);
+    somePrice();
   });
 };
 
@@ -93,7 +110,6 @@ async function listProduct() {
     .catch((err) => alert(`erro ao carregar produtos. Erro: ${err}`));
   
   products.forEach(printOutProducts);
-  console.log(products);
 }
 
 function recoverShoppingList() {
@@ -104,7 +120,8 @@ function recoverShoppingList() {
       document.getElementsByClassName('cart__items')[0]
       .appendChild(createCartItemElement(obj));
     });
-  }  
+  }
+  somePrice();
 }
 
 window.onload = () => {
