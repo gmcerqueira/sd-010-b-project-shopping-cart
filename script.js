@@ -23,7 +23,7 @@ function createProductItemElement({ sku, name, image }) {
 
   return section;
 }
-
+// VERIFICAR ESSA FUNÇÃO E REFATORAR O CÓDIGO
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
@@ -73,7 +73,7 @@ function addCart() {
   btnAddCart.forEach((button) => button.addEventListener('click', (event) => {
     const itemId = event.target.parentNode.firstChild.innerText;
     const ol = document.querySelector('.cart__items');
-
+   
     fetch(`https://api.mercadolibre.com/items/${itemId}`)
     .then((response) => response.json()
     .then((productId) => {
