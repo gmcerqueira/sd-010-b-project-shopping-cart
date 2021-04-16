@@ -9,8 +9,8 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function funcFetch(url2) {
-  return fetch(url2) 
+function funcFetch(urls) {
+  return fetch(urls) 
   .then((fetchReturn) => fetchReturn.json())
   .catch((erro) => erro);
 }
@@ -24,9 +24,15 @@ function createCustomElement(element, className, innerText) {
 
 function salvar() {
   const itensASalvar = ol.innerHTML;
-  localStorage.setItem('Salvo', itensASalvar); //por innerHTMH pois o localStorageso salva texto
+  localStorage.setItem('Salvo', itensASalvar); // por innerHTMH pois o localStorageso salva texto
 }
 
+function cartItemClickListener(event) {
+  // coloque seu código aqui
+  const selecionado = event.target.parentNode;
+  selecionado.removeChild(event.target);
+  salvar();
+}
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -64,14 +70,6 @@ function createProductItemElement({ sku, name, image }) {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
-
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-  const selecionado = event.target.parentNode;
-  selecionado.removeChild(event.target);
-  salvar();
-}
-
 function lista(url) {
   const itens = document.querySelector('.items');
   funcFetch(url)
