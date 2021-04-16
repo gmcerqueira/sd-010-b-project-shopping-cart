@@ -9,8 +9,9 @@ const updatePrices = async () => {
     const price = priceTag[1].substring(1);
     pricesArray.push(Number(price));
   });
-  const totalPrice = pricesArray.reduce((acc, curr) => acc + curr, 0);
-  const pricePlace = document.querySelector('.total-price');
+  const totalPrice = await pricesArray.reduce((acc, curr) => acc + curr, 0);
+  const pricePlace = await document.querySelector('.total-price');
+  console.log(totalPrice);
   pricePlace.textContent = `Preço Total: $ ${parseFloat(totalPrice).toFixed(2)}`;
 };
 
