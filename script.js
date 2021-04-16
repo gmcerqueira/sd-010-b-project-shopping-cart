@@ -18,21 +18,39 @@ function cartConstructor(li) {
 }
 
 function cartItemClickListener(event) {
-  event.target.remove();
+  const product = event.target;
+  localStorage.removeItem(product.id);
+  product.remove();
+}
+
+// Recebi ajuda do colega, Alan Tanaka T10-B, para a execução do requisito 4
+function cartRecover() {
+  if (localStorage.length) {
+   for (let index = 0; index < localStorage.length; index += 1) {
+      const saved = JSON.parse(localStorage[index]);
+      const li = document.createElement('li');
+      li.innerText = `SKU: ${saved.sku} | NAME: ${saved.name} | PRICE: $${saved.salePrice}`;
+      li.id = index;
+      li.addEventListener('click', cartItemClickListener);
+      document.querySelector('ol.cart__items').appendChild(li);
+    }
+  }
 }
 
  function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
+  li.id = `${localStorage.length}`;
+  const index = li.id;
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  localStorage.setItem(index, JSON.stringify({ sku, name, salePrice }));
   return cartConstructor(li);
 }
 
 async function fetchIdProduct(itemID) {
   const fetchID = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const productId = await fetchID.json();
-  console.log(productId);
   return createCartItemElement(productId);
  }
 
@@ -41,8 +59,8 @@ function getSkuFromProductItem(item) {
   return fetchIdProduct(itemID);
 }
 
-async function itemCatcher(evento) {
-  const eventTarget = evento.target;
+async function itemCatcher(event) {
+  const eventTarget = event.target;
   const aboveContent = eventTarget.parentNode;
   return getSkuFromProductItem(aboveContent);
 }
@@ -67,12 +85,13 @@ async function insertProducts(products) {
  }
 
  async function fetchReceiver() {
-   const fetchMerch = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
-const response = await fetchMerch.json();
-const products = response.results;
-  return insertProducts(products);  
+  const fetchMerch = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
+  const response = await fetchMerch.json();
+  const products = response.results;
+  return insertProducts(products);
  }
 
 window.onload = async function onload() {
  await fetchReceiver();
+ await cartRecover();
 };
