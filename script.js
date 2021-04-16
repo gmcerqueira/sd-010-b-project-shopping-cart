@@ -1,5 +1,3 @@
-// window.onload = function onload() { };
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -14,8 +12,8 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener() {
-  // seu cóigo aqui
+function cartItemClickListener(event) {
+  event.target.remove();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -42,18 +40,22 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
+
+// Pega da API o item pelo ID
 const fetchItem = async (sku) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
   const data = await response.json();
   return data;
 };
 
+// Captura ol e adiciona li ao licar no card adicioando o item no carrinho;
 const addItemCart = async (sku) => {
   const getOl = document.querySelector('.cart__items');
   const data = await fetchItem(sku);
   getOl.appendChild(createCartItemElement(data));
 };
 
+// Faz a listagem dos computadores, chama a função que cria os cards aicionano evento nele. Em seguida pega o id e chama função adItemCart;
 const createListProduct = (data) => {
   data.results.forEach((product) => {
     const classItens = document.querySelector('.items');
@@ -66,6 +68,7 @@ const createListProduct = (data) => {
   });
 };
 
+// Faz requisição de todos os computadores na API.
 const fetchPC = async () => {
   // referencia https://www.youtube.com/watch?v=Zl_jF7umgcs&ab_channel=RogerMelo
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
