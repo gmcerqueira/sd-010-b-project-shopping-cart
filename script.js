@@ -107,6 +107,7 @@ function loadStorage() {
     console.log(price);
     
     localStorage.setItem('listCart', items.innerHTML);
+    localStorage.setItem('sum', sum);
   });
 
   items.innerHTML = localStorage.getItem('listCart');
