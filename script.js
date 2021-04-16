@@ -45,7 +45,7 @@ async function getProducts() {
   return (result);
 }
 
-async function renderProducts(getProducts) {
+async function renderProducts() {
   getProducts.forEach((product) => { 
     const elementProduct = createProductItemElement(product);
     const item = document.querySelector('.items');
