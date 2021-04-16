@@ -1,3 +1,8 @@
+// const p = document.createElement('p');
+// p.innerText = 'vqv'
+// const lista = document.getElementsByClassName('cart__items');
+// lista.appendChild(p)
+
 function criarElemento(element, className, innerText) {
   const elemento = document.createElement(element);
   elemento.className = className;
@@ -50,8 +55,19 @@ async function clickElemente (event) {
     name: prod.title,
     salePrice: prod.price,
   });
+  let total = localStorage.getItem('preco');
+  total += prod.price;
+  localStorage.setItem('preco', total);
+  console.log(total);
   incontrarItem.appendChild(newEl);
   localStorage.setItem('cartItems', incontrarItem.innerHTML);
+}
+
+function calcPreço(price){
+  let total =  localStorage.getItem("preco");
+  total += preco;
+  localStorage.setItem("preco", total);
+  console.log(total);
 }
 
 async function transformarUrl(url) {
@@ -73,11 +89,10 @@ async function transformarUrl(url) {
 }
 
   function cartItemClickListener(event) {
-   console.log('entrou na lista')
+   console.log('entrou na lista');
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
-  console.log('teste')
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -87,4 +102,5 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 window.onload = function onload() {
   transformarUrl('https://api.mercadolibre.com/sites/MLB/search?q=computador');
+  localStorage.setItem('preco', 0);
  };
