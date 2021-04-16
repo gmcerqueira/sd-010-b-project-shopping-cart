@@ -45,7 +45,6 @@ async function somePrice() {
     .find((product) => product.id === id).price);
 
   const total = (arrayPrices.reduce((acc, current) => acc + current, 0));
-  console.log(arrayPrices);
   totalPrice.innerText = total;
 }
 
@@ -124,7 +123,17 @@ function recoverShoppingList() {
   somePrice();
 }
 
+function btnClearShoppingList() {
+  const btnEmpty = document.getElementsByClassName('empty-cart')[0];
+  btnEmpty.addEventListener('click', () => {
+    document.getElementsByClassName('cart__items')[0].innerHTML = '';
+    document.getElementsByClassName('total-price')[0].innerHTML = 0;
+    localStorage.removeItem('productsSave');
+  });
+}
+
 window.onload = () => {
   listProduct();
   recoverShoppingList();
+  btnClearShoppingList();
 };
