@@ -63,6 +63,12 @@
   padding: 5px;
 }
 
+.cart__items {
+  border: 2px solid blue;
+  border-radius: 5px;
+  height: auto;
+}
+
 .cart {
   display: flex;
   flex-basis: 30%;
