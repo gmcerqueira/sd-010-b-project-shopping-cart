@@ -38,31 +38,30 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 //   return li;
 // }
 
- async function getProducts() {
-  const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
-  const products = await response.json();
-  const result = products.results;
-  return (result);
-}
-// função assincrona, envia requisição ao API com a busca por computador
-// aguarda com o await o retorno desta requisição e guarda na const response
-// na const products armazena o resultado de response transformado em json
-// a const result guarda especificamente o array results do arquivo json
-// retorna o array com 50 itens - result
- 
-async function renderProducts(getProducts) {
-  getProducts.forEach((product) => { 
-    const elementProduct = createProductItemElement(product);
-    const item = document.querySelector('.items');
-    item.appendChild(elementProduct); 
-  }); 
-}
-// função que exibe os itens na tela e tem como parametro a função anterior
-// utiliza o retorno dos produtos e cria um elemento para cada item do array
-// o item, busca os elementos com a classe .items 
-// e o append, inclui o elemento criado no foreach como filho da classe items.
-
-window.onload = async function onload() {
-  const product = await getProducts();
-  renderProducts(product);
+ const getProducts = async (product) => {
+  const items = document.querySelector('.items');
+    fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${product}`).then(
+      (response) => {
+        response.json().then((products) => {
+          const result = products.results;
+          result.forEach((element) => { 
+            items.appendChild(createProductItemElement(element));
+          }); 
+        });
+      },
+    ).catch((erro) => {
+      alert(`Erro interno: ${erro}`);
+    });  
  };
+ 
+// função assincrona com parametro o nome do produto desejado, envia requisição ao API - fetch
+// se der certo, entra com a resposta no .then que na seqquencia da função, transforma em json 
+// e novamente entra no then como products e é saldo numa constante desconstruindo apenas o array results que contem
+// os produtos especificado - um array com 50 itens 
+// no array, fazemos um foreach para criar para cada produto um elemento html filho da classe items
+// Este código havia sido escrito inicialmente com async/await, porém como não passou no lint, pedi ajuda para meu 
+// colega Emerson Saturnino que me explicou melhor a utilização do then e refatorei o código seguindo a lógica acima.
+
+window.onload = function onload() {
+  getProducts('computador');
+};
