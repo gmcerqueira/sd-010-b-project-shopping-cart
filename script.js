@@ -53,7 +53,7 @@ const fetchCarItems = async (itemID) => {
   return response;
 };
 
-function cartItemClickListener(event) {  
+function cartItemClickListener(event) {
   const getTargetId = event.target.id;
   const response = fetchCarItems(getTargetId);
   const getOL = document.getElementsByClassName('cart__items')[0];
@@ -85,7 +85,7 @@ const createCartItems = async () => {
     carOL.appendChild(creatLi);
   });
 };
-
+  // Tive ajuda do instrutor Eduardo para finalizar o requisito 1.
 const renderItems = (getResults) => {
   let pc;
   const selectSection = document.getElementsByClassName('items')[0];
@@ -96,13 +96,20 @@ const renderItems = (getResults) => {
       const carProduct = cartItemsList.find((item) => item.id === el.id);
       if (!carProduct) cartItemsList.push(el);
       localStorage.setItem('carShop', JSON.stringify(cartItemsList));
-      createCartItems();
+      createCartItems();      
     });
    });
   };
-  
-  // Tive ajuda do instrutor Eduardo para finalizar o requisito 1.
 
+  const emptyCart = async () => {
+    const selectbtn = document.getElementsByClassName('empty-cart')[0];
+     selectbtn.addEventListener('click', () => {
+      cartItemsList = [];
+      localStorage.removeItem('carShop');
+      createCartItems();
+    });
+  };
+  
 window.onload = async function onload() { 
   console.log('Ok!!! Ready');
   const getResult = await listOfProducts();
@@ -111,4 +118,5 @@ window.onload = async function onload() {
   const itemsStorageString = localStorage.getItem('carShop');
   cartItemsList = itemsStorageString ? JSON.parse(itemsStorageString) : [];
   createCartItems();
+  emptyCart();
 };
