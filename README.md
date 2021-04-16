@@ -76,7 +76,7 @@ Seu projeto deve ter o comportamento parecido com o do gif abaixo quando finaliz
 1. Clone o repositório
   * `git clone https://github.com/tryber/sd-010-b-project-shopping-cart.git`.
   * Entre na pasta do repositório que você acabou de clonar:
-    * `cd sd-010-a-project-shopping-cart`
+    * `cd sd-010-b-project-shopping-cart`
 2. Instale as dependências
   * `npm install`
 3. Crie uma branch a partir da branch `master`
