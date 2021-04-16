@@ -67,8 +67,8 @@ async function fetchId(id) {
 async function botao(id) {
   const item = await fetchId(id);
   const carrinho = createCartItemElement(item);
-  const newOl = document.querySelector('.cart__items');
-  newOl.appendChild(carrinho);
+  const newUl = document.querySelector('.cart__items');
+  newUl.appendChild(carrinho);
 }
 
 async function adicionarCarrinho() {
