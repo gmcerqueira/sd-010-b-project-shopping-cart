@@ -1,6 +1,6 @@
 const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
 const ol = document.querySelector('.cart__items');
-let salvos = ol.childNodes;
+const salvos = ol.childNodes;
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -9,8 +9,8 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function funcFetch(url) {
-  return fetch(url) 
+function funcFetch(url2) {
+  return fetch(url2) 
   .then((fetchReturn) => fetchReturn.json())
   .catch((erro) => erro);
 }
@@ -27,18 +27,13 @@ function salvar() {
   localStorage.setItem('Salvo', itensASalvar); //por innerHTMH pois o localStorageso salva texto
 }
 
-function createProductItemElement({ sku, name, image }) {
-  const section = document.createElement('section');
-  section.className = 'item';
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  // section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  const button = (createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  button.id = sku
-  button.addEventListener('click', adcionar); 
-  section.appendChild(button);
-  return section;
+
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.addEventListener('click', cartItemClickListener);
+  return li;
 }
 
 async function adcionar(este) {
@@ -48,8 +43,22 @@ async function adcionar(este) {
     sku: itemSelecionado.id,
     name: itemSelecionado.title,
     salePrice: itemSelecionado.price,
-  }))
-  salvar()
+  }));
+  salvar();
+}
+
+function createProductItemElement({ sku, name, image }) {
+  const section = document.createElement('section');
+  section.className = 'item';
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  // section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  const button = (createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  button.id = sku;
+  button.addEventListener('click', adcionar); 
+  section.appendChild(button);
+  return section;
 }
 
 // function getSkuFromProductItem(item) {
@@ -60,15 +69,7 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
   const selecionado = event.target.parentNode;
   selecionado.removeChild(event.target);
-  salvar()
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
+  salvar();
 }
 
 function lista(url) {
@@ -80,7 +81,7 @@ function lista(url) {
         sku: item.id,
         name: item.title,
         image: item.thumbnail,
-      })
+      }),
       );
   }))
   .catch((erro) => erro);
@@ -94,6 +95,6 @@ function colocaOsListeners() {
 
 lista(url);
 window.onload = function onload() {
-  ol.innerHTML = localStorage.getItem ('Salvo');
-  colocaOsListeners()
+  ol.innerHTML = localStorage.getItem('Salvo');
+  colocaOsListeners();
 };
