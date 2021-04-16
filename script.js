@@ -1,8 +1,7 @@
 const cart = '.cart__items'; // Atribuo a classe a uma constante assim posso reutilizar mais vezes quanto for pegar
 // https://eslint.org/docs/rules/prefer-const (Jonnes Bezerra)
-let total = 0;
-let storageTotalPrice = localStorage.getItem('totalPrice');
-const priceContainer = document.getElementsByClassName('total-price');
+let total = 0; // valor inicial do carrinho
+localStorage.setItem('totalPrice', total); // adiciono a chave e o valor inicial ao localStorage
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -28,31 +27,31 @@ function getSkuFromProductItem(item) {
 function addToLocalStorage(id, objeto) {
   localStorage.setItem(id, objeto);
 }
-
 //-----------------------------------------------------------------------------------------------------
 // BOTÃO ADICIONAR ITENS AO CARRINHO DE COMPRAS
+
+const priceContainer = document.getElementsByClassName('total-price');
 
 function cartItemClickListener(event) { 
   const cartItem = document.querySelector(cart); // recupero meu carrinho com os itens
   const cartItemClicked = event.target; // item que recebeu o click
   // https://www.devmedia.com.br/javascript-substring-selecionando-parte-de-uma-string/39232
   const itemClickedPrice = cartItemClicked.innerText.substring(
-    cartItemClicked.innerText.indexOf('$') + 1,
+    cartItemClicked.innerText.indexOf('$') + 1, // pego o valor depois do $ no texto
     );  
-  total -= itemClickedPrice;
-  total = Math.round(total * 100) / 100;
-  addToLocalStorage('totalPrice', total);
-  priceContainer[0].innerHTML = total;
-  console.log(priceContainer[0]);
-  cartItemClicked.remove(); // item é removido
+    cartItemClicked.remove(); // item é removido
+  total -= itemClickedPrice; // subtrai o valor do total
+  total = Math.round(total * 100) / 100; // arredonda o total
+  priceContainer[0].innerHTML = total; // adiciono o valor atual a tag html
   addToLocalStorage('productsCart', cartItem.innerHTML); // Atualizo o storage sem o item;
+  addToLocalStorage('totalPrice', total); // salvo no storage
   }
   // --------------------------------------------------------------------------------------------------
 // VALOR TOTAL DO CARRINHO DE COMPRAS
 
-function cartTotalPrice(value) {
-  total += Math.round(value * 100) / 100;
-  console.log(priceContainer[0].innerHTML = total);
+function cartTotalPrice(value) { // pego o valor passado pelo parametro ao adicionar item no carrinho
+  total += value; // soma no total
+  priceContainer[0].innerHTML = total; // passo o valor para o html
   return total;
 }
 
@@ -78,8 +77,7 @@ function addProductToCart(event) {
   .then(({ id, title, price }) => { // com o retorno crio o meu elem e o adiciono ao carrinho passando para as
     cartAdd.appendChild(createCartItemElement({ sku: id, name: title, salePrice: price }));// chaves id, title e preço
       addToLocalStorage('productsCart', cartAdd.innerHTML); // salvo meu li criado no localstorage
-      addToLocalStorage('totalPrice', cartTotalPrice(price));
-      console.log(priceContainer[0]);
+      addToLocalStorage('totalPrice', cartTotalPrice(price)); // salvo o valor passado pra função soma no storage
     }); 
   }
 //-----------------------------------------------------------------------------------------------------------------
@@ -99,35 +97,35 @@ function createProductItemElement({ sku, name, image }) {
 
 // REQUISIÇÃO COM A API MERCADO LIVRE E CRIANDO LISTA
 // loading feito no plantão com ideia do Henrique Zózimo.
+
 async function creatProductList() {
-  const container = document.querySelector('.container');
-  const message = document.createElement('span');
-  message.className = 'loading';
+  const container = document.querySelector('.container'); // recupero o container que vou add o loading
+  const message = document.createElement('span'); // crio um span
+  message.className = 'loading'; // nome da classe e o texto
   message.innerText = 'loading...';
-  container.appendChild(message);
-  console.log(message);
-  await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
-    .then((response) => response.json())
+  container.appendChild(message); // adiciono ao container
+  await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador') // espero a requisiçao com a API
+    .then((response) => response.json()) // resposta para json
     .then((data) => {
-      const dataResults = data.results;
+      const dataResults = data.results; 
       const listItems = document.querySelector('.items'); // recupera a seção onde será criada a lista de produtos
-      dataResults.forEach(({ id, title, thumbnail }) => // Henrique Clementino 
-      listItems.appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail })));
+      dataResults.forEach(({ id, title, thumbnail }) => // pego o id, title e imagem do obj recuperado
+      listItems.appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail }))); // add ao carrinho
     })
-    .then(() => message.remove())
+    .then(() => message.remove()) // removo a classe de loading
     .catch(() => alert('Não foi possível se conectar com a API '));
-    console.log(container);
+    // console.log(container);
 }
 
 //-------------------------------------------------------------------------------------------------
 // RECUPERANDO O CARRINHO SALVO NO STORAGE
+let storageTotalPrice = localStorage.getItem('totalPrice'); // recupero o preço total do storage
 
 function getStorageCart() {  
-  const cartRecovered = document.querySelector(cart);
-  const storageCart = localStorage.getItem('productsCart');
-  total = parseFloat(storageTotalPrice);
-  priceContainer[0].innerHTML = storageTotalPrice;
-  console.log(storageTotalPrice);
+  const cartRecovered = document.querySelector(cart); // recupero meu carrinho
+  const storageCart = localStorage.getItem('productsCart'); // pego os itens salvos no carrinho
+  total = parseFloat(storageTotalPrice); // transformo em numero
+  priceContainer[0].innerHTML = storageTotalPrice; // adiciono o valor ao html
   if (storageCart) { // se tevier storage
     cartRecovered.innerHTML = storageCart; // passo o inner html para o meu carrinho
     const listItems = document.querySelectorAll('li'); // pego os lis recuperados do storage
@@ -140,11 +138,11 @@ function getStorageCart() {
 
 function emptyCart() {
   const carrinhoAtual = document.querySelectorAll('.cart__item'); // node list
-  if (carrinhoAtual.length === 0) {
+  if (carrinhoAtual.length === 0) { // vejo se tem algo no carrinho
     alert('Carrinho Vazio');
   } else {
-    carrinhoAtual.forEach((item) => item.remove());
-    addToLocalStorage('productsCart', carrinhoAtual.innerHTML = '');
+    carrinhoAtual.forEach((item) => item.remove()); // removo cada item
+    addToLocalStorage('productsCart', carrinhoAtual.innerHTML = ''); // zero o localStorage
     storageTotalPrice = 0;
     priceContainer[0].innerHTML = storageTotalPrice;
     total = storageTotalPrice;
