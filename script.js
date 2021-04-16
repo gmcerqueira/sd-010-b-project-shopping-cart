@@ -1,20 +1,7 @@
 let arrCarts = [];
 
-// function getTotalPrice(arr) {
-//   return new Promise((resolve) => {
-//     let total = 0;
-//     const elementSpan = document.querySelector('#price');
-//     arr.forEach((elem) => {
-//       total += elem.salePrice
-//     })
-//     elementSpan.innerHTML = `Preço Total: R$${total.toFixed(2)}`
-//   })
-// } 
-
 async function totalPrice(arr) {
-  // const response = await getTotalPrice(arrCarts)
   let total = 0;
-  // const elementSpan = document.querySelector('#price');
   const elementSection = document.querySelector('.total-price');
     arr.forEach((elem) => {
     total += elem.salePrice;
@@ -114,8 +101,17 @@ function fetchProducts() {
     });
 }
 
+function delProducts() {
+  const cartItems = document.querySelector('#itemsCart');
+  while (cartItems.firstChild) {
+    cartItems.removeChild(cartItems.firstChild);
+  }
+}
+
 window.onload = function onload() { 
   savedProducts();
   fetchProducts();  
   totalPrice(arrCarts);
+  const emptyCart = document.querySelector('.empty-cart');
+  emptyCart.addEventListener('click', delProducts);
 };
