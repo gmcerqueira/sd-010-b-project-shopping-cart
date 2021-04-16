@@ -1,3 +1,4 @@
+// ideia retirada no site: https://stackoverflow.com/questions/53799108/how-to-add-a-loading-animation-while-fetch-data-from-api-vanilla-js
 let loadingStatus = false;
 function verifyRequestAPI() {
   if (loadingStatus) {
@@ -36,7 +37,7 @@ function cartItemClickListener(event) {
   const price = Number(liText.substring(liText.indexOf('$') + 1, liText.length));
   
   sum -= price;
-  arr = [Math.abs(sum)];
+  arr = [Math.abs(sum)]; // acho que tenho que alterar esse arr. Pensar em como remover apenas o item clicado do array
 
   spanSum.innerText = `${Math.abs(sum.toFixed(2))}`;
   
@@ -94,18 +95,18 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 }
 
 function fetchProduct(computer) {
+  loadingStatus = true;
+  verifyRequestAPI();
+
   fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${computer}`)
     .then((response) => response.json())
     .then(({ results }) => {
       loadingStatus = false;
       verifyRequestAPI();
+
       results.forEach((data) => createProductItemElement(data));
     });
 }
-
-/* function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-} */
 
 function removeAllItems() {
   const cartItems = document.getElementsByClassName('cart__items')[0];
@@ -123,7 +124,6 @@ function removeAllItems() {
 function loadStorage() {
   const items = document.getElementsByTagName('ol')[0];
   const spanSum = document.querySelector('.total-price');
-  
   const sumLocalStorage = Number(localStorage.getItem('sum'));
   spanSum.innerHTML = Math.abs(sumLocalStorage.toFixed(2));
   
@@ -133,7 +133,7 @@ function loadStorage() {
     const liText = event.target.innerText;
     const price2 = Number(liText.substring(liText.indexOf('$') + 1, liText.length));
     console.log(price2);
-
+    // ao recarregar a página nao consigo somar e subtrair os valores.
     localStorage.setItem('listCart', items.innerHTML);
   });
   
@@ -141,10 +141,12 @@ function loadStorage() {
   items.innerHTML = localStorage.getItem('listCart');
 }
 
+/* function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+} */
+
 window.onload = function onload() { 
   fetchProduct('computador');
   removeAllItems();
   loadStorage();
-  loadingStatus = true;
-  verifyRequestAPI();
 };
