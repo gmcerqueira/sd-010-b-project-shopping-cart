@@ -1,3 +1,12 @@
+function sumOfTotal() {
+  let total = 0;
+  const catchaP = document.querySelector('p');
+  const catchaCartItem = document.querySelectorAll('.cart__item');
+  catchaCartItem.forEach((price) => {
+    total += Number(price.innerHTML.split('$')[1]);
+    catchaP.innerText = total;
+  });
+}
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -19,6 +28,7 @@ function cartItemClickListener(event) {
   document.querySelector('.cart__items')
     .addEventListener('click', (event2) => event2.target.remove());
   item.remove();
+  sumOfTotal();
 }
 
 // desafio 4
@@ -38,12 +48,9 @@ function createCartItemElement({
   ol.appendChild(li);
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  saveLocalStorage(liContainID, {
-    sku,
-    name,
-    salePrice,
-  });
+  saveLocalStorage(liContainID, { sku, name, salePrice });
   li.addEventListener('click', cartItemClickListener);
+  sumOfTotal();
   return li;
 }
 // desafio 4
@@ -134,8 +141,9 @@ window.onload = function onload() {
 // 3.2 excluir o ID
 // 5° Desafio
 // Baby Steps:
-// 1° localizar o valor
-// 2° somar os valores
-// 3° Preparar o  ambiente para adicionar a soma 
+// 1° localizar o valor x
+// 2° somar os valores x
+// 3° Preparar o  ambiente para adicionar a soma  x
 // 4° transformar a função em assincrona
+
 // Agradecimentos ao Alan Tanaka Turma 10 tribo B - Henrique Zozimo Turma 10 Tribo B - Daniel ROberto Turma 10 Tribo B - Thiago Marchini Turma 10 Tribo B por ter me auxiliado nos desafios.
