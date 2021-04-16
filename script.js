@@ -84,10 +84,9 @@ function loadingLocalStorage() {
 function deleteButton() {
   const cartItem = document.querySelectorAll('.cart__item');
   localStorage.clear();
-  console.log('funciona?');
-  for (let index = 0; index < cartItem.length; index += 1) {
-    cartItem[index].remove();
-  }
+  cartItem.forEach((cont) => {
+    cont.remove();
+  });
 }
 
 window.onload = function onload() {
@@ -139,4 +138,4 @@ window.onload = function onload() {
 // 2° somar os valores
 // 3° Preparar o  ambiente para adicionar a soma 
 // 4° transformar a função em assincrona
-// Agradecimentos ao Alan Tanaka Turma 10 tribo B - Henrique Zozimo Turma 10 Tribo B - Daniel ROberto Turma 10 Tribo B - Thiago Marchini por ter me auxiliado nos desafios.
+// Agradecimentos ao Alan Tanaka Turma 10 tribo B - Henrique Zozimo Turma 10 Tribo B - Daniel ROberto Turma 10 Tribo B - Thiago Marchini Turma 10 Tribo B por ter me auxiliado nos desafios.
