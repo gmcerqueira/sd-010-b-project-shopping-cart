@@ -70,10 +70,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return sectionItems.appendChild(section);
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 async function getProducts() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const { results } = await response.json();
