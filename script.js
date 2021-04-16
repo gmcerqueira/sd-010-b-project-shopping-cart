@@ -15,10 +15,10 @@ async function totalPrice(arr) {
   // const response = await getTotalPrice(arrCarts)
   let total = 0;
   const elementSpan = document.querySelector('#price');
-  arr.forEach((elem) => {
+    arr.forEach((elem) => {
     total += elem.salePrice;
   });
-  elementSpan.innerHTML = `${total}`;
+  elementSpan.innerHTML = total;
 }
 
 function createProductImageElement(imageSource) {
