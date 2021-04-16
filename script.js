@@ -31,7 +31,7 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 function cartItemClickListener() {
-  // coloque seu código aqui
+  
 }
 
 function createCartItemElement({ id, title, price }) {
@@ -67,8 +67,8 @@ async function fetchId(id) {
 async function botao(id) {
   const item = await fetchId(id);
   const carrinho = createCartItemElement(item);
-  const newUl = document.querySelector('.cart__items');
-  newUl.appendChild(carrinho);
+  const newOl = document.querySelector('.cart__items');
+  newOl.appendChild(carrinho);
 }
 
 async function adicionarCarrinho() {
