@@ -70,6 +70,7 @@ const eventButtomItem = async (id) => {
   const productCart = createCartItemElement(product);
   const ol = document.querySelector('.cart__items');
   ol.appendChild(productCart);
+  localStorage.setItem('Cart', ol.innerHTML);
 };
 
 const renderItemsCart = async () => {
@@ -90,8 +91,14 @@ const removeAll = () => {
   });
 };
 
+const saveCart = () => {
+  const saveItems = localStorage.getItem('Cart');
+  document.querySelector('.cart__items').innerHTML = saveItems;
+};
+
 window.onload = async function onload() {
   await renderProducts();
   await renderItemsCart();
   await removeAll();
+  await saveCart();
 };
