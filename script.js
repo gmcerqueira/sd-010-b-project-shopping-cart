@@ -95,9 +95,9 @@ const renderItems = (getResults) => {
     const selectDiv = document.getElementsByClassName('total-price')[0];
     createh2.innerText = await value;
     createh2.id = 'totalPrice';
+    createh2.classList('total-price');
     selectDiv.appendChild(createh2);
-    console.log(value);
-    
+    console.log(value);    
     return value;
   };
 
