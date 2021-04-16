@@ -18,7 +18,7 @@ async function totalPrice(arr) {
   arr.forEach((elem) => {
     total += elem.salePrice;
   });
-  elementSpan.innerHTML = `Preço Total: R$${total.toFixed(2)}`;
+  elementSpan.innerHTML = `${total.toFixed(2)}`;
 }
 
 function createProductImageElement(imageSource) {
