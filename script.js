@@ -29,8 +29,8 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
-  return event;
+  const shoppingCart = document.getElementsByClassName('cart__items')[0];
+  shoppingCart.removeChild(event.target);
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
