@@ -2,7 +2,7 @@ const cart = '.cart__items'; // Atribuo a classe a uma constante assim posso reu
 // https://eslint.org/docs/rules/prefer-const (Jonnes Bezerra)
 let total = 0;
 let storageTotalPrice = localStorage.getItem('totalPrice');
-const priceContainer = document.getElementsByTagName('p');
+const priceContainer = document.getElementsByClassName('total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -39,10 +39,11 @@ function cartItemClickListener(event) {
   const itemClickedPrice = cartItemClicked.innerText.substring(
     cartItemClicked.innerText.indexOf('$') + 1,
     );  
-  const result = parseFloat(total - itemClickedPrice);
-  total = Math.round(result * 100) / 100;
-  priceContainer[0].innerHTML = total;
+  total -= itemClickedPrice;
+  total = Math.round(total * 100) / 100;
   addToLocalStorage('totalPrice', total);
+  priceContainer[0].innerHTML = total;
+  console.log(priceContainer[0]);
   cartItemClicked.remove(); // item é removido
   addToLocalStorage('productsCart', cartItem.innerHTML); // Atualizo o storage sem o item;
   }
@@ -51,7 +52,7 @@ function cartItemClickListener(event) {
 
 function cartTotalPrice(value) {
   total += Math.round(value * 100) / 100;
-  priceContainer[0].innerHTML = total;
+  console.log(priceContainer[0].innerHTML = total);
   return total;
 }
 
@@ -78,6 +79,7 @@ function addProductToCart(event) {
     cartAdd.appendChild(createCartItemElement({ sku: id, name: title, salePrice: price }));// chaves id, title e preço
       addToLocalStorage('productsCart', cartAdd.innerHTML); // salvo meu li criado no localstorage
       addToLocalStorage('totalPrice', cartTotalPrice(price));
+      console.log(priceContainer[0]);
     }); 
   }
 //-----------------------------------------------------------------------------------------------------------------
@@ -96,16 +98,25 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 // REQUISIÇÃO COM A API MERCADO LIVRE E CRIANDO LISTA
+// loading feito no plantão com ideia do Henrique Zózimo.
 async function creatProductList() {
-  const listItems = document.querySelector('.items'); // recupera a seção onde será criada a lista de produtos
+  const container = document.querySelector('.container');
+  const message = document.createElement('span');
+  message.className = 'loading';
+  message.innerText = 'loading...';
+  container.appendChild(message);
+  console.log(message);
   await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
     .then((response) => response.json())
     .then((data) => {
       const dataResults = data.results;
+      const listItems = document.querySelector('.items'); // recupera a seção onde será criada a lista de produtos
       dataResults.forEach(({ id, title, thumbnail }) => // Henrique Clementino 
       listItems.appendChild(createProductItemElement({ sku: id, name: title, image: thumbnail })));
     })
+    .then(() => message.remove())
     .catch(() => alert('Não foi possível se conectar com a API '));
+    console.log(container);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -114,11 +125,13 @@ async function creatProductList() {
 function getStorageCart() {  
   const cartRecovered = document.querySelector(cart);
   const storageCart = localStorage.getItem('productsCart');
+  total = parseFloat(storageTotalPrice);
   priceContainer[0].innerHTML = storageTotalPrice;
-  if (storageCart !== '' && storageCart !== null && cartRecovered !== null) { 
-    cartRecovered.innerHTML = (localStorage.getItem('productsCart')); // pego os valores dela
-    const lis = document.querySelectorAll('li'); // pego os lis recuperados do storage
-    lis.forEach((li) => li.addEventListener('click', cartItemClickListener)); // adiciono para cada um o listener do click
+  console.log(storageTotalPrice);
+  if (storageCart) { // se tevier storage
+    cartRecovered.innerHTML = storageCart; // passo o inner html para o meu carrinho
+    const listItems = document.querySelectorAll('li'); // pego os lis recuperados do storage
+    listItems.forEach((li) => li.addEventListener('click', cartItemClickListener)); // adiciono para cada um o listener do click
   }
 }
 
@@ -131,7 +144,7 @@ function emptyCart() {
     alert('Carrinho Vazio');
   } else {
     carrinhoAtual.forEach((item) => item.remove());
-    localStorage.setItem('productsCart', carrinhoAtual.innerHTML = '');
+    addToLocalStorage('productsCart', carrinhoAtual.innerHTML = '');
     storageTotalPrice = 0;
     priceContainer[0].innerHTML = storageTotalPrice;
     total = storageTotalPrice;
@@ -150,5 +163,4 @@ window.onload = function onload() {
 creatProductList();
 getStorageCart();
 addClickEventToEmptyCartButton();
-// cartTotalPrice();
 };
