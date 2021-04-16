@@ -1,4 +1,18 @@
-window.onload = function onload() { };
+window.onload = function onload() {};
+
+const waitApi = () => {
+  const cartSection = document.querySelector('.cart');
+  const newElement = document.createElement('span');
+  newElement.className = 'loading';
+  newElement.innerText = 'loading...';
+  cartSection.appendChild(newElement);
+};
+
+const afterRequisition = () => {
+  const cartSection = document.querySelector('.cart');
+  const span = document.querySelector('.loading');
+  cartSection.removeChild(span);
+};
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -51,7 +65,9 @@ const getProducts = async () => {
 };
 
 const renderProducts = async () => {
+  waitApi();
   const itemsProducts = await getProducts();
+  afterRequisition();
   const items = document.querySelector('.items');
   itemsProducts.forEach((itemProduct) => {
     const objItem = { sku: itemProduct.id, name: itemProduct.title, image: itemProduct.thumbnail };
@@ -72,7 +88,7 @@ const eventButtomItem = async (id) => {
   const productCart = createCartItemElement(product);
   const ol = document.querySelector(cartItems);
   ol.appendChild(productCart);
-  localStorage.setItem('Cart', ol.innerHTML);
+  localStorage.setItem('Cart', JSON.stringify(ol.innerHTML));
 };
 
 const renderItemsCart = async () => {
@@ -95,8 +111,9 @@ const removeAll = () => {
 
 const saveCart = () => {
   const saveItems = localStorage.getItem('Cart');
+  const obj = JSON.parse(saveItems);
   const ol = document.querySelector(cartItems);
-  ol.innerHTML = saveItems;
+  ol.innerHTML = obj;
 };
 
 window.onload = async function onload() {
