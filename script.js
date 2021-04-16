@@ -11,13 +11,12 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
-// const addProduct = document.querySelector('.cart_item');
-// addProduct.appendChild(createdItem);
 
 const cartItemClickListener = (event) => {
     const clickedItem = event.target;
     clickedItem.remove();
     };
+// Lucas me ajudou a entender que eu poderia aproveitar a função adicionada com clique na linha 26.
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
@@ -26,6 +25,10 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
+const removeElement = () => {
+const chartFilled = document.querySelector('.cart__items');
+chartFilled.innerHTML = '';
+};
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
@@ -41,12 +44,12 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
     const createdItem = createCartItemElement(buy);
     const addProduct = document.querySelector('.cart__items');
     addProduct.appendChild(createdItem);
+    const bttnClick = document.querySelector('.empty-cart');
+bttnClick.addEventListener('click', removeElement);
   });
   return section;
 }
 // Alan me ajudou nesta questão;
-
-// const Productsadded = document.querySelector('.cart_item');
 
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
