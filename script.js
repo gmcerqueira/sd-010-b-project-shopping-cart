@@ -14,15 +14,10 @@ function createCustomElement(element, className, innerText) {
 // const addProduct = document.querySelector('.cart_item');
 // addProduct.appendChild(createdItem);
 
-const cartItemClickListener = () => {
-  const lis = document.querySelectorAll('.cart__item');
-  lis.forEach((liItem) => {
-    liItem.addEventListener('click', (event) => {
+const cartItemClickListener = (event) => {
     const clickedItem = event.target;
     clickedItem.remove();
-    });
-  });    
-};
+    };
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
