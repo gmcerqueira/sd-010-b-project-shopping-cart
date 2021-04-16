@@ -6,6 +6,31 @@ btn.addEventListener('click', () => {
   document.querySelector('.cart__items').innerHTML = '';
 });
 
+const totalPrice = document.createElement('span');
+totalPrice.className = 'total-price';
+document.querySelector('.cart').appendChild(totalPrice);
+
+// selecting loading div
+const loader = document.createElement('div');
+loader.classList.add('loading');
+loader.innerHTML = 'Loadingando';
+document.querySelector('.items').appendChild(loader);
+
+// showing loading
+function displayLoading() {
+  loader.classList.add('display');
+  // to stop loading after some time
+  setTimeout(() => {
+      loader.classList.remove('display');
+  }, 2000);
+}
+
+// hiding loading 
+function hideLoading() {
+  loader.style.display = 'none';
+  loader.remove();
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -46,6 +71,7 @@ function saveCartList() {
   });
 }
 
+// Carrega a lista de produtos salvos no LS:
 function loadCartList() {
   for (let i = 0; i < localStorage.length; i += 1) {
     const obj = localStorage[i];
@@ -85,9 +111,11 @@ function createProductItemElement({ sku, name, image }) {
 
 // Através da requisição da API captura uma lista de obj e, pegando infos especificas deles, cria a lista de produtos com a função: 'createProductItemElement';
 function productInfo(product) {
+  displayLoading();
   return fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${product}`)
   .then((response) => response.json())
   .then((computers) => {
+    hideLoading();
     computers.results.forEach(({ id, title, thumbnail }) => {
       const pc = { sku: id, name: title, image: thumbnail };
       document.querySelector('.items').appendChild(createProductItemElement(pc));
