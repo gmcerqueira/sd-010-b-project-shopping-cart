@@ -8,14 +8,12 @@ function retirarItem(valor) {
 function cartItemClickListener(event) {
   const one = event.target;
   const one1 = one.parentElement;
-  if (one1.parentElement.tagName === 'LI' || one1.firstChild.innerHTML !== null) {
+  if (one1.parentElement.tagName === 'LI' ) {
     retirarItem(one.parentElement.firstChild.innerHTML.split(' ')[1]);
     event.target.parentElement.parentElement.remove();
-  } else if (one.firstChild.firstChild.innerHTML !== null) {
+  } else {
       retirarItem(one.firstChild.firstChild.innerHTML.split(' ')[1]);
       event.target.remove();
-  } else {
-      console.log(event.target);
   }
 }
 
@@ -41,16 +39,13 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-// let soma = 0;
-// async function somaPrice(object) {
-//   const p = document.createElement('p');
-//   const cart1 = document.body;
-//   console.log(cart1);
-//   cart1.appendChild(p);
-//   soma += object.salePrice;
-//   p.innerText = soma;
-//   console.log(soma);  
-// }
+let soma = 0;
+async function somaPrice(object) {
+  const p = document.querySelector('.total-price');
+  soma += object.salePrice;
+  p.innerText = soma;
+  console.log(soma);  
+}
 
 function buttonAdd(button, sku) {
   button.addEventListener('click', () => {
@@ -67,7 +62,7 @@ function buttonAdd(button, sku) {
       };
       const cart = document.getElementsByClassName('cart__items')[0];
       cart.appendChild(createCartItemElement(object));
-      // somaPrice(object);
+      somaPrice(object);
     });
   });
 }
