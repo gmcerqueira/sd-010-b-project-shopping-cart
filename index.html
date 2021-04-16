@@ -1,22 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="script.js"></script>
-  </head>
-
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="header.css">
+    <title>Shop Cart</title>
+</head>
+  
   <body>
+    <header>
+      <div class="overlay"></div>
+      <nav>
+          <h2>SHOP</h2>
+          <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="#">About</a></li>
+          </ul>
+      </nav>
+  </header>
     <section class="container">
-      <section class="items"></section>
+      <section class="items">
+        <ul class ="list"></ul>
+      </section>
       <section class="cart">
         <span class="cart__title">Carrinho de compras</span>
         <button class="empty-cart">Esvaziar carrinho</button>
-        <ol class="cart__items"></ol>
+        <ul class="cart__items"></ul>
+        <ul class="total-price"></ul>
       </section>
     </section>
+    <script src="script.js"></script>
   </body>
-</html>
+  </html>
