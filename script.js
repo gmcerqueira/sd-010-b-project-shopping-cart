@@ -14,15 +14,38 @@ function createCustomElement(element, className, innerText) {
 
 // pegando as ids da API
 async function fethIds(id) {
-  const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
-  const responseJson = await response.json();
+  const responseFetch = await fetch(`https://api.mercadolibre.com/items/${id}`);
+  const responseJson = await responseFetch.json();
   const idsProducts = responseJson;
   return idsProducts;
 }
 
+// const arrayLocalStorage = [];
+
 function cartItemClickListener(event) {
   event.target.remove('parent');
-}  
+  // localStorage.removeItem(event.target.innerText);
+  const targetInnerText = event.target.innerText;
+  // console.log(targetInnerText);
+  const sizeLocalStore = Object.values(localStorage).length;
+  console.log(targetInnerText);
+  console.log(sizeLocalStore);
+  for (let index = 0; index < sizeLocalStore; index += 1) {
+    if (targetInnerText === Object.values(localStorage)[index]) {
+      localStorage.removeItem(Object.keys(localStorage)[index]);
+      break;
+    }
+  }
+}
+
+const localStorageCartShop = (cartShop) => {
+  const sizeCartItem = document.getElementsByClassName('cart__item');
+  for (let index = 1; index <= sizeCartItem.length; index += 1) {
+    if (index === sizeCartItem.length) {
+      localStorage.setItem(`cartShop[${index}]`, `${cartShop}`);
+    }
+  }
+};
 
 // tive ajuda do Lucas Portella;
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -32,13 +55,17 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const classCartItems = document.getElementsByClassName('cart__items')[0];
   classCartItems.appendChild(li);
   li.addEventListener('click', cartItemClickListener);
+  // localStorageCartShop(li.innerText);
   return li;
 }
 
 async function addCarrinho(event) {
-  const id = await event.target.parentNode.firstChild.innerText;
-  const response = await fethIds(id);
-  await createCartItemElement(response);
+  const id = event.target.parentNode.firstChild.innerText;
+  const responseFath = await fethIds(id);
+  const responseApiId = createCartItemElement(responseFath);
+  localStorageCartShop(responseApiId.innerText); // localStorage
+  // arrayLocalStorage.push(responseApiId.innerText);
+  return responseApiId;
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -71,6 +98,17 @@ async function fethProdutos() {
   return consultProducts(products);
 }
 
+function recoveryLocalStorage() {
+  for (let index = 1; index <= localStorage.length; index += 1) {
+    const li = document.createElement('li');
+    li.className = 'cart__item';
+    li.innerText = localStorage.getItem(`cartShop[${index}]`);
+    const classCartItems = document.getElementsByClassName('cart__items')[0];
+    classCartItems.appendChild(li);
+    li.addEventListener('click', cartItemClickListener);
+  }
+}
+
 // function getSkuFromProductItem(item) {
   //   return item.querySelector('span.item__sku').innerText;
   // }
@@ -91,4 +129,5 @@ async function fethProdutos() {
     // tive ajuda do Lucas Matins
   window.onload = async function onload() {
     await fethProdutos(); // so vem parar aqui oq for preciso carregar primeiro 
+    recoveryLocalStorage();
   };
