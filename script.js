@@ -15,11 +15,13 @@ function createCustomElement(element, className, innerText) {
 // addProduct.appendChild(createdItem);
 
 const cartItemClickListener = () => {
-  const remove = document.querySelector('.cart__items');
-  const removal = document.querySelector('.cart__item');
-  removal.addEventListener('click', () => {
-      remove.removeChild(removal);
+  const lis = document.querySelectorAll('.cart__item');
+  lis.forEach((liItem) => {
+    liItem.addEventListener('click', (event) => {
+    const clickedItem = event.target;
+    clickedItem.remove();
     });
+  });    
 };
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
