@@ -5,7 +5,7 @@ async function fetchProducts() {
   return computers;
 }
 
-const cartItems = [];
+let cartItems = [];
 
 function saveCartItems() {
   localStorage.setItem('cart', JSON.stringify(cartItems));
@@ -20,7 +20,6 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  saveCartItems();
   return li;
 }
 
@@ -30,11 +29,10 @@ function renderCartProducts(idInfos) {
   cartOl.appendChild(item);
 }
 
-function getSavedCartItems() {
-  const items = JSON.parse(localStorage.getItem('cart'));
-  items.forEach((item) => {
-    renderCartProducts(item);
-  });
+function getSavedCartItems(items) {
+    items.forEach((item) => {
+      renderCartProducts(item);
+    });
 }
 
 async function fetchById(event) {
@@ -48,6 +46,7 @@ async function fetchById(event) {
     salePrice: idInfos.price,
   };
   cartItems.push(idObject);
+  saveCartItems();
   renderCartProducts(idObject);
 }
 
@@ -93,9 +92,11 @@ function renderProducts(computersList) {
 }
 
 window.onload = async function onload() {
+  const cartItemsString = localStorage.getItem('cart');
+  cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
+  getSavedCartItems(cartItems);
   const computers = await fetchProducts();
-  renderProducts(computers);
-  getSavedCartItems();
+  await renderProducts(computers);
 };
 
 // function getSkuFromProductItem(item) {
