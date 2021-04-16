@@ -1,3 +1,5 @@
+// const { pullAll } = require("cypress/types/lodash");
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -25,6 +27,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+ 
   return li;
 }
 
@@ -41,8 +44,9 @@ function createProductItemElement({ sku, name, image }) {
     const requisicaoJson = await requisicao.json();
     const filho = createCartItemElement(requisicaoJson);
     document.querySelector('.cart__items').appendChild(filho);
+    const pai = document.querySelector('ol');
+    localStorage.setItem('chave', pai.innerText);
   });
-
   return section;
 }
 
@@ -60,7 +64,6 @@ function pegaAPI() {
         };
         const produto = createProductItemElement(produtos);
         document.querySelector('.items').appendChild(produto);
-        // document.querySelector('.loading').remove();
       });
     });
 }
@@ -72,10 +75,18 @@ async function apaga() {
   });
 }
 
+ function localStoranges() {
+  const ol = document.querySelector('ol');
+  if (localStorage.getItem('chave')) {
+    ol.innerText = localStorage.chave;
+  }
+}
+
 window.onload = async function onload() {
   try {
     await pegaAPI();
     await apaga();
+    await localStoranges();
   } catch (_error) {
     alert('error');
   }
