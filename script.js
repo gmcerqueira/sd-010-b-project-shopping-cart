@@ -7,23 +7,8 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  // li.addEventListener('click', cartItemClickListener);
   return li;
-}
-
-async function clickElemente(event) {
-  const incontrarItem = document.getElementsByClassName('cart__items')[0];
-  const parent = event.target.parentElement;
-  const prodID = getSkuFromProductItem(parent);
-  const prod = await getProductId(prodID);
-  const newEl = createCartItemElement({
-    sku: prod.id,
-    name: prod.title,
-    salePrice: prod.price,
-  });
-  // calcPreço(prod.price);
-  incontrarItem.appendChild(newEl);
-  localStorage.setItem('cartItems', incontrarItem.innerHTML);
 }
 
 function criarElemento(element, className, innerText) {
@@ -66,6 +51,21 @@ function getProductId(sku) {
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
+}
+
+async function clickElemente(event) {
+  const incontrarItem = document.getElementsByClassName('cart__items')[0];
+  const parent = event.target.parentElement;
+  const prodID = getSkuFromProductItem(parent);
+  const prod = await getProductId(prodID);
+  const newEl = createCartItemElement({
+    sku: prod.id,
+    name: prod.title,
+    salePrice: prod.price,
+  });
+  // calcPreço(prod.price);
+  incontrarItem.appendChild(newEl);
+  localStorage.setItem('cartItems', incontrarItem.innerHTML);
 }
 
 // function calcPreço(price){
