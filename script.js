@@ -1,3 +1,21 @@
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`; // esses eu consigo ao fazer o segundo fetch.
+   // li.addEventListener('click', cartItemClickListener);
+   
+  return li;
+ }
+const addToCard = async (sku) => {
+  const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
+  const jsonIds = await response.json();
+  const clickItem = createCartItemElement({
+     id: jsonIds.id, title: jsonIds.title, price: jsonIds.price });
+  
+  const ol = document.getElementsByClassName('cart__items')[0];
+  
+  return ol.appendChild(clickItem);
+   };
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -19,9 +37,11 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(createProductImageElement(image)); 
    sectitems[0].appendChild(section); // usei o [0] porque o document.getElementByClassName me retorna um array, não importanto quantos elementos com determinada classe existam. Como só existe um elemento com class "items", aí só usa o [0] e já dá certo.
+   const buttonadd = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'); // botão verde de cada produto.
+   section.appendChild(buttonadd);
+   buttonadd.addEventListener('click', () => addToCard(sku));
   return section;
 }
 
@@ -29,17 +49,10 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-// }
-
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+ // function cartItemClickListener(event) {
+   
+ // }
+ 
 const myFetch = () => { // essas coisas é melhor botar no final do código pra dar menos problema com o Lint.
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
   .then((response) => {
