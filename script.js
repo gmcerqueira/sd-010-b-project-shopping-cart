@@ -110,5 +110,5 @@ window.onload = function onload() {
   lista(url);
   ol.innerHTML = localStorage.getItem('Salvo');
   colocaOsListeners();
-  loadingRemove()
+  loadingRemove();
 };
