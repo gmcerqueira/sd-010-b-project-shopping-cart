@@ -49,42 +49,51 @@ const callFetch = async () => {
   return arrayReturn;
 };
 
-const renderProductList = async (product) => {
-  const items = document.querySelector('.items');
-  product.forEach((element) => {
-    const object = {
-      sku: element.id,
-      name: element.title,
-      image: element.thumbnail, 
-    };
-    const joinProducts = createProductItemElement(object);
-    items.appendChild(joinProducts);
-  });
-};
+// function addStorage() => {
+  //   //toda vez que pegar o produto, dar push no array  
+  // }
+  // localStorage.setItem('cart', value) /* puxa como string no local storage */
   
-const changeToObject = (data) => ({ sku: data.id, name: data.title, salePrice: data.price });
+  const renderProductList = async (product) => {
+    const items = document.querySelector('.items');
+    product.forEach((element) => {
+      const object = {
+        sku: element.id,
+        name: element.title,
+        image: element.thumbnail, 
+      };
+      const joinProducts = createProductItemElement(object);
+      items.appendChild(joinProducts);
+    });
+  };
+  
+  const changeToObject = (data) => ({ sku: data.id, name: data.title, salePrice: data.price });
+  
+  const joinItemsCart = (item) => {
+    const olCartItem = document.querySelector('.cart__items');
+    olCartItem.appendChild(item);
+  };
+  
+  function removeAllItems() {
+    const catchButton = document.querySelector('.empty-cart');
+    const createOl = document.querySelector('.cart__items');
+    catchButton.addEventListener('click', () => {
+      createOl.innerHTML = ' ';
+    });
+  }
 
-const joinItemsCart = (item) => {
-  const olCartItem = document.querySelector('.cart__items');
-  olCartItem.appendChild(item);
-};
-
-function removeAllItems() {
-  const catchButton = document.querySelector('.empty-cart');
-  const createOl = document.querySelector('.cart__items');
-  catchButton.addEventListener('click', () => {
-    createOl.innerHTML = ' ';
-  });
-}
-
-function buttonEvent() {
-  const productButton = document.querySelectorAll('.item__add');
-  productButton.forEach((addProduct) => {
-    addProduct.addEventListener('click', async (event) => {
-      const idProduct = getSkuFromProductItem(event.target.parentNode);
-      const fetchCall = await fetch(`https://api.mercadolibre.com/items/${idProduct}`);
-      const response = await fetchCall.json();
-      const changeObject = changeToObject(response);
+  const arrStorage = [];
+  
+  function buttonEvent() {
+    const productButton = document.querySelectorAll('.item__add');
+    productButton.forEach((addProduct) => {
+      addProduct.addEventListener('click', async (event) => {
+        const idProduct = getSkuFromProductItem(event.target.parentNode);
+        const fetchCall = await fetch(`https://api.mercadolibre.com/items/${idProduct}`);
+        const response = await fetchCall.json();
+        arrStorage.push(response);
+        localStorage.setItem('qualquer', JSON.stringify(arrStorage));/* pesquisa JSON. */
+        const changeObject = changeToObject(response);
       const liCreate = createCartItemElement(changeObject);
       joinItemsCart(liCreate);
     });
