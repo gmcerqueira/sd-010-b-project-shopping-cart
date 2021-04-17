@@ -72,11 +72,17 @@ async function requisitionProduct(product) {
     createProductItemElement(value, requisitionIdIProduct);
   });
 }
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+
+function removeAllItems() {
+  const buttonRemoveAllItems = document.querySelector('.empty-cart');
+  const containerItems = document.querySelector('ol');
+  buttonRemoveAllItems.addEventListener('click', () => {
+    containerItems.innerHTML = '';
+  });
+}
 
 window.onload = function onload() {
   requisitionProduct('computador');
   renderItems();
+  removeAllItems();
 };
