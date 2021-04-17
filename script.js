@@ -56,6 +56,12 @@ const addItemCart = async (sku) => {
   getOl.appendChild(createCartItemElement(data));
 };
 
+// const addItemStorage = () => {
+//   const getIdItem = document.querySelector('.cart__items li');
+//   localStorage.setItem('item', getIdItem);
+//   console.log(getIdItem);
+// };
+
 // Faz a listagem dos computadores, chama a função que cria os cards aicionando evento de click nele. Em seguida pega o id e chama função adItemCart;
 const createListProduct = (data) => {
   data.results.forEach((product) => {
@@ -64,6 +70,7 @@ const createListProduct = (data) => {
     cardProduct.addEventListener('click', (event) => {
       const section = event.target.parentNode;
       addItemCart(section.dataset.id);
+      // addItemStorage();
     });
     classItens.appendChild(cardProduct);
   });
