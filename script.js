@@ -23,17 +23,6 @@ async function cartItemClickListener(event) {
   localStorage.removeItem(`${ide}`);
 }
 
-function priceCart(price) {
-  const priceItem = [];
-  const ol = document.querySelector('ol');
-  const totalPrice = document.querySelector('.total-price');
-  priceItem.push(price);
-  const sumPrice = priceItem.reduce((acc, curr) => acc + curr);
-  console.log(sumPrice);
-  totalPrice.innerHTML = `Preço Total ${sumPrice}`;
-  ol.appendChild(totalPrice);
-}
-
 function keepListing() {
   for (let i = 0; i < localStorage.length; i += 1) {
     const ol = document.querySelector('ol');
@@ -55,7 +44,6 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   setListing(ide, { sku, name, salePrice });
   li.addEventListener('click', cartItemClickListener);
   ol.appendChild(li);
-  priceCart(salePrice);
 }
 
 function createProductItemElement({ sku, name, image }) {
