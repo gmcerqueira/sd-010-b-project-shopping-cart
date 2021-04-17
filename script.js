@@ -1,5 +1,7 @@
+const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
 let cartShoppingIds = [];
 let totalPrice = 0;
+const shoppingList = document.querySelector('.cart__items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -27,23 +29,19 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
 
 async function totalOrder(price) {
-  // totalPrice = Math.round((totalPrice + price) * 100) / 100;
-  totalPrice += price;
-  const totalPriceElement = document.querySelector('.total-price');
-  totalPriceElement.innerHTML = totalPrice;
+  totalPrice = Math.round((totalPrice + price) * 100) / 100;
+  document.querySelector('.total-price').innerHTML = totalPrice;
 }
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const id = event.target.innerHTML.split(' ')[1];
   const price = event.target.innerHTML.split('$')[1];
-  console.log(id);
-  console.log(price);
   totalOrder(-price);
   cartShoppingIds.splice(cartShoppingIds.indexOf(id), 1);
   localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
@@ -51,40 +49,31 @@ function cartItemClickListener(event) {
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  // const price = salePrice < 15 ? salePrice + 1 : salePrice;
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  const text = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  const li = createCustomElement('li', 'cart__item', text);
   li.addEventListener('click', cartItemClickListener);
-  cartShoppingIds.push(sku);
-  console.log(cartShoppingIds);
-  localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
+  // cartShoppingIds.push(sku);
+  // localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
   return li;
 }
 
-async function fetchLed() {
-  const endpoint = 'https://api.mercadolibre.com/items/MLB687124927';
-  const itemToAdd = await (await fetch(endpoint)).json();
-  console.log(itemToAdd);
-}
-fetchLed();
 async function addToCart(event) {
   // https://stackoverflow.com/questions/38481549/what-is-the-difference-between-e-target-parentnode-and-e-path1
-  let itemId = event.target;
-  // console.log(itemId);
-  itemId = itemId ? itemId.parentNode.querySelector('.item__sku').innerText : event;
-  console.log(itemId);
-  const endpoint = 'https://api.mercadolibre.com/items/';
-  const itemToAdd = await (await fetch(`${endpoint}${itemId}`)).json();
+  let itemId = event;
+  if (event.target) {
+    itemId = getSkuFromProductItem(event.target.parentNode);
+    cartShoppingIds.push(itemId);
+    localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
+  }
+  const resultFetch = await fetch(`https://api.mercadolibre.com/items/${itemId}`);
+  const itemToAdd = await resultFetch.json();
   const listItem = createCartItemElement(itemToAdd);
   const { price } = itemToAdd;
-  console.log(price);
   await totalOrder(price);
-  const shoppingList = document.querySelector('.cart__items');
   shoppingList.appendChild(listItem);
 }
 
-async function getComputers(endpoint) {
+async function getComputers() {
   const result = await fetch(endpoint);
   const computers = await result.json();
   return computers.results;
@@ -96,64 +85,46 @@ function renderComputers(computers) {
     const sectionItem = createProductItemElement(computer);
     itemsSection.appendChild(sectionItem);
   });
-  // usado querySectorAll pois retorna uma NodeList, senão teria que usar outro comando (Array.prototype.forEach.call)
+  // usado querySectorAll, pois retorna uma NodeList, senão, usando getElementsByClassName retorna uma HTMLCollection e teria que usar outro comando (Array.prototype.forEach.call)
   // https://stackoverflow.com/questions/3871547/js-iterating-over-result-of-getelementsbyclassname-using-array-foreach
   const buttons = document.querySelectorAll('.item__add');
   buttons.forEach((button) => button.addEventListener('click', addToCart));
 }
 
 async function renderCart() {
-  localStorage.removeItem('computers');
-  const oldCartShoppingIds = cartShoppingIds;
-  console.log(oldCartShoppingIds);
-  cartShoppingIds = [];
-  // https://lavrton.com/javascript-loops-how-to-handle-async-await-6252dd3c795/
-  oldCartShoppingIds.reduce(async (prevPromise, currId) => {
-    await prevPromise;
-    return addToCart(currId);
-  }, Promise.resolve());
-  // oldCartShoppingIds.forEach((id) => {
-  //   addToCart(id);
-  // });
-}
-// for (let index = 0; index < oldCartShoppingIds.length; index += 1) {
-//   await addToCart(oldCartShoppingIds[index]);
-// }
-// const promises = await oldCartShoppingIds.map(async (id) => await addToCart(id));
-// const resolve = await Promise.all(promises);
-// console.log(resolve);
-// https://zellwk.com/blog/async-await-in-loops/
-// https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
-// for (const id of oldCartShoppingIds) {
-//   await addToCart(id);
-// }
-// oldCartShoppingIds.forEach((id) => {
-//   addToCart(id);
-// });
-function emptyCart() {
-  document.querySelector('.cart__items').innerHTML = '';
-  totalOrder(-totalPrice);
-  totalPrice = 0;
-  localStorage.removeItem('computers');
-  cartShoppingIds = [];
-}
-
-window.onload = async function onload() {
-  document.querySelector('.items').appendChild(createCustomElement('span', 'loading', 'Loading'));
-
-  const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-  const computers = await getComputers(endpoint);
   const cartShopString = localStorage.getItem('computers');
-  // JSON.parse foi visto no plantão do dia 14/04 (primeiro dia do projeto)
+  // JSON.parse foi visto no plantão do dia 14/04 com Luanderson (primeiro dia do projeto)
   cartShoppingIds = cartShopString ? JSON.parse(cartShopString) : [];
   const cart = document.querySelector('.cart__title');
   const totalCart = totalPrice;
-  cart.insertAdjacentElement('afterend', createCustomElement('span', 'total-price', totalCart));
+  const totalCartElement = createCustomElement('span', 'total-price', totalCart);
+  cart.insertAdjacentElement('afterend', totalCartElement);
+  // https://lavrton.com/javascript-loops-how-to-handle-async-await-6252dd3c795/
+  cartShoppingIds.reduce(async (prevPromise, currId) => {
+    await prevPromise;
+    return addToCart(currId);
+  }, Promise.resolve());
+  // cartShoppingIds.forEach((id) => addToCart(id)); // o forEach não respeita async/await
+}
 
-  const clearAll = document.querySelector('.empty-cart');
-  clearAll.addEventListener('click', emptyCart);
+function emptyCart() {
+  shoppingList.innerHTML = '';
+  totalOrder(-totalPrice);
+  cartShoppingIds = [];
+  localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
+}
 
-  renderComputers(computers);
-  document.querySelector('.loading').remove();
+const clearAll = document.querySelector('.empty-cart');
+clearAll.addEventListener('click', emptyCart);
+
+function loading() {
+  const items = document.querySelector('.items');
+  items.appendChild(createCustomElement('span', 'loading', 'Loading...'));
+}
+
+window.onload = async function onload() {
+  loading();
+  renderComputers(await getComputers());
   renderCart();
+  document.querySelector('.loading').remove();
 };
