@@ -1,7 +1,9 @@
 // const addCartItem = document.querySelectorAll('.item__add ');
 // const remuveCarItem = document.querySelectoAll('.empty-cart');
 // const allCar = document.querySelector('.cart__title')
-const cartItemClickListener = (i) => i;
+const cartItemClickListener = (event) => {
+  event.target.remove();
+};
 
 // cria a imagem src, classe, return
 function createProductImageElement(imageSource) {
