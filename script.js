@@ -24,20 +24,37 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+async function getSkuFromProductItem(item) {
+  return item.id;
+}
 
 async function cartItemClickListener(event) {
   // coloque seu código aqui
   event.path[0].remove();
+  localStorage.removeItem(event.path[0].id);
 }
 
-function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+async function changePrice(price) {
+  let total = parseInt(document.getElementsByClassName('total-price')[0].innerHTML, 10);
+  console.log(total);
+  console.log(price.price);
+  total += price.price;
+}
+
+async function getProductID(idButton) {
+  const item = await fetch(`https://api.mercadolibre.com/items/${idButton}`);
+  const itemJson = await item.json();
+  return itemJson;
+}
+
+async function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.id = sku;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  localStorage.setItem(li.id, li);
+  await changePrice(await getProductID(await getSkuFromProductItem(li)));
   return li;
 }
 
@@ -51,19 +68,25 @@ async function getListProducts() {
   return span;
 }
 
-function shoppingCart(spans) {
+async function addShoppingCart(product) {
   const ol = document.querySelector('.cart__items');
-  for (let index = 0; index < spans.children.length; index += 1) {
-    spans.children[index].lastChild.addEventListener('click', async (button) => {
-      const id = button.path[1].firstChild.innerText;
-      const item = await fetch(`https://api.mercadolibre.com/items/${id}`);
-      const itemJson = await item.json();
-      ol.appendChild(createCartItemElement(itemJson));
-    });
+  ol.appendChild(await createCartItemElement(product));
+}
+
+async function rendersAfterLoading(index) {
+  const key = localStorage.key(index);
+  if (key !== null) { 
+   await addShoppingCart(await getProductID(key));
   }
 }
 
 window.onload = async function onload() {
   const products = await getListProducts();
-  shoppingCart(products);
+  for (let index = 0; index < products.children.length; index += 1) {
+    products.children[index].lastChild.addEventListener('click', async (buttonEvent) => {
+     const itemJson = await getProductID(buttonEvent.path[1].firstChild.innerText);
+     addShoppingCart(itemJson);
+    });
+    rendersAfterLoading(index);
+  }
 };
