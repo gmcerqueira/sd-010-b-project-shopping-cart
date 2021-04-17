@@ -113,7 +113,7 @@ window.onload = async function onload() {
   console.log('Ok!!! Ready');
   const getResult = await listOfProducts();
   const getLoadEl = document.querySelector('.loading');
-  getLoadEl.parentNode.removeChild(getLoadEl);
+  getLoadEl.remove();
   renderItems(getResult);
   createCartItemElement(getResult);
   const itemsStorageString = localStorage.getItem('carShop');
