@@ -1,3 +1,5 @@
+const shoppingCart = document.querySelector('.cart__items');
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -38,7 +40,6 @@ function cartItemClickListener(event) {
 
 const emptyShoppingCart = () => {
   const emptyButton = document.getElementsByClassName('empty-cart')[0];
-  const shoppingCart = document.querySelector('.cart__items');
 
   emptyButton.addEventListener('click', () => {
     localStorage.clear();
@@ -46,20 +47,16 @@ const emptyShoppingCart = () => {
   });
 };
 
-const allItemsLocalStorage = () => {
-  return Object.values(localStorage);
-}
+const allItemsLocalStorage = () => Object.values(localStorage);
 
 const getListLocalStorage = (localStorage) => {
-  const shoppingCart = document.querySelector('.cart__items');
-  
-  localStorage.forEach((element) => {
+  localStorage.forEach((item) => {
     const product = document.createElement('li');
-    element = JSON.parse(element);
+    item = JSON.parse(item);
 
     product.className = 'cart__item';
-    product.innerText = `${element}`;
-    product.innerText = `SKU: ${element.sku} | NAME: ${element.name} | PRICE: $${element.salePrice}`;
+    product.innerText = `SKU: ${item.sku} | 
+    NAME: ${item.name} | PRICE: $${item.salePrice}`;
     product.addEventListener('click', cartItemClickListener);
     shoppingCart.appendChild(product);
   });
@@ -72,7 +69,7 @@ function createCartItemElement({ sku, name, salePrice }) {
     sku, 
     name, 
     salePrice,
-  }
+  };
 
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -131,7 +128,6 @@ const addShoppingCart = () => {
   const product = document.querySelectorAll('.item__add').forEach((button) => {
     button.addEventListener('click', (event) => {
       const productId = event.target.parentNode.firstChild.innerText;
-      const shoppingCart = document.querySelector('.cart__items');
 
       fetchProduct(productId).then((dataProduct) => {
         shoppingCart.appendChild(createCartItemElement(getResultProduct(dataProduct)));
@@ -150,5 +146,3 @@ window.onload = function onload() {
     getListLocalStorage(allItemsLocalStorage());
   });
 };
-
-
