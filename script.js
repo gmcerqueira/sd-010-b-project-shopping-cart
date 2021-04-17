@@ -107,11 +107,6 @@ function colocaOsListeners() {
   }
 }
 
-function clerCart() {
-  ol.innerHTML = [];
-  localStorage.clear();
-}
-
 window.onload = function onload() {
   lista(url);
   ol.innerHTML = localStorage.getItem('Salvo');
