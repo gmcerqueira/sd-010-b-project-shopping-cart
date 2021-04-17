@@ -1,4 +1,4 @@
-// const prices = [0.00];
+const loading = document.querySelector('.loading');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -22,8 +22,22 @@ async function fethIds(id) {
   return idsProducts;
 }
 
-// const arrayLocalStorage = [];
+// calc o valor total do carrinho
+function totalPricesInCart() {
+  const getPrices = Object.values(document.getElementsByClassName('cart__item'));
+  let totalPrices = 0;
+  getPrices.forEach((_key, index) => {
+    const price = getPrices[index].innerText.split('$', 2)[1];
+    totalPrices += Number(price);
+    console.log(price);
+  });
+  // totalInCart = totalPrices;
+  // const elementeH3 = document.getElementsByClassName('total-price');
+  // elementeH3.innerHTML = `${totalInCart}`;
+  return totalPrices;
+}
 
+// Clicar para deletar o item do carrinho e do localStorage
 function cartItemClickListener(event) {
   event.target.remove('parent');
   const targetInnerText = event.target.innerText;
@@ -34,6 +48,7 @@ function cartItemClickListener(event) {
       break;
     }
   }
+  totalPricesInCart();
 }
 
 const localStorageCartShop = (cartShop) => {
@@ -53,48 +68,33 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const classCartItems = document.getElementsByClassName('cart__items')[0];
   classCartItems.appendChild(li);
   li.addEventListener('click', cartItemClickListener);
-  // localStorageCartShop(li.innerText);
   return li;
 }
 
+// botão de limpar o carrinho
 function clearCarAndLocalStorage() {
   localStorage.clear();
   const cartItem = document.getElementsByClassName('cart__items');
   cartItem[0].innerHTML = '';
-  // Object.values(cartItem).forEach((_key, index) => cartItem[index].remove('parent'));
 }
 document.getElementsByClassName('empty-cart')[0]
   .addEventListener('click', clearCarAndLocalStorage);
 
-// let totalPrices;
-
-// async function totalPricesInCart() {
-//   const getPrices = await Object.values(document.getElementsByClassName('cart__item'));
-//   await getPrices.forEach((_key, index) => {
-    // const price = getPrices[index].innerText.split('$', 2)[1];
-    // prices.push(Number(price));
-  // });
-  // totalPrices = await prices.reduce((acc, currentValue) => acc + currentValue);
-  // const elementeH3 = await document.getElementsByClassName('total-price')[0];
-  // elementeH3.innerText = totalPrices;
-  // return totalPrices;
-// }
-
 function creatElementH3() {
   const h3 = document.createElement('h3');
   h3.className = 'total-price';
-  h3.innerText = 'R$ 0.00';
+  h3.innerText = `R$ ${totalPricesInCart()}`;
   const classCart = document.querySelector('.cart');
   classCart.appendChild(h3);
 }
 
+// add item no carrinho ao clicar
 async function addCarrinho(event) {
   const id = event.target.parentNode.firstChild.innerText;
   const responseFath = await fethIds(id);
   const responseApiId = createCartItemElement(responseFath);
+  totalPricesInCart();
   localStorageCartShop(responseApiId.innerText);
-  // totalPricesInCart(); // localStorage
-  // arrayLocalStorage.push(responseApiId.innerText);
   return responseApiId;
 }
 
@@ -106,11 +106,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
     .addEventListener('click', addCarrinho); // add evento nos botões de add no carrinho
-      
-    // criar addeventlistem
-  // const buttons = document.querySelectorAll('.item__add');
-  // buttons.forEach((button) => button.addEventListener('click', () => console.log('fui clicado')));
-
   return section;
 }
 
@@ -125,6 +120,7 @@ async function fethProdutos() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const responseJson = await response.json();
   const products = responseJson.results;
+  loading.remove();
   return consultProducts(products);
 }
 
@@ -137,28 +133,11 @@ function recoveryLocalStorage() {
     classCartItems.appendChild(li);
     li.addEventListener('click', cartItemClickListener);
   }
+  totalPricesInCart();
 }
-
-// function getSkuFromProductItem(item) {
-  //   return item.querySelector('span.item__sku').innerText;
-  // }
-
-  // classItem.forEach(() =>
-  // classItem.addEventListener('click', () => console.log('item adicionado')));
-   
-  // function addProductsInFavorite(products) {
-  //   const classCartItems = document.getElementsByClassName('cart__items');
-  //   classCartItems.appendChild(createCartItemElement(products));
-  // }
-
-  // const classCartItem = document.querySelector('cart__items');
-  // classCartItem.appendChild();
-  
-  // testando addEventListener
-  
+ 
     // tive ajuda do Lucas Matins
   window.onload = async function onload() {
-    // await totalPricesInCart();
     await fethProdutos(); // so vem parar aqui oq for preciso carregar primeiro 
     recoveryLocalStorage();
     creatElementH3();
