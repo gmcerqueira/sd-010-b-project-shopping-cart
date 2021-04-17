@@ -26,21 +26,21 @@ function createCartItemElement({ id, title, price }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-// evento de pegar o evento de click   .parentNode `https://api.mercadolibre.com/items/${id}`;
-// const eventClick = (event) => {
-//   const idproduto = event.terget.parentNode.firstChild.innerText;
-//   idproduto = 'texto':
-// };
 
-// pegar o evento de click no item
+// pegar o evento de click no item enviar pela api
 const addCardCar = async (ItemID) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${ItemID}`);
   const item = await response.json();
-  return item;
+  const returnID = createCartItemElement(item);
+  const ulCard = document.querySelector('.cart__items');
+  ulCard.appendChild(returnID);
 };
 
 // add no carrinho de compras
-const addCardItem = async (event) => event;
+const addCardItem = async (event) => {
+  const getButtonId = event.target.parentNode.firstChild.innerText;
+  addCardCar(getButtonId);
+};
 
 // cria elemento no dom , id , titulo , imagem. botao de adicionar ao car. eventListener click
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -56,10 +56,10 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return sectionItem.appendChild(section);
 }
 
-// cria item no carrinho de compras com os paramentros passado
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// // cria item no carrinho de compras com os paramentros passado
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 // function cartItemClickListener(event) {
 //   // coloque seu código aqui
@@ -75,8 +75,8 @@ function getSkuFromProductItem(item) {
 window.onload = function onload() {
   const fetchApi = async (item) => {
     const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${item}`);
-    const date = await response.json();
-    date.results.forEach((element) => {
+    const data = await response.json();
+    data.results.forEach((element) => {
       createProductItemElement(element);
     });
   };
