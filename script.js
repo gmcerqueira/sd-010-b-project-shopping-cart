@@ -30,14 +30,54 @@ function createProductItemElement({ sku, name, image }) {
 
 function cartItemClickListener(event) {
   const shoppingCart = document.getElementsByClassName('cart__items')[0];
+  const productId = event.target.innerText.split(' ');
+
   shoppingCart.removeChild(event.target);
+  localStorage.removeItem(productId[1]);
 }
 
+const emptyShoppingCart = () => {
+  const emptyButton = document.getElementsByClassName('empty-cart')[0];
+  const shoppingCart = document.querySelector('.cart__items');
+
+  emptyButton.addEventListener('click', () => {
+    localStorage.clear();
+    shoppingCart.innerHTML = '';
+  });
+};
+
+const allItemsLocalStorage = () => {
+  return Object.values(localStorage);
+}
+
+const getListLocalStorage = (localStorage) => {
+  const shoppingCart = document.querySelector('.cart__items');
+  
+  localStorage.forEach((element) => {
+    const product = document.createElement('li');
+    element = JSON.parse(element);
+
+    product.className = 'cart__item';
+    product.innerText = `${element}`;
+    product.innerText = `SKU: ${element.sku} | NAME: ${element.name} | PRICE: $${element.salePrice}`;
+    product.addEventListener('click', cartItemClickListener);
+    shoppingCart.appendChild(product);
+  });
+};
+
+// https://www.horadecodar.com.br/2020/07/21/como-salvar-um-objeto-na-localstorage/
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
+  const product = {
+    sku, 
+    name, 
+    salePrice,
+  }
+
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  localStorage.setItem(sku, JSON.stringify(product));
   return li;
 }
 
@@ -106,5 +146,9 @@ window.onload = function onload() {
   getListProducts()
   .then(() => {
     addShoppingCart();
+    emptyShoppingCart();
+    getListLocalStorage(allItemsLocalStorage());
   });
 };
+
+
