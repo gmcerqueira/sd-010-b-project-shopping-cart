@@ -81,11 +81,18 @@ const getProduct = async () => {
   });
 };
 
+// Mensagem de loading enquanto a API carrega
+const loadingState = () => {
+  const loading = document.querySelector('.loading');
+  if (getProduct) {
+    loading.style.display = 'none';
+  }
+};
+
 // Armazena itens no localStorage
 function localStorageCache() {
   const getPcInfosLocalStorage = localStorage.getItem('pcs');
   getPcInfos = getPcInfosLocalStorage ? JSON.parse(getPcInfosLocalStorage) : [];
-  // const selectItem = document.querySelector('.cart__items');
 
   getPcInfos.map(({ sku, name, salePrice }) => {
     const li = document.createElement('li');
@@ -110,4 +117,5 @@ window.onload = () => {
   localStorageCache();
   clearCart();
   getProduct();
+  loadingState();
 };
