@@ -12,7 +12,6 @@ function clerCart() {
 
 butonClear.addEventListener('click', clerCart);
 
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
