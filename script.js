@@ -69,6 +69,15 @@ const joinItemsCart = (item) => {
   olCartItem.appendChild(item);
 };
 
+function removeAllItems() {
+  const catchButton = document.querySelector('.empty-cart');
+  const createOl = document.querySelector('.cart__items');
+  catchButton.addEventListener('click', () => {
+    createOl.innerHTML = ' ';
+  });
+
+}
+
 function buttonEvent() {
   const productButton = document.querySelectorAll('.item__add');
   productButton.forEach((addProduct) => {
@@ -87,4 +96,5 @@ window.onload = async function onload() {
   const products = await callFetch();
   renderProductList(products);
   buttonEvent();
+  removeAllItems();
 };
