@@ -12,13 +12,23 @@ function createProductImageElement(imageSource) {
   return img;
 }
 const savelocalStorage = [];
+const savePrice = [0];
+const divPrice = document.querySelector('.total-price');
 
- function cartItemClickListener(event) {
+const price = () => {
+  const sumPrices = savePrice.reduce((acc, element) => acc + element);
+   divPrice.innerText = `${sumPrices}`;
+};
+ async function cartItemClickListener(event) {
    // let newArray = savelocalStorage;
   const select = event.target;
   select.remove();
+  console.log(select.innerText.split('$')[1]);
+  console.log(savePrice);
   savelocalStorage.splice(savelocalStorage.indexOf(select), 1);
+  savePrice.splice(savePrice.indexOf(Number(select.innerText.split('$')[1])), 1);
   localStorage.setItem('selected', JSON.stringify(savelocalStorage));
+  price();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -30,20 +40,24 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
 
     return ol.appendChild(li);
   }
+
   const fetchItem = ((itemID) => {
     fetch(`https://api.mercadolibre.com/items/${itemID}`)
     .then((response) => response.json())
     .then((item) => {
       createCartItemElement(item);
       savelocalStorage.push(item);
+      savePrice.push(item.price);
       })
-    .then(() => localStorage.setItem('selected', JSON.stringify(savelocalStorage)));
+    .then(() => localStorage.setItem('selected', JSON.stringify(savelocalStorage)))
+    .then(() => price());
     });
 
   const clickEvent = (event) => {
     const select = event.target;
     const itemID = select.parentElement.firstElementChild.innerText;
     fetchItem(itemID);
+
     // localStorage.setItem('selected', JSON.stringify(savelocalStorage));
   };
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -89,4 +103,4 @@ const fetchProducts = ((product) => {
   const savedLocalStorage = await localStorage.getItem('selected');
   const arraySaved = JSON.parse(savedLocalStorage);
   arraySaved.forEach((element) => createCartItemElement(element));
-  };
+};
