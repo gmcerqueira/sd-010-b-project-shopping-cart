@@ -10,6 +10,7 @@ const totalPrice = document.createElement('span');
 totalPrice.className = 'total-price';
 document.querySelector('.cart').appendChild(totalPrice);
 
+// Fonte: https://dev.to/vaishnavme/displaying-loading-animation-on-fetch-api-calls-1e5m
 // selecting loading div
 const loader = document.createElement('div');
 loader.classList.add('loading');
@@ -19,15 +20,11 @@ document.querySelector('.items').appendChild(loader);
 // showing loading
 function displayLoading() {
   loader.classList.add('display');
-  // to stop loading after some time
-  setTimeout(() => {
-      loader.classList.remove('display');
-  }, 2000);
 }
 
 // hiding loading 
 function hideLoading() {
-  loader.style.display = 'none';
+  // loader.style.display = 'none';
   loader.remove();
 }
 
@@ -62,6 +59,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// Tive ajuda do Denis Rossati e Abimael Albuquerque
 // Salva a lista de produtos no carrinho:
 function saveCartList() {
   const ol = document.querySelector(cartItemClass);
