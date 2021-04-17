@@ -1,5 +1,9 @@
+const cartItems2 = [];
 function cartItemClickListener(event) {
- event.target.remove();
+  const localStorageRecovery = localStorage.getItem('cartItems');
+  const itensSaved = JSON.parse(localStorageRecovery);
+  console.log(itensSaved);
+  event.target.remove();
   }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -14,22 +18,35 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-async function cartItemAddClickListener(event) {
+const prepareToAdd = async (id) => {
+  const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
+  const archive = await response.json();
+  return archive;
+};
+
+async function buttonClickAddCart(event) {
   const itemId = getSkuFromProductItem(event.target.parentNode);
-  const prepareToAdd = async (id) => {
-    const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
-    const archive = await response.json();
-    return archive;
-  };
   const itemApiReturn = await prepareToAdd(itemId);
   const { id, title, price } = itemApiReturn;
-  const computerAdd = {
+  const itemCart = {
     sku: id,
     name: title,
     salePrice: price,
   };
-  document.querySelector('.cart__items').appendChild(createCartItemElement(computerAdd));
+  cartItems2.push(itemCart);
+  document.querySelector('.cart__items').appendChild(createCartItemElement(itemCart));
+  localStorage.setItem('cartItems', JSON.stringify(cartItems2));
   }
+
+ function recoveryLocal() {
+  const localStorageRecovery = localStorage.getItem('cartItems');
+  const itensSaved = JSON.parse(localStorageRecovery);
+  const cartItems = document.getElementsByClassName('cart__items')[0];
+  itensSaved.forEach((item) => {
+  const itemAddLocalStorage = createCartItemElement(item);
+  cartItems.appendChild(itemAddLocalStorage);
+  });
+}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -53,7 +70,7 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
-  .addEventListener('click', cartItemAddClickListener);
+  .addEventListener('click', buttonClickAddCart);
 
   return section;
 }
@@ -62,7 +79,6 @@ async function getComputer() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computer');
   const computers = await response.json();
   const { results } = computers;
-  console.log(results);
   // ate aqui está tudo certo estou recebendo um objeto 
   results.forEach((computer) => {    
     const newComputerObject = {
@@ -77,4 +93,5 @@ async function getComputer() {
 window.onload = async function onload() { 
   // acima tenho os computadore que busca achou!
   await getComputer();
+  recoveryLocal();
   };
