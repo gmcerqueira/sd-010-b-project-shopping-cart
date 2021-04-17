@@ -6,12 +6,12 @@ const itens = document.querySelector('.items');
 const loading = document.querySelector('.loading');
 const butonClear = document.querySelector('.empty-cart');
 
-butonClear.addEventListener('click', clerCart);
-
 function clerCart() {
   ol.innerHTML = [];
   localStorage.clear();
 }
+
+butonClear.addEventListener('click', clerCart);
 
 function loadingRmove() {
   loading.remove();
