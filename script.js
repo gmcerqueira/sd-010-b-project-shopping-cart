@@ -67,8 +67,11 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 // Busca os produtos desejados da API do MercadoLivre
+const loading = document.querySelector('.load');
 
 const getProduct = async () => {
+  const teste = '<div class="loading">Loading...</div>';
+  loading.innerHTML = teste;
   const product = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const result = await product.json();
   const { results } = result;
@@ -80,17 +83,9 @@ const getProduct = async () => {
   resultsApi.forEach((element) => {
     allSelectItem.appendChild(element);
   });
-
-  const loading = document.querySelector('.loading');
-  if (getProduct) {
-    loading.style.display = 'none';
-  }
+  // Mensagem de loading enquanto a resposta da API carrega
+  loading.innerHTML = '';
 };
-
-// Mensagem de loading enquanto a resposta da API carrega
-// const loadingState = () => {
-  
-// };
 
 // Armazena itens no localStorage
 function localStorageCache() {
@@ -120,5 +115,4 @@ window.onload = () => {
   localStorageCache();
   clearCart();
   getProduct();
-  // loadingState();
 };
