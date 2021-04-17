@@ -17,19 +17,19 @@ const localSave = () => {
   const toBesaved = savingS.innerHTML;
   localStorage.setItem('keyy', toBesaved);
 };
+// Diegho e Denis me ajudaram no desenvolvimento deste quesito;
 
 const refreshPage = () => {
  const searchLocal = localStorage.getItem('keyy');
- console.log(searchLocal);
  savingS.innerHTML = searchLocal;
 };
+// Diegho e Denis me ajudaram no desenvolvimento deste quesito;
 
 const cartItemClickListener = (event) => {
   const clickedItem = event.target;
   clickedItem.remove();
   localSave();
 };
-// Lucas me ajudou a entender que eu poderia aproveitar a função adicionada com clique na linha 26.
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
@@ -39,6 +39,25 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   localSave();
   return li;
 }
+
+async function createLoadMessage() {
+  const load = document.querySelector('.items');
+  const li = document.createElement('li');
+  li.className = 'loading';
+  li.innerText = 'loading';
+  load.appendChild(li);
+  return li;
+}
+
+function takeLoadMessageDown() {
+  const load = document.querySelector('.items');
+  const loadingMessage = document.querySelector('.loading');
+  loadingMessage.className = '';
+  loadingMessage.innerText = '';
+  load.removeChild(loadingMessage);
+  return loadingMessage;
+}
+
 // const totalPrice = () => {
 //   const individualChartFilled = document.querySelector('.cart__item');
 // };
@@ -47,6 +66,7 @@ const removeElement = () => {
   savingS.innerHTML = '';
   localSave();
 };
+// Lucas me ajudou a entender que eu poderia aproveitar a função adicionada com clique na linha 26.'
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
@@ -68,7 +88,7 @@ localSave();
   });
   return section;
 }
-// Alan me ajudou nesta questão;
+// Alan me ajudou nesta questão e também o Wolf no plantão;
 
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
@@ -86,12 +106,25 @@ async function renderComputers() {
   const first = document.querySelector('.items');
 shopp.forEach((shop) => {
     first.appendChild(createProductItemElement(shop));
-    // first.addEventListener('click', )
   });
  }
+// O colega Denis me ajudou no primeiro quesito. 
+const loadPage = () => {
+  setTimeout(() => {
+    createLoadMessage();
+    renderComputers();
+  });
+};
+
+const loadedPage = () => {
+  setTimeout(() => {
+    takeLoadMessageDown();
+  }, Math.random() * 3000);
+};
 
 window.onload = async function onload() {
   savingS = document.querySelector('.cart__items');
-  renderComputers();
+  loadPage();
   refreshPage();
+  loadedPage();
 };
