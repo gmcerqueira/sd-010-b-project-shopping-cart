@@ -1,16 +1,23 @@
+function cartItemClickListener(event) {
+  event.target.remove();
+}
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`; // esses eu consigo ao fazer o segundo fetch.
-   // li.addEventListener('click', cartItemClickListener);
+   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`; // esses eu obtenho ao fazer o segundo fetch(tá na função addToCard).
+   
+    li.addEventListener('click', cartItemClickListener);// esse é pro requisito 3.
    
   return li;
  }
+ 
 const addToCard = async (sku) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
-  const jsonIds = await response.json();
+  const jsonIds = await response.json();// melhor fazer dessa forma do que usando then()
   const clickItem = createCartItemElement({
-     id: jsonIds.id, title: jsonIds.title, price: jsonIds.price });
+     id: jsonIds.id, title: jsonIds.title, price: jsonIds.price });// o clickitem vai receber essa função com esses parâmetros. Tive que fazer isso pra não dar problema de Lint. Tem que fazer isso somente pra usar o appendChild com o OL.
+     // esses parâmetros desse jeito foram a forma de fazer dar certo.
+     // Resumo da sequência do req. 2:  Quando eu clico no botão verde, eu chamo a função que faz a requisição e essa mesma função diz que a função createCartItemElement(que estrutura as LIs) é filha de OL. Por isso que aparece as informações do produto(que eu cliquei) naquela OL.
   
   const ol = document.getElementsByClassName('cart__items')[0];
   
@@ -39,20 +46,16 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image)); 
    sectitems[0].appendChild(section); // usei o [0] porque o document.getElementByClassName me retorna um array, não importanto quantos elementos com determinada classe existam. Como só existe um elemento com class "items", aí só usa o [0] e já dá certo.
-   const buttonadd = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'); // botão verde de cada produto.
-   section.appendChild(buttonadd);
-   buttonadd.addEventListener('click', () => addToCard(sku));
-  return section;
+   const buttonadd = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'); // criei uma var pro botão verde de cada produto.
+   section.appendChild(buttonadd);// no começo não entendi, mas tem que ser aqui esse appendChild porque o botão verde aparece junto da imagem e do nome.
+   buttonadd.addEventListener('click', () => addToCard(sku));// é uma forma de chamar a função(Ela faz requisição). Essa parte é do requisito 2.
+  return section;// esse section confuso é pra retornar ID,imagem, nome e o botão verde.
 }
 
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
- // function cartItemClickListener(event) {
-   
- // }
- 
 const myFetch = () => { // essas coisas é melhor botar no final do código pra dar menos problema com o Lint.
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador')
   .then((response) => {
