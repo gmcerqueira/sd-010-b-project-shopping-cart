@@ -27,32 +27,42 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return item.querySelector('span.item__sku').innerText;
 } */
 
+const total = () => {
+  const totalPrice = document.querySelector('.total-price');
+  const li = document.querySelectorAll('li');
+  let totalValor = 0;
+  li.forEach(({ id: index }) => {
+    const id = index;
+    const soma = parseFloat(id);
+    totalValor += soma;
+    console.log(totalValor);
+  });
+  totalPrice.innerText = totalValor;
+  /* totalPrice.appendChild(totalValor); */
+};
+
 function cartItemClickListener(event) {
   event.target.remove();
+  total();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
+  li.id = salePrice;
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  const totalPrice = document.querySelector('.total-price');
+  totalPrice.innerText = li.id;
   li.addEventListener('click', cartItemClickListener);
+  /* const totalPrice = document.querySelector('.total-price'); */
   return li;
 }
-
-/* const add = (mercados) => {
-  const deconstruct = mercados.results;
-  const items = document.querySelector('.items');
-  deconstruct.forEach((element) => {
-  items.appendChild(createProductItemElement(element));
-  });
-}; */
 
 const localS = () => {
   const arr = Array.from(document.querySelectorAll('li'));
   const keyy = {};
   arr.forEach((li, index) => {
     keyy[index] = li.innerText;
-    console.log(keyy);
   });
   localStorage.setItem('keyss', JSON.stringify(keyy));
 };
@@ -71,6 +81,7 @@ const getId = (event) => {
       .then((list) => {
         const li = createCartItemElement(list);
         addLi(li);
+        total();
       });
     });
 };
@@ -109,7 +120,7 @@ const clear = () => {
   });
 };
 
-const recoverStorage = () => {
+const recoverStorageLi = () => {
   const ol = document.querySelector('.cart__items');
   if (localStorage.getItem('keyss')) {
     const aux = Object.values(JSON.parse(localStorage.getItem('keyss')));
@@ -124,5 +135,5 @@ const recoverStorage = () => {
 window.onload = async function onload() {
   getPc('computador');
   clear();
-  recoverStorage();
+  recoverStorageLi();
 };
