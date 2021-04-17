@@ -3,7 +3,6 @@ const ol = document.querySelector('.cart__items');
 const salvos = ol.childNodes;
 const itens = document.querySelector('.items');
 // const preco = document.querySelector('.total-price');
-const loading = document.querySelector('.loading');
 const butonClear = document.querySelector('.empty-cart');
 
 function clerCart() {
@@ -13,9 +12,6 @@ function clerCart() {
 
 butonClear.addEventListener('click', clerCart);
 
-function loadingRemove() {
-  loading.remove();
-}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -110,5 +106,6 @@ window.onload = function onload() {
   lista(url);
   ol.innerHTML = localStorage.getItem('Salvo');
   colocaOsListeners();
-  loadingRemove();
+  const loading = document.querySelector('.loading');
+  loading.remove();
 };
