@@ -68,6 +68,7 @@ async function requisitionProduct(product) {
   );
   const responseJson = await response.json();
   const { results } = responseJson;
+  document.querySelector('.loading').remove();
   results.forEach((value) => {
     createProductItemElement(value, requisitionIdIProduct);
   });
