@@ -90,10 +90,28 @@ function buttonEvent() {
     });
   });
 }
-  
+
+// antes do renderProduct
+const expectLoadingAPI = () => {
+  const newSpan = document.createElement('span');
+  const sectionCart = document.querySelector('.cart');
+  newSpan.className = 'loading';
+  newSpan.innerText = 'loading...';
+  sectionCart.appendChild(newSpan);
+};
+
+// depois do renderProduct
+const afterLoadingAPI = () => {
+  const sectionCart = document.querySelector('.cart');
+  const stopLoading = document.querySelector('.loading');
+  sectionCart.removeChild(stopLoading);
+};
+
 window.onload = async function onload() {
-  const products = await callFetch();
-  renderProductList(products);
+  expectLoadingAPI();
+  const products = await callFetch();  
+  afterLoadingAPI();
+  renderProductList(products);  
   buttonEvent();
   removeAllItems();
 };
