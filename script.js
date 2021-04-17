@@ -11,35 +11,64 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
-function cartItemClickListener(event) {
-  event.target.parentNode.removeChild(event.target);
+
+function setListing(ide, objItem) {
+  localStorage.setItem(`${ide}`, JSON.stringify(objItem));
+}
+
+async function cartItemClickListener(event) {
+  const item = event.target;
+  const ide = item.id;
+  item.parentNode.removeChild(item);
+  localStorage.removeItem(`${ide}`);
+}
+
+function priceCart(price) {
+  const priceItem = [];
+  const ol = document.querySelector('ol');
+  const totalPrice = document.querySelector('.total-price');
+  priceItem.push(price);
+  const sumPrice = priceItem.reduce((acc, curr) => acc + curr);
+  console.log(sumPrice);
+  totalPrice.innerHTML = `Preço Total ${sumPrice}`;
+  ol.appendChild(totalPrice);
+}
+
+function keepListing() {
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const ol = document.querySelector('ol');
+    const value = JSON.parse(localStorage[i]);
+    const li = document.createElement('li');
+    li.id = i;
+    li.innerText = `SKU: ${value.sku} | NAME: ${value.name} | PRICE: $${value.salePrice}`;
+    ol.appendChild(li).addEventListener('click', cartItemClickListener);
+  }
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
+  const ol = document.querySelector('ol');
   const li = document.createElement('li');
-  const olClass = document.querySelector('.cart__items');
+  li.id = `${localStorage.length}`;
+  const ide = li.id;
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  setListing(ide, { sku, name, salePrice });
   li.addEventListener('click', cartItemClickListener);
-  return olClass.appendChild(li);
+  ol.appendChild(li);
+  priceCart(salePrice);
 }
 
-function fetchAddCart(endpoint) {
-  fetch(endpoint)
-    .then((response) => response.json())
-    .then((data) => createCartItemElement(data));
-}
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
     .addEventListener('click', () => {
-      const endpoint = `https://api.mercadolibre.com/items/${sku}`;
-      fetchAddCart(endpoint);
+      fetch(`https://api.mercadolibre.com/items/${sku}`)
+        .then((res) => res.json())
+        .then((data) => createCartItemElement(data));
     });
 
   return section;
@@ -56,25 +85,14 @@ function fetchApi($QUERY) {
     .then((response) => response.json())
     .then((data) => {
       data.results.forEach((result) => {
-        const newObj = {
-          sku: result.id, name: result.title, image: result.thumbnail,
-        };
+        const newObj = { sku: result.id, name: result.title, image: result.thumbnail };
         const itemsClass = document.querySelector('.items');
         itemsClass.appendChild(createProductItemElement(newObj));
       });
     });
-}
-
-function addItemCart() {
-  const buttonAdd = document.querySelectorAll('.item__add');
-  buttonAdd.forEach((item) => {
-    item.addEventListener('click', () => {
-
-    });
-  });
+  keepListing();
 }
 
 window.onload = function onload() {
   fetchApi('computador');
-  addItemCart();
 };
