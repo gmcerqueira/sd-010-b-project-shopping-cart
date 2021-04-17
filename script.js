@@ -131,7 +131,6 @@ window.onload = async function onload() {
   cartShoppingIds = cartShopString ? JSON.parse(cartShopString) : [];
   renderCart();
   document.querySelector('.items').appendChild(createCustomElement('span', 'loading', 'Loading'));
-
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const computers = await getComputers(endpoint);
   const cart = document.querySelector('.cart__title');
