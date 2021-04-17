@@ -1,3 +1,6 @@
+const itens = [];
+const buttonErase = document.getElementsByClassName('empty-cart')[0];
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -17,10 +20,33 @@ function cartConstructor(li) {
   ol.appendChild(li);
 }
 
-function cartItemClickListener(event) {
+function clearbtn() {
+  localStorage.clear();
+  document.querySelector('.cart__items').innerHTML = '';
+}
+
+function totalSum() {
+  let prices = [];
+  if (itens.length === 0) {
+  for (let index = 0; index < itens.length; index += 1) {
+   prices.push(JSON.parse(itens[index]).salePrice);
+  }
+  const sum = prices.reduce((total, price) => total + price)
+  const span = document.getElementsByClassName('total-price')[0];
+  span.innerHTML = sum
+};
+}
+
+  function cartItemClickListener(event) {
   const product = event.target;
-  localStorage.removeItem(product.id);
+  itens.splice(product.id, 1);
   product.remove();
+  localStorage.clear();
+  const li = document.getElementsByClassName('cart__item');
+  itens.forEach((item, index) => {
+    localStorage.setItem(index, JSON.stringify(item));
+    li[index].id = index;
+  });
 }
 
 // Recebi ajuda do colega, Alan Tanaka T10-B, para a execução do requisito 4
@@ -34,6 +60,7 @@ function cartRecover() {
       li.addEventListener('click', cartItemClickListener);
       document.querySelector('ol.cart__items').appendChild(li);
     }
+    totalSum();
   }
 }
 
@@ -44,6 +71,7 @@ function cartRecover() {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  itens[index] = { sku, name, salePrice };
   localStorage.setItem(index, JSON.stringify({ sku, name, salePrice }));
   return cartConstructor(li);
 }
@@ -51,6 +79,7 @@ function cartRecover() {
 async function fetchIdProduct(itemID) {
   const fetchID = await fetch(`https://api.mercadolibre.com/items/${itemID}`);
   const productId = await fetchID.json();
+  totalSum();
   return createCartItemElement(productId);
  }
 
@@ -68,7 +97,6 @@ async function itemCatcher(event) {
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
@@ -76,6 +104,8 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   .addEventListener('click', itemCatcher);
   return section;
 }
+
+buttonErase.addEventListener('click', clearbtn);
 
 async function insertProducts(products) {
   const items = document.querySelectorAll('.items')[0];
@@ -88,10 +118,10 @@ async function insertProducts(products) {
   const fetchMerch = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const response = await fetchMerch.json();
   const products = response.results;
+  cartRecover();
   return insertProducts(products);
  }
-
-window.onload = async function onload() {
- await fetchReceiver();
- await cartRecover();
+ 
+window.onload = function onload() {
+ fetchReceiver();
 };
