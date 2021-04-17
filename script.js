@@ -14,7 +14,7 @@ function clerCart() {
 butonClear.addEventListener('click', clerCart);
 
 function loadingRemove() {
-  loading.innerText = '';
+  loading.remove();
 }
 
 function createProductImageElement(imageSource) {
@@ -110,5 +110,5 @@ window.onload = function onload() {
   lista(url);
   ol.innerHTML = localStorage.getItem('Salvo');
   colocaOsListeners();
-  loadingRemove();
+  loadingRemove()
 };
