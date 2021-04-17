@@ -75,7 +75,6 @@ function removeAllItems() {
   catchButton.addEventListener('click', () => {
     createOl.innerHTML = ' ';
   });
-
 }
 
 function buttonEvent() {
