@@ -1,6 +1,7 @@
 const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
 const ol = document.querySelector('.cart__items');
 const salvos = ol.childNodes;
+const itens = document.querySelector('.items');
 // const preco = document.querySelector('.total-price');
 const loading = document.querySelector('.loading');
 const butonClear = document.querySelector('.empty-cart');
@@ -86,7 +87,6 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 function lista(http) {
-  itens = document.querySelector('.items');
   funcFetch(http)
   .then((coisa) => coisa.results.forEach((item) => {
     itens.appendChild(
