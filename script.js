@@ -101,8 +101,8 @@ function colocaOsListeners() {
   }
 }
 
-window.onload = function onload() {
-  lista(url);
+window.onload = async function onload() {
+  await lista(url);
   ol.innerHTML = localStorage.getItem('Salvo');
   colocaOsListeners();
   const loading = document.querySelector('.loading');
