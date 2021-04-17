@@ -126,13 +126,14 @@ function emptyCart() {
 }
 
 window.onload = async function onload() {
+  const cartShopString = localStorage.getItem('computers');
+  // JSON.parse foi visto no plantão do dia 14/04 (primeiro dia do projeto)
+  cartShoppingIds = cartShopString ? JSON.parse(cartShopString) : [];
+  renderCart();
   document.querySelector('.items').appendChild(createCustomElement('span', 'loading', 'Loading'));
 
   const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
   const computers = await getComputers(endpoint);
-  const cartShopString = localStorage.getItem('computers');
-  // JSON.parse foi visto no plantão do dia 14/04 (primeiro dia do projeto)
-  cartShoppingIds = cartShopString ? JSON.parse(cartShopString) : [];
   const cart = document.querySelector('.cart__title');
   const totalCart = totalPrice;
   cart.insertAdjacentElement('afterend', createCustomElement('span', 'total-price', totalCart));
@@ -142,5 +143,4 @@ window.onload = async function onload() {
 
   renderComputers(computers);
   document.querySelector('.loading').remove();
-  renderCart();
 };
