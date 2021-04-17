@@ -81,7 +81,7 @@ const getProduct = async () => {
   });
 };
 
-// Mensagem de loading enquanto a API carrega
+// Mensagem de loading enquanto a resposta da API carrega
 const loadingState = () => {
   const loading = document.querySelector('.loading');
   if (getProduct) {
