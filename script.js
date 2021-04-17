@@ -71,13 +71,22 @@ const eventButton = () => {
   const buttonProducts = document.querySelectorAll('.item__add'); // traz uma lista con todos os botões dos produtos;
   buttonProducts.forEach((product) => {
     product.addEventListener('click', async (event) => {
-      const id = getSkuFromProductItem(event.target.parentNode);
+      // resgata o id do produto que foi clicado no botão "adicionar ao carrinho"
+      const id = getSkuFromProductItem(event.target.parentNode); 
       const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
       const responseAPI = await response.json();
-      const objTransform = transformToObject(responseAPI);
+      const objTransform = transformToObject(responseAPI);// a função pega os dados necessarios para entrar como parametro a função da proxima linha retornando um objeto;
       const liCreated = createCartItemElement(objTransform);
       renderItemsCart(liCreated);
     });
+  });
+};
+
+const emptyCart = () => {
+  const buttonEmptyCart = document.querySelector('.empty-cart');
+  buttonEmptyCart.addEventListener('click', () => {
+    const listCart = document.querySelector('.cart__items');
+    listCart.innerText = '';
   });
 };
 
@@ -85,4 +94,5 @@ window.onload = async function onload() {
   const products = await consultAPI();
   renderProduct(products);
   eventButton();
+  emptyCart();
 };
