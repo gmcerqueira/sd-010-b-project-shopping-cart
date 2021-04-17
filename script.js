@@ -1,3 +1,5 @@
+// const prices = [0.00];
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -24,12 +26,8 @@ async function fethIds(id) {
 
 function cartItemClickListener(event) {
   event.target.remove('parent');
-  // localStorage.removeItem(event.target.innerText);
   const targetInnerText = event.target.innerText;
-  // console.log(targetInnerText);
   const sizeLocalStore = Object.values(localStorage).length;
-  console.log(targetInnerText);
-  console.log(sizeLocalStore);
   for (let index = 0; index < sizeLocalStore; index += 1) {
     if (targetInnerText === Object.values(localStorage)[index]) {
       localStorage.removeItem(Object.keys(localStorage)[index]);
@@ -59,11 +57,43 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
+function clearCarAndLocalStorage() {
+  localStorage.clear();
+  const cartItem = document.getElementsByClassName('cart__items');
+  cartItem[0].innerHTML = '';
+  // Object.values(cartItem).forEach((_key, index) => cartItem[index].remove('parent'));
+}
+document.getElementsByClassName('empty-cart')[0]
+  .addEventListener('click', clearCarAndLocalStorage);
+
+// let totalPrices;
+
+// async function totalPricesInCart() {
+//   const getPrices = await Object.values(document.getElementsByClassName('cart__item'));
+//   await getPrices.forEach((_key, index) => {
+    // const price = getPrices[index].innerText.split('$', 2)[1];
+    // prices.push(Number(price));
+  // });
+  // totalPrices = await prices.reduce((acc, currentValue) => acc + currentValue);
+  // const elementeH3 = await document.getElementsByClassName('total-price')[0];
+  // elementeH3.innerText = totalPrices;
+  // return totalPrices;
+// }
+
+function creatElementH3() {
+  const h3 = document.createElement('h3');
+  h3.className = 'total-price';
+  h3.innerText = 'R$ 0.00';
+  const classCart = document.querySelector('.cart');
+  classCart.appendChild(h3);
+}
+
 async function addCarrinho(event) {
   const id = event.target.parentNode.firstChild.innerText;
   const responseFath = await fethIds(id);
   const responseApiId = createCartItemElement(responseFath);
-  localStorageCartShop(responseApiId.innerText); // localStorage
+  localStorageCartShop(responseApiId.innerText);
+  // totalPricesInCart(); // localStorage
   // arrayLocalStorage.push(responseApiId.innerText);
   return responseApiId;
 }
@@ -128,6 +158,8 @@ function recoveryLocalStorage() {
   
     // tive ajuda do Lucas Matins
   window.onload = async function onload() {
+    // await totalPricesInCart();
     await fethProdutos(); // so vem parar aqui oq for preciso carregar primeiro 
     recoveryLocalStorage();
+    creatElementH3();
   };
