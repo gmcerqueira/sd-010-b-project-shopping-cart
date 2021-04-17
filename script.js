@@ -13,7 +13,7 @@ function createProductImageElement(imageSource) {
   img.src = imageSource;
   return img;
 }
-// cria elemento com o texto com a classe
+// cria elemento com o texto e com a classe e o texto
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -21,29 +21,13 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 // 
-function createProductItemElement({
-  sku,
-  name,
-  image,
-}) {
-  const section = document.createElement('section');
-  section.className = 'item';
-
-  section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
-  section.appendChild(createProductImageElement(image));
-  const itemButton = (createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  section.appendChild(itemButton);
-  itemButton.addEventListener('click', () => addToCart(sku));
-  return section;
-}
-
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  event.target.remove();// o target referencia o objeto que criou o evento, no caso é a li que foi clicada
 }
 // cria card dos itens no carrinho
 function createCartItemElement({
@@ -69,6 +53,23 @@ const addToCart = async (skuId) => {
   const orderedList = document.getElementsByClassName('cart__items')[0];
   return orderedList.appendChild(newItem);
 };
+
+function createProductItemElement({
+  sku,
+  name,
+  image,
+}) {
+  const section = document.createElement('section');
+  section.className = 'item';
+
+  section.appendChild(createCustomElement('span', 'item__sku', sku));
+  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createProductImageElement(image));
+  const itemButton = (createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
+  section.appendChild(itemButton);
+  itemButton.addEventListener('click', () => addToCart(sku));
+  return section;
+}
 
 const newChild = (element) => {
   const createChild = document.getElementsByClassName('items')[0];
