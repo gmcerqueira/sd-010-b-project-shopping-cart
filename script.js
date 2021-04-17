@@ -56,8 +56,8 @@ const getListLocalStorage = (localStorage) => {
     const item = JSON.parse(itemJason);
 
     product.className = 'cart__item';
-    product.innerText = `SKU: ${item.sku} | 
-    NAME: ${item.name} | PRICE: $${item.salePrice}`;
+    product.innerText = `
+SKU: ${item.sku} | NAME: ${item.name} | PRICE: $${item.salePrice}`;
     product.addEventListener('click', cartItemClickListener);
     shoppingCart.appendChild(product);
   });
