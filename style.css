@@ -74,3 +74,12 @@
   font-size: 16pt;
   text-align: center;
 }
+
+/* aqui começa minhas modificações */
+.cart__item {
+  border: solid 1px black;
+}
+
+ol {
+  list-style-type: square;
+}

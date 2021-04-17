@@ -26,8 +26,9 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function cartItemClickListener(_) {
-  // coloque seu código aqui
+function cartItemClickListener(event) {
+  const cartListItems = document.querySelector('.cart__items');
+  cartListItems.removeChild(event.target);
 }
 
 function createCartItemElement({ id, title, price }) {
