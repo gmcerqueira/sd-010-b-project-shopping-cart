@@ -32,7 +32,8 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 // }
 
 async function totalOrder(price) {
-  totalPrice = Math.round((totalPrice + price) * 100) / 100;
+  // totalPrice = Math.round((totalPrice + price) * 100) / 100;
+  totalPrice += price;
   const totalPriceElement = document.querySelector('.total-price');
   totalPriceElement.innerHTML = totalPrice;
 }
@@ -52,6 +53,7 @@ function cartItemClickListener(event) {
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  // const price = salePrice < 15 ? salePrice + 1 : salePrice;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   cartShoppingIds.push(sku);
@@ -60,10 +62,18 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
+async function fetchLed() {
+  const endpoint = 'https://api.mercadolibre.com/items/MLB687124927';
+  const itemToAdd = await (await fetch(endpoint)).json();
+  console.log(itemToAdd);
+}
+fetchLed();
 async function addToCart(event) {
   // https://stackoverflow.com/questions/38481549/what-is-the-difference-between-e-target-parentnode-and-e-path1
   let itemId = event.target;
-  itemId = itemId ? itemId.parentNode.querySelector('.item__sku').innerHTML : event;
+  // console.log(itemId);
+  itemId = itemId ? itemId.parentNode.querySelector('.item__sku').innerText : event;
+  console.log(itemId);
   const endpoint = 'https://api.mercadolibre.com/items/';
   const itemToAdd = await (await fetch(`${endpoint}${itemId}`)).json();
   const listItem = createCartItemElement(itemToAdd);
@@ -98,10 +108,13 @@ async function renderCart() {
   console.log(oldCartShoppingIds);
   cartShoppingIds = [];
   // https://lavrton.com/javascript-loops-how-to-handle-async-await-6252dd3c795/
-  await oldCartShoppingIds.reduce(async (prevPromise, currId) => {
+  oldCartShoppingIds.reduce(async (prevPromise, currId) => {
     await prevPromise;
     return addToCart(currId);
   }, Promise.resolve());
+  // oldCartShoppingIds.forEach((id) => {
+  //   addToCart(id);
+  // });
 }
 // for (let index = 0; index < oldCartShoppingIds.length; index += 1) {
 //   await addToCart(oldCartShoppingIds[index]);
@@ -127,12 +140,12 @@ function emptyCart() {
 
 window.onload = async function onload() {
   document.querySelector('.items').appendChild(createCustomElement('span', 'loading', 'Loading'));
+
+  const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
+  const computers = await getComputers(endpoint);
   const cartShopString = localStorage.getItem('computers');
   // JSON.parse foi visto no plantão do dia 14/04 (primeiro dia do projeto)
   cartShoppingIds = cartShopString ? JSON.parse(cartShopString) : [];
-  renderCart();
-  const endpoint = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-  const computers = await getComputers(endpoint);
   const cart = document.querySelector('.cart__title');
   const totalCart = totalPrice;
   cart.insertAdjacentElement('afterend', createCustomElement('span', 'total-price', totalCart));
@@ -142,4 +155,5 @@ window.onload = async function onload() {
 
   renderComputers(computers);
   document.querySelector('.loading').remove();
+  renderCart();
 };
