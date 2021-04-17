@@ -28,17 +28,18 @@ async function getSkuFromProductItem(item) {
   return item.id;
 }
 
-async function cartItemClickListener(event) {
-  // coloque seu código aqui
-  event.path[0].remove();
-  localStorage.removeItem(event.path[0].id);
+async function changePrice(salecePrice) {
+  const total = await document.querySelector('.total-price');
+  total.innerHTML = await Math.round(parseFloat(total.innerHTML)) + salecePrice.price;
 }
 
-async function changePrice(price) {
-  let total = parseInt(document.getElementsByClassName('total-price')[0].innerHTML, 10);
-  console.log(total);
-  console.log(price.price);
-  total += price.price;
+async function cartItemClickListener(event) {
+  // coloque seu código aqui
+  const text = await event.path[0].innerText;
+  const num = await text.substring(text.indexOf('$') + 1);
+  await changePrice({ price: (num * (-1)) });
+  await event.path[0].remove();
+  await localStorage.removeItem(event.path[0].id);
 }
 
 async function getProductID(idButton) {
@@ -70,12 +71,13 @@ async function getListProducts() {
 
 async function addShoppingCart(product) {
   const ol = document.querySelector('.cart__items');
+  // console.log(product);
   ol.appendChild(await createCartItemElement(product));
 }
 
 async function rendersAfterLoading(index) {
   const key = localStorage.key(index);
-  if (key !== null) { 
+  if (key !== null) {
    await addShoppingCart(await getProductID(key));
   }
 }
