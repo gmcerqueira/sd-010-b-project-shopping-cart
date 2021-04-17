@@ -101,10 +101,6 @@ function lista(http) {
   loadingRmove();
 }
 
-function loadingRmove() {
-  loading.remove();
-}
-
 function colocaOsListeners() {
   for (let cont = 0; cont < salvos.length; cont += 1) {
     salvos[cont].addEventListener('click', cartItemClickListener);
