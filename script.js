@@ -1,3 +1,4 @@
+const olClass = '.cart__items';
 const apiAcess = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const {
@@ -25,9 +26,15 @@ function createCustomElement(element, className, innerText) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
+const setStorage = (ol) => {
+  localStorage.setItem('localCart', ol.innerHTML);
+};
+
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  event.target.remove();// o target referencia o objeto que criou o evento, no caso é a li que foi clicada
+  event.target.remove();
+  const olStorage = document.querySelector(olClass);
+  setStorage(olStorage);// o target referencia o objeto que criou o evento, no caso é a li que foi clicada
 }
 // cria card dos itens no carrinho
 function createCartItemElement({
@@ -50,8 +57,10 @@ const addToCart = async (skuId) => {
     name: jsonResponse.title,
     salePrice: jsonResponse.price,
   });
-  const orderedList = document.getElementsByClassName('cart__items')[0];
-  return orderedList.appendChild(newItem);
+  const orderedList = document.querySelector(olClass);
+  console.log(orderedList);
+  orderedList.appendChild(newItem);
+  setStorage(orderedList);
 };
 
 function createProductItemElement({
@@ -88,10 +97,20 @@ const makeProduct = (apiJason) => {
   return results;
 };
 
+const cartStorage = () => {
+  const getStorage = localStorage.getItem('localCart');
+  console.log(getStorage);
+  const olStorage = document.querySelector(olClass);
+  olStorage.innerHTML = getStorage;
+  const liCart = document.querySelectorAll('.cart__item');
+  liCart.forEach((li) => li.addEventListener('click', cartItemClickListener));
+};
+
 const createList = async () => {
   makeProduct(await apiAcess());
 };
 
 window.onload = function onload() {
   createList();
+  cartStorage();
 };
