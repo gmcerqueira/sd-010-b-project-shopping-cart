@@ -1,5 +1,3 @@
-const shoppingCart = document.querySelector('.cart__items');
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -31,15 +29,16 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 function cartItemClickListener(event) {
-  const shoppingCartItems = document.getElementsByClassName('cart__items')[0];
+  const shoppingCart = document.getElementsByClassName('cart__items')[0];
   const productId = event.target.innerText.split(' ');
 
-  shoppingCartItems.removeChild(event.target);
+  shoppingCart.removeChild(event.target);
   localStorage.removeItem(productId[1]);
 }
 
 const emptyShoppingCart = () => {
   const emptyButton = document.getElementsByClassName('empty-cart')[0];
+  const shoppingCart = document.getElementsByClassName('cart__items')[0];
 
   emptyButton.addEventListener('click', () => {
     localStorage.clear();
@@ -50,9 +49,11 @@ const emptyShoppingCart = () => {
 const allItemsLocalStorage = () => Object.values(localStorage);
 
 const getListLocalStorage = (localStorage) => {
-  localStorage.forEach((jasonItem) => {
+  const shoppingCart = document.querySelector('.cart__items');
+
+  localStorage.forEach((itemJason) => {
     const product = document.createElement('li');
-    const item = JSON.parse(jasonItem);
+    const item = JSON.parse(itemJason);
 
     product.className = 'cart__item';
     product.innerText = `SKU: ${item.sku} | 
@@ -75,6 +76,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   localStorage.setItem(sku, JSON.stringify(product));
+
   return li;
 }
 
@@ -128,6 +130,7 @@ const addShoppingCart = () => {
   const product = document.querySelectorAll('.item__add').forEach((button) => {
     button.addEventListener('click', (event) => {
       const productId = event.target.parentNode.firstChild.innerText;
+      const shoppingCart = document.querySelector('.cart__items');
 
       fetchProduct(productId).then((dataProduct) => {
         shoppingCart.appendChild(createCartItemElement(getResultProduct(dataProduct)));
