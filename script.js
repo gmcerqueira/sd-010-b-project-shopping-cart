@@ -26,15 +26,15 @@ function clearbtn() {
 }
 
 function totalSum() {
-  let prices = [];
+  const prices = [];
   if (itens.length === 0) {
   for (let index = 0; index < itens.length; index += 1) {
    prices.push(JSON.parse(itens[index]).salePrice);
   }
-  const sum = prices.reduce((total, price) => total + price)
+  const sum = prices.reduce((total, price) => total + price);
   const span = document.getElementsByClassName('total-price')[0];
-  span.innerHTML = sum
-};
+  span.innerHTML = sum;
+}
 }
 
   function cartItemClickListener(event) {
