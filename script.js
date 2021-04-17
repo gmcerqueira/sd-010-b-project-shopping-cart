@@ -70,7 +70,6 @@ async function addToCart(event) {
   const { price } = itemToAdd;
   console.log(price);
   await totalOrder(price);
-  console.log(price);
   const shoppingList = document.querySelector('.cart__items');
   shoppingList.appendChild(listItem);
 }
@@ -93,16 +92,31 @@ function renderComputers(computers) {
   buttons.forEach((button) => button.addEventListener('click', addToCart));
 }
 
-function renderCart() {
+async function renderCart() {
   localStorage.removeItem('computers');
   const oldCartShoppingIds = cartShoppingIds;
   console.log(oldCartShoppingIds);
   cartShoppingIds = [];
-  oldCartShoppingIds.forEach((id) => {
-    addToCart(id);
-  });
+  // https://lavrton.com/javascript-loops-how-to-handle-async-await-6252dd3c795/
+  await oldCartShoppingIds.reduce(async (prevPromise, currId) => {
+    await prevPromise;
+    return addToCart(currId);
+  }, Promise.resolve());
 }
-
+// for (let index = 0; index < oldCartShoppingIds.length; index += 1) {
+//   await addToCart(oldCartShoppingIds[index]);
+// }
+// const promises = await oldCartShoppingIds.map(async (id) => await addToCart(id));
+// const resolve = await Promise.all(promises);
+// console.log(resolve);
+// https://zellwk.com/blog/async-await-in-loops/
+// https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
+// for (const id of oldCartShoppingIds) {
+//   await addToCart(id);
+// }
+// oldCartShoppingIds.forEach((id) => {
+//   addToCart(id);
+// });
 function emptyCart() {
   document.querySelector('.cart__items').innerHTML = '';
   totalOrder(-totalPrice);
