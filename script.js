@@ -14,7 +14,7 @@ function clerCart() {
 butonClear.addEventListener('click', clerCart);
 
 function loadingRemove() {
-  loading.remove();
+  loading.innerText = '';
 }
 
 function createProductImageElement(imageSource) {
