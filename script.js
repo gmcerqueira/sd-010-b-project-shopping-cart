@@ -13,7 +13,7 @@ function clerCart() {
 
 butonClear.addEventListener('click', clerCart);
 
-function loadingRmove() {
+function loadingRemove() {
   loading.remove();
 }
 
@@ -98,7 +98,6 @@ function lista(http) {
       );
   }))
   .catch((erro) => erro);
-  loadingRmove();
 }
 
 function colocaOsListeners() {
@@ -111,4 +110,5 @@ window.onload = function onload() {
   lista(url);
   ol.innerHTML = localStorage.getItem('Salvo');
   colocaOsListeners();
+  loadingRemove();
 };
