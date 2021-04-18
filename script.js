@@ -55,13 +55,6 @@ function cartItemClickListener(event) {
   event.target.remove();  
 }
 
-/* const removePrice = (carItem) => {
-  carItem.forEach((price) => {
-    totalPrice -= price.salePrice;
-    });
-    return totalPrice; 
-}; */
-
 // Requisito 4 - Local Storage // Falta imprimir na tela quando for atualizada
 const salvaLocalStorage = (idProduto, objetoVal) => {
   localStorage.setItem(`${idProduto}`, JSON.stringify(objetoVal));
@@ -80,8 +73,9 @@ function createCartItemElement({ sku, name, salePrice }) {
 
 async function getElements(QUERY) {
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${QUERY}`);
-  const { results } = await response.json();  
-
+  const { results } = await response.json(); 
+  const textLoading = document.querySelector('.loading');
+  textLoading.remove(); 
   return results; 
 }
 
@@ -123,10 +117,6 @@ const addProduct = () => {
   return button;
 };
 
-const allProductsChamada = async () => {
- renderProduct(await getElements('computador'));
-};
-
 const recarregarLocalStorage = () => {
   if (localStorage.length) {
     const objkeys = Object.keys(localStorage).sort((a, b) => a - b);
@@ -156,6 +146,10 @@ const clearCart = () => {
     localStorage.clear();
   });
 };
+
+const allProductsChamada = async () => {
+  renderProduct(await getElements('computador'));
+ };
 
 window.onload = function onload() { 
   recarregarLocalStorage();
