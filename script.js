@@ -28,9 +28,10 @@ async function getSkuFromProductItem(item) {
   return item.id;
 }
 
-async function changePrice(salecePrice) {
-  const total = await document.querySelector('.total-price');
-  total.innerHTML = await Math.round(parseFloat(total.innerHTML)) + salecePrice.price;
+async function changePrice(salePrice) {
+  const number = salePrice.price;
+  const total = document.querySelector('.total-price');
+  total.innerHTML = (Math.round(((total.innerHTML) * 100) / 100) + number);
 }
 
 async function cartItemClickListener(event) {
@@ -39,7 +40,7 @@ async function cartItemClickListener(event) {
   const num = await text.substring(text.indexOf('$') + 1);
   await changePrice({ price: (num * (-1)) });
   await event.path[0].remove();
-  await localStorage.removeItem(event.path[0].id);
+  localStorage.removeItem(event.path[0].id);
 }
 
 async function getProductID(idButton) {
