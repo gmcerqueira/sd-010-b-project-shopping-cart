@@ -29,14 +29,34 @@ function createCustomElement(element, className, innerText) {
 let cart = [];
 let totalPrice = 0;
 
+// Função que soma os valores
+const sumPrices = async () => {
+  totalPrice = (cart.reduce((acc, cur) => acc + cur.price, 0));
+};
+
+const painelCart = document.querySelector('.cart');
+
+// Função que mostra os preços na tela principal
+const showPrices = () => {
+  const spanPrice = document.querySelector('.total-price');
+  if (!spanPrice) {
+    painelCart.appendChild(createCustomElement('span', 'total-price', `${totalPrice}`));
+  } if (spanPrice) {
+    painelCart.removeChild(spanPrice);
+    painelCart.appendChild(createCustomElement('span', 'total-price', `${totalPrice}`));
+  }
+};
+
 const cartListItems = document.querySelector('.cart__items');
 
+// função que salva os itens adicionados ao carrinho no LocalStorage
 function saveCart({ id, title, price }) {
   cart.push({ id, title, price });
   localStorage.setItem('shoppingCart', JSON.stringify(cart));
-  return cart
+  return cart;
 }
 
+// Função que remove os itens do carrinho
 async function cartItemClickListener(event) {
   const removeItem = cart.find(({ id }) => id === event.target);
   cart.splice(removeItem, 1);
@@ -46,6 +66,7 @@ async function cartItemClickListener(event) {
   cartListItems.removeChild(event.target);
 }
 
+// Criar elementos HTML
 function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -54,16 +75,15 @@ function createCartItemElement({ id, title, price }) {
   cartListItems.appendChild(li);
   return li;
 }
-
+// Recupera os itens salvos no carrinho
 function loadCart() {
   const savedCart = localStorage.getItem('shoppingCart');
   cart = savedCart === null ? [] : JSON.parse(savedCart);
   cart.forEach((item) => createCartItemElement(item));
-  return cart
+  return cart;
 }
-
+// Retira todos os itens do carrinho.
 const clearButton = document.querySelector('.empty-cart');
-
 clearButton.addEventListener('click', () => {
   while (cartListItems.firstChild) {
     cartListItems.removeChild(cartListItems.firstElementChild);
@@ -73,11 +93,11 @@ clearButton.addEventListener('click', () => {
   showPrices();
   localStorage.setItem('shoppingCart', JSON.stringify(cart));
 });
-
+// Recupera o id do item que foi clicado na vitrine
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
-
+// Cria os itens que aparecem na vitrine
 function createProductItemElement({ id, title, thumbnail }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -90,28 +110,12 @@ function createProductItemElement({ id, title, thumbnail }) {
     const itemID = await fetchIdItem(returnIdItem);
     saveCart(itemID);
     createCartItemElement(itemID);
-    await  sumPrices();
+    sumPrices();
     showPrices();
   });
   return section;
 }
-
-const sumPrices = async () => {
-  totalPrice = (cart.reduce((acc, cur) => acc + cur.price, 0));
-}
-
-const painelCart = document.querySelector('.cart')
-
-const showPrices = () => {
-  const spanPrice = document.querySelector('.total-price');
-  if (!spanPrice) {
-    painelCart.appendChild(createCustomElement('span', 'total-price', `${totalPrice}`));
-  } if (spanPrice) {
-    painelCart.removeChild(spanPrice);
-    painelCart.appendChild(createCustomElement('span', 'total-price', `${totalPrice}`));
-  }
-}
-
+// Adiciona os itens à vitrine
 async function addSectionElements() {
   const list = await getData('Computador');
   const classItems = document.querySelector('.items');
@@ -124,7 +128,7 @@ async function addSectionElements() {
 window.onload = async function onload() {
   await addSectionElements();
   loadCart();
-  await  sumPrices();
+  await sumPrices();
   showPrices();
 };
 // Referências
