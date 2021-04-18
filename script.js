@@ -55,7 +55,7 @@ async function renderCar(produtoCar) {
 }
 
 async function producId(id) {
-  const response = await fetch (`https://api.mercadolibre.com/items/${id}`);
+  const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
   const results = await response.json();
   return results;
 }
@@ -72,7 +72,7 @@ async function adicionaCar() {
   botoes.forEach((button) => {
     const productBt = button.parentElement.children[0].innerText;
     button.addEventListener('click', () => {
-      adicionaOl(producId);
+      adicionaOl(productBt);
     });
   });
 }
