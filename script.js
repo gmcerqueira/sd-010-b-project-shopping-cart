@@ -1,7 +1,7 @@
 function loadData() {
-  document.querySelector('.cart__items').innerHTML = localStorage.getItem('Cart data');
+  document.getElementsByClassName('.cart__items').innerHTML = localStorage.getItem('Cart data');
 }
-
+// Carrega o carrinho de compras através do LocalStorage ao iniciar a página
 function saveLocalStorage() {
   return localStorage.setItem('Cart data', document.querySelector('.cart__items').innerHTML);
 }
@@ -72,6 +72,19 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+// apaga todos os itens do local storage
+function clearCart() {
+  const removeItemId = document.querySelector('.empty-cart');
+  removeItemId.addEventListener('click', () => {
+    document.querySelector('.cart__items').innerHTML = '';
+    totalPrice();
+  });
+}
+
 // ASYNC declara a função como assincrona! e assim podemos usar o AWAIT
 // Esta função cria uma listagem de produtos($computador)
 async function getComputer() {
@@ -87,8 +100,5 @@ window.onload = function onload() {
   console.log('Funcionando, corretamente.');
   getComputer();
   loadData();
+  clearCart();
 };
-
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
