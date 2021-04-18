@@ -1,7 +1,7 @@
 // função de apagar item no carrinho de compras
 const cartItemClickListener = (event) => {
   event.target.remove();
-  const olCard = document.querySelector('.cart__items');
+  const olCard = document.getElementsByClassName('cart__items')[0];
   localStorage.saveItensCar = olCard.innerHTML; // apaga item loca
 };
 
