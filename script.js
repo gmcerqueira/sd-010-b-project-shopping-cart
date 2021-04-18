@@ -33,25 +33,25 @@ function cartItemClickListener(event) {
   event.target.remove();
 }
 
+function getHtmlElement(element) {
+  return document.querySelector(element);
+}
+
 function saveItems() {
-  const containerItems = document.querySelector('ol');
-  localStorage.setItem('items', containerItems.innerHTML);
+  localStorage.setItem('items', getHtmlElement('ol').innerHTML);
 }
 
 function renderItems() {
-  const containerItems = document.querySelector('ol');
   if (localStorage.items) {
-    containerItems.innerHTML = localStorage.getItem('items');
+    getHtmlElement('ol').innerHTML = localStorage.getItem('items');
   }
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }, callback) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  const li = createCustomElement('li', 'cart__item',
+    `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`);
   li.addEventListener('click', cartItemClickListener);
-  const containerItems = document.querySelector('.cart__items');
-  containerItems.appendChild(li);
+  getHtmlElement('ol').appendChild(li);
   callback();
   return li;
 }
@@ -76,9 +76,8 @@ async function requisitionProduct(product) {
 
 function removeAllItems() {
   const buttonRemoveAllItems = document.querySelector('.empty-cart');
-  const containerItems = document.querySelector('ol');
   buttonRemoveAllItems.addEventListener('click', () => {
-    containerItems.innerHTML = '';
+    getHtmlElement('ol').innerHTML = '';
   });
 }
 
