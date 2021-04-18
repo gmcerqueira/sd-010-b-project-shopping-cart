@@ -24,16 +24,20 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function storageCart() {
+  localStorage.clear('cart');
+  const myStorage = document.getElementsByClassName('cart__items')[0].innerHTML;
+  console.log(myStorage);
+  localStorage.setItem('cart', myStorage);
+}
 
 function cartItemClickListener(event) {
-// coloque seu código aqui
-event.currentTarget.classList.contains('clicked');
-  event.currentTarget.classList.add('clicked');
-event.currentTarget.remove('clicked');
-}
+  // coloque seu código aqui
+  event.currentTarget.classList.contains('clicked');
+    event.currentTarget.classList.add('clicked');
+  event.currentTarget.remove('clicked');
+  storageCart();
+  }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
@@ -43,8 +47,8 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-function addObject(sku) {
-  fetch(`https://api.mercadolibre.com/items/${sku}`)
+function getSkuFromProductItem(item) {
+  fetch(`https://api.mercadolibre.com/items/${item}`)
     .then((response) => response.json())
     .then((data) => {
       const addCar = {
@@ -54,13 +58,13 @@ function addObject(sku) {
       };
       const cart = document.getElementsByClassName('cart__items')[0];
       cart.appendChild(createCartItemElement(addCar));
+      storageCart();
     });
 }
 
-window.onload = function onload() {
+function addObject() {
   fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
-    .then((response) => response.json())
-    .then((data) => {
+    .then((response) => response.json()).then((data) => {
       data.results.forEach((item) => {
         const computer = createProductItemElement({
           sku: item.id,
@@ -72,7 +76,18 @@ window.onload = function onload() {
     })
     .then(() => {
       document.querySelectorAll('.item__add').forEach((addItem) => 
-        addItem.addEventListener('click', () => addObject(addItem
-        .parentElement.querySelector('span.item__sku').innerText)));
+        addItem.addEventListener('click', () => { 
+          getSkuFromProductItem(addItem
+        .parentElement.querySelector('span.item__sku').innerText);
+      }));
     });
+}
+
+window.onload = function onload() {
+  if (localStorage.getItem('cart') !== undefined) {
+    document.getElementsByClassName('cart__items')[0].innerHTML = localStorage.getItem('cart');
+    const li = document.querySelectorAll('li');
+    li.forEach((list) => list.addEventListener('click', cartItemClickListener));
+  }
+  addObject();
 };
