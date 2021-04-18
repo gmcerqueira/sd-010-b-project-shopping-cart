@@ -26,8 +26,18 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+let cart = [];
+
+function saveCart({ id, title, price }) {
+  cart.push({ id, title, price });
+  localStorage.setItem('shoppingCart', JSON.stringify(cart));
+}
+
 function cartItemClickListener(event) {
   const cartListItems = document.querySelector('.cart__items');
+  const removeItem = cart.find(({ id }) => id === event.target);
+  cart.splice(removeItem, 1);
+  localStorage.setItem('shoppingCart', JSON.stringify(cart));
   cartListItems.removeChild(event.target);
 }
 
@@ -39,6 +49,12 @@ function createCartItemElement({ id, title, price }) {
   li.addEventListener('click', cartItemClickListener);
   cartItems.appendChild(li);
   return li;
+}
+
+function loadCart() {
+  const savedCart = localStorage.getItem('shoppingCart');
+  cart = savedCart === null ? [] : JSON.parse(savedCart);
+  cart.forEach((item) => createCartItemElement(item));
 }
 
 function getSkuFromProductItem(item) {
@@ -55,6 +71,7 @@ function createProductItemElement({ id, title, thumbnail }) {
    'Adicionar ao carrinho!')).addEventListener('click', async (event) => {
     const returnIdItem = getSkuFromProductItem(event.target.parentNode);
     const itemID = await fetchIdItem(returnIdItem);
+    saveCart(itemID);
     createCartItemElement(itemID);
   });
   return section;
@@ -71,4 +88,5 @@ async function addSectionElements() {
 
 window.onload = async function onload() {
   await addSectionElements();
+  loadCart();
 };
