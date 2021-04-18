@@ -39,8 +39,8 @@ function cartItemClickListener(event) {
   event.target.remove();  
 }
 
-async function somarPrice(carItem) {
-  await carItem.forEach((price) => {
+function somarPrice(carItem) {
+  carItem.forEach((price) => {
    totalPrice += price.salePrice;
    });
    return totalPrice; 
@@ -62,7 +62,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.id = `${localStorage.length}`;
+  li.id = `${Date.now()}`;
   li.addEventListener('click', cartItemClickListener);
   const ol = document.getElementsByClassName('cart__items')[0];
   ol.appendChild(li);
@@ -121,12 +121,14 @@ const allProductsChamada = async () => {
 
 const recarregarLocalStorage = () => {
   if (localStorage.length) {
+    const objkeys = Object.keys(localStorage).sort((a, b) => a - b);
     for (let index = 0; index < localStorage.length; index += 1) {
-      const itemobj = JSON.parse(localStorage[index]);
+      const key = objkeys[index]; 
+      const itemobj = JSON.parse(localStorage[key]);
       const li = document.createElement('li');
       li.className = 'cart__item';
       li.innerText = `SKU: ${itemobj.sku} | NAME: ${itemobj.name} | PRICE: $${itemobj.salePrice}`;
-      li.id = `${index}`;
+      li.id = `${key}`;
       li.addEventListener('click', cartItemClickListener);
       const ol = document.getElementsByClassName('cart__items')[0];
       ol.appendChild(li);
