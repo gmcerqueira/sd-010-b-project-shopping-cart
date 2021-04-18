@@ -1,8 +1,21 @@
+// soma os preços assincronas
+const sumPriceCar = async () => {
+  const pPriceAll = document.querySelector('.total-price');
+  let sum = 0;
+  const liCardCar = document.querySelectorAll('.cart__item');
+    liCardCar.forEach((li) => {
+     const price = li.innerText.split('$')[1];
+     sum += Number(price);
+    });
+  pPriceAll.innerHTML = sum;
+};
+
 // função de apagar item no carrinho de compras
-const cartItemClickListener = (event) => {
+const cartItemClickListener = async (event) => {
   event.target.remove();
   const olCard = document.getElementsByClassName('cart__items')[0];
-  localStorage.saveItensCar = olCard.innerHTML; // apaga item loca
+  localStorage.saveItensCar = olCard.innerHTML; // apaga item local
+  await sumPriceCar();
 };
 
 // cria a imagem src, classe, return
@@ -21,6 +34,8 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// cria elemento clicado no carrinho, add função eventlistene.
+// chama a função de apagar
 function createCartItemElement({ id, title, price }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -29,17 +44,18 @@ function createCartItemElement({ id, title, price }) {
   return li;
 }
 
-// pegar o evento de click no item enviar pela api
+// recebe id click  faz requisição api, cria chave no localStorage -salva
 const addCardCar = async (ItemID) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${ItemID}`);
   const item = await response.json();
   const returnID = createCartItemElement(item);
   const olCard = document.querySelector('.cart__items');
-  olCard.appendChild(returnID);
+  olCard.appendChild(returnID); // add novamente eventlistener e chama a função de apagar
   localStorage.setItem('saveItensCar', olCard.innerHTML); // save no localStorage.setItem()
+  await sumPriceCar();
 };
 
-// add no carrinho de compras
+// pega id produto para add carrinho de compras. atraves do botao
 const addCardItem = async (event) => {
   const getButtonId = event.target.parentNode.firstChild.innerText;
   addCardCar(getButtonId);
