@@ -13,9 +13,9 @@ function clerCart() {
 
 butonClear.addEventListener('click', clerCart);
 
-// function loadingRemove() {
-//   ;
-// }
+function loadingRemove() {
+  loading.remove();
+}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -96,9 +96,8 @@ function lista(http) {
         image: item.thumbnail,
       }),
       );
-    loading.remove();
-  }),
-  )
+    loadingRemove()
+  }))
   .catch((erro) => erro);
 }
 
