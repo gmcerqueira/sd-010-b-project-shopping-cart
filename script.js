@@ -1,26 +1,26 @@
 const cartTotalPrice = (num) => {
   const arr = [];
-  let t = 0;
+  let sum = 0;
   for (let i = 0; i < localStorage.length; i += 1) {
-    const key = localStorage.key(i);
+    const key = localStorage.key(i); /* Esse método localiza uma chave do obj usando um índice */
     const data = JSON.parse(localStorage[key]);
     arr.push(data.salePrice);
   }
 
   if (num) {
     arr.push(num);
-    t = parseFloat(arr.reduce((acc, cur) => acc + cur, 0));
-    document.querySelector('.total-price').innerText = t;
+    sum = parseFloat(arr.reduce((acc, cur) => acc + cur, 0));
+    document.querySelector('.total-price').innerText = sum;
   }
-  t = parseFloat(arr.reduce((acc, cur) => acc + cur, 0));
-  document.querySelector('.total-price').innerText = t;
+  sum = parseFloat(arr.reduce((acc, cur) => acc + cur, 0));
+  document.querySelector('.total-price').innerText = sum;
 };
 
 const save = (ide, objItem) => {
   localStorage.setItem(`${ide}`, JSON.stringify(objItem));  
 };
   
-  /* << DEFAULT >> */
+  /* << DEFAULT FUNCTIONS >> */
   
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -71,7 +71,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-/* << FIM DEFAULT >> */
+/* << END DEFAULT FUNCTIONS >> */
 
 const addItemToCart = async (event) => {
   const item = event.target;
@@ -104,7 +104,6 @@ const load = () => {
   if (localStorage.length) {
     console.log(Object.keys(localStorage));
     for (let i = 0; i < localStorage.length; i += 1) {
-      // const key = localStorage.key(i);
       const data = JSON.parse(localStorage[i]);
       const li = document.createElement('li');
       li.innerText = `SKU: ${data.sku} | NAME: ${data.name} | PRICE: $${data.salePrice}`;
