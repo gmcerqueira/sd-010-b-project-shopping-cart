@@ -3,12 +3,12 @@ function loadData() {
 }
 // Carrega o carrinho de compras através do LocalStorage ao iniciar a página
 function saveLocalStorage() {
-  return localStorage.setItem('Cart data', document.querySelector('.cart__items').innerHTML);
+  return localStorage.setItem('Cart data', document.querySelector('cart__items').innerHTML);
 }
 
 async function totalPrice() {
   let sum = 0;
-  const cartItems = document.querySelector('.cart__items');
+  const cartItems = document.querySelector('cart__items');
   cartItems.childNodes.forEach((child) => {
     const valueItem = child.innerText.split('$')[1];
     sum += Number(valueItem);
