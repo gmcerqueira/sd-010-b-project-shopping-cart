@@ -32,6 +32,8 @@ function totalSum() {
 }
 }
 
+const loading = document.querySelector('.loading');
+
 function clearbtn() {
   localStorage.clear();
   document.querySelector('.cart__items').innerHTML = '';
@@ -114,6 +116,7 @@ async function insertProducts(products) {
   await products.forEach((product) => {
     items.appendChild(createProductItemElement(product));
   });
+  loading.remove();
  }
 
  async function fetchReceiver() {
