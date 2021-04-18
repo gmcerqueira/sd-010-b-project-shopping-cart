@@ -171,7 +171,18 @@ const addShoppingCart = () => {
   return product;
 };
 
+const loadingContent = () => {
+  const spanLoading = document.getElementsByClassName('loading')[0];
+  spanLoading.innerText = 'Carregando...';
+};
+
+const loadedContent = () => {
+  const spanLoading = document.getElementsByClassName('loading')[0];
+  spanLoading.remove();
+};
+
 window.onload = async function onload() {
+  loadingContent();
   getListProducts()
   .then(() => {
     addShoppingCart();
@@ -179,5 +190,7 @@ window.onload = async function onload() {
     getListLocalStorage(allItemsLocalStorage());
   }).then(() => {
     sumTotalShoppingCart();
+  }).then(() => {
+    loadedContent();
   });
 };
