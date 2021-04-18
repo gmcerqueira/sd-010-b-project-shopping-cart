@@ -10,12 +10,22 @@ const sumPriceCar = async () => {
   pPriceAll.innerHTML = sum;
 };
 
-// função de apagar item no carrinho de compras
+// função de apagar item unitario  no carrinho de compras
 const cartItemClickListener = async (event) => {
   event.target.remove();
   const olCard = document.getElementsByClassName('cart__items')[0];
   localStorage.saveItensCar = olCard.innerHTML; // apaga item local
   await sumPriceCar();
+};
+
+// limpa todo o carrinho de compras
+const clearAllItensCar = () => {
+const btnCleanAll = document.querySelector('.empty-cart');
+  btnCleanAll.addEventListener('click', () => {
+    const olCard = document.getElementsByClassName('cart__items')[0];
+    olCard.innerHTML = '';
+    localStorage.saveItensCar = '';
+  });
 };
 
 // cria a imagem src, classe, return
@@ -75,35 +85,29 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return sectionItem.appendChild(section);
 }
 
-// // cria item no carrinho de compras com os paramentros passado
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+// Dedico esse projecto ao meu colega de Turma , Lucas Martins
+// me ajudou muito , Vlw Lucas Martins.
 
-// function cartItemClickListener(event) {
-//   // coloque seu código aqui
-//   // return event.target =
-// }
+    const restoreLocalStorage = () => {
+      if (localStorage.getItem('saveItensCar')) {
+        const olCard = document.querySelector('.cart__items');
+        olCard.innerHTML = localStorage.getItem('saveItensCar');
+        const liCardCar = document.querySelectorAll('.cart__item');
+        liCardCar.forEach((li) => {
+          li.addEventListener('click', cartItemClickListener);
+        });
+      }
+    };
 
-const restoreLocalStorage = () => {
-  if (localStorage.getItem('saveItensCar')) {
-    const olCard = document.querySelector('.cart__items');
-    olCard.innerHTML = localStorage.getItem('saveItensCar');
-    const liCardCar = document.querySelectorAll('.cart__item');
-    liCardCar.forEach((li) => {
-      li.addEventListener('click', cartItemClickListener);
-    });
-  }
-};
-
-window.onload = function onload() {
-  const fetchApi = async (item) => {
-    const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${item}`);
-    const data = await response.json();
-    data.results.forEach((element) => {
-      createProductItemElement(element);
-    });
-  };
-  fetchApi('computador');
-  restoreLocalStorage();
-};
+    window.onload = function onload() {
+      const fetchApi = async (item) => {
+        const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${item}`);
+        const data = await response.json();
+        data.results.forEach((element) => {
+          createProductItemElement(element);
+        });
+      };
+      fetchApi('computador');
+      restoreLocalStorage();
+      clearAllItensCar();
+    };
