@@ -1,8 +1,8 @@
-// const addCartItem = document.querySelectorAll('.item__add ');
-// const remuveCarItem = document.querySelectoAll('.empty-cart');
-// const allCar = document.querySelector('.cart__title')
+// função de apagar item no carrinho de compras
 const cartItemClickListener = (event) => {
   event.target.remove();
+  const olCard = document.querySelector('.cart__items');
+  localStorage.saveItensCar = olCard.innerHTML; // apaga item loca
 };
 
 // cria a imagem src, classe, return
@@ -34,8 +34,9 @@ const addCardCar = async (ItemID) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${ItemID}`);
   const item = await response.json();
   const returnID = createCartItemElement(item);
-  const ulCard = document.querySelector('.cart__items');
-  ulCard.appendChild(returnID);
+  const olCard = document.querySelector('.cart__items');
+  olCard.appendChild(returnID);
+  localStorage.setItem('saveItensCar', olCard.innerHTML); // save no localStorage.setItem()
 };
 
 // add no carrinho de compras
@@ -68,11 +69,16 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 //   // return event.target =
 // }
 
-// const addLocalStorage = () => {
-//   localStorage.setItem("chave", valor)
-//   //nessa chave vai ser armazenado um arry de objetos = JSON.stringfy(arrayde objetos)
-
-// }
+const restoreLocalStorage = () => {
+  if (localStorage.getItem('saveItensCar')) {
+    const olCard = document.querySelector('.cart__items');
+    olCard.innerHTML = localStorage.getItem('saveItensCar');
+    const liCardCar = document.querySelectorAll('.cart__item');
+    liCardCar.forEach((li) => {
+      li.addEventListener('click', cartItemClickListener);
+    });
+  }
+};
 
 window.onload = function onload() {
   const fetchApi = async (item) => {
@@ -83,4 +89,5 @@ window.onload = function onload() {
     });
   };
   fetchApi('computador');
+  restoreLocalStorage();
 };
