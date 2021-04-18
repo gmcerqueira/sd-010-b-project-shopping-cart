@@ -1,5 +1,5 @@
 function loadData() {
-  document.getElementsByClassName('.cart__items').innerHTML = localStorage.getItem('Cart data');
+  document.querySelector('cart__items').innerHTML = localStorage.getItem('Cart data');
 }
 // Carrega o carrinho de compras através do LocalStorage ao iniciar a página
 function saveLocalStorage() {
@@ -72,9 +72,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
+// function getSkuFromProductItem(item) {
+//   return item.querySelector('span.item__sku').innerText;
+// }
 
 // apaga todos os itens do local storage
 function clearCart() {
