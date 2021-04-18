@@ -23,7 +23,7 @@ function priceCart() {
 
 async function cartItemClickListener(event) {
   const item = event.target;
-  item.parentNode.removeChild(item);
+  item.remove();
   arrayStorage.splice(arrayStorage.indexOf(item), 1);
   priceItem.splice(priceItem.indexOf(Number(item.innerText.split('$')[1])), 1);
   localStorage.setItem('items', JSON.stringify(arrayStorage));
