@@ -19,9 +19,7 @@ function createCustomElement(element, className, innerText) {
 function cartItemClickListener(event) {
   event.target.remove();
   const ordenedList = getElement('ol');
-  if (ordenedList) {
-    localStorage.setItem('itens', ordenedList.innerHTML);
-  }
+  localStorage.setItem('itens', ordenedList.innerHTML);
   // const liItens = document.querySelectorAll('li');
   // liItens.forEach((element) => {
   //   localStorage.setItem('itens', JSON.stringify(element.innerHTML));
@@ -78,25 +76,30 @@ const getApi = async (parameter) => {
 // }
 
 const removeAll = () => {
-  const buttonRemoveAll = document.querySelector('.empty-cart');
   const ol2 = getElement('ol');
-  buttonRemoveAll.addEventListener('click', () => {
-    ol2.innerHTML = '';
-  });
+  ol2.innerHTML = '';
+  localStorage.setItem('itens', ol2.innerHTML);
 };
 
 window.onload = function onload() {
   getApi('computador');
-  removeAll();
+
+  const buttonRemoveAll = document.querySelector('.empty-cart');
+  buttonRemoveAll.addEventListener('click', removeAll);
+  
   const olList = document.querySelector('.cart__items');
-  olList.addEventListener('click', cartItemClickListener);
   olList.innerHTML = localStorage.getItem('itens');
 
-  // const liStorage = JSON.parse(localStorage.getItem('itens'));
+  const liItens = document.querySelectorAll('li');
+  liItens.forEach((element) => {
+    element.addEventListener('click', cartItemClickListener);
+  });
+};
+
+// const liStorage = JSON.parse(localStorage.getItem('itens'));
   // liStorage.forEach((element) => {
   //   const li = document.createElement('li');
   //   li.className = 'cart__item';
   //   li.innerHTML = element;
   //   ordenedList.appendChild(li);
   // });
-};
