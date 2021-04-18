@@ -1,24 +1,25 @@
-// function loadData() {
-//   document.querySelector('.cart__items').innerHTML = localStorage.getItem('data');
-// }
+function loadData() {
+  // eslint-disable-next-line sonarjs/no-duplicate-string
+  document.querySelector('.cart__items').innerHTML = localStorage.getItem('data');
+}
 
-// // Carrega o carrinho de compras através do LocalStorage ao iniciar a página
+// Carrega o carrinho de compras através do LocalStorage ao iniciar a página
 
-// function saveLocalStorage() {
-//   return localStorage.setItem('data', document.querySelector('.cart__items').innerHTML);
-// }
+function saveLocalStorage() {
+  return localStorage.setItem('data', document.querySelector('.cart__items').innerHTML);
+}
 
-// function totalPrice() {
-//   let sum = 0;
-//   const cartItems = document.querySelector('.cart__items');
-//   cartItems.childNodes.forEach((child) => {
-//     const valueItem = child.innerText.split('$')[1];
-//     sum += Number(valueItem);
-//     return sum;
-//   });
-//   // saveLocalStorage();
-//   document.querySelector('.total-price').innerHTML = `${sum}`;
-// }
+async function totalPrice() {
+  let sum = 0;
+  const cartItems = document.querySelector('.cart__items');
+  cartItems.childNodes.forEach((child) => {
+    const valueItem = child.innerText.split('$')[1];
+    sum += Number(valueItem);
+    return sum;
+  });
+  saveLocalStorage();
+  document.querySelector('.total-price').innerHTML = `${sum}`;
+}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -39,7 +40,7 @@ function cartItemClickListener(event) {
   // coloque seu código aqui
   const intemCart = event.target;
   intemCart.parentNode.removeChild(intemCart);
-  // totalPrice();
+  totalPrice();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -57,7 +58,7 @@ async function onClick(sku) {
   const addToCart = createCartItemElement(results);
   document.querySelector('.cart__items').appendChild(addToCart);
   addToCart.addEventListener('click', cartItemClickListener);
-  // totalPrice();
+  totalPrice();
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -83,7 +84,7 @@ function clearCart() {
   const removeItemId = document.querySelector('.empty-cart');
   removeItemId.addEventListener('click', () => {
     document.querySelector('.cart__items').innerHTML = '';
-    // totalPrice();
+    totalPrice();
   });
 }
 
@@ -102,7 +103,7 @@ async function getComputer() {
 window.onload = function onload() {
   console.log('Funcionando, corretamente.');
   getComputer();
-  // loadData();
+  loadData();
   clearCart();
-  // totalPrice();
+  totalPrice();
 };
