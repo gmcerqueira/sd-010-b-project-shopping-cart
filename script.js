@@ -10,6 +10,7 @@ async function fetchPC() {
 // Definição de constantes para o Projeto
 const listCart = document.querySelector('.cart__items');
 const totalPrice = document.querySelector('.total-price');
+const cartItem = '.cart__item'; // método para resolver a solicitação do lint devido as repetições do '.cart-tem'
 // -----------------------------------------------------------------------------------------------------
 
 // REQUISITO 7 -----------------------------------------------------------------------------------------
@@ -76,7 +77,7 @@ async function getMLProducts() {
 async function cartTotalPrice() {
   const totalPrices = document.querySelector('.total-price');
   let totalValue = 0;
-  const cartItems = document.querySelectorAll('.cart__item');
+  const cartItems = document.querySelectorAll(cartItem);
   for (let i = 0; i < cartItems.length; i += 1) {
     totalValue += parseFloat(cartItems[i].innerHTML.split('$')[1]);
     totalPrices.innerHTML = ((Math.round(totalValue * 100)) / 100);
@@ -93,6 +94,9 @@ function saveCart() {
 
 // Função Remove os itens clicados / salva no Localstorage / ajusta soma total
 function cartItemClickListener(event) {
+  const itemLi = document.querySelectorAll('.cart__item');
+  console.log(itemLi.length);
+    if (itemLi.length <= 1) { totalPrice.innerHTML = '0.00'; }
   event.target.remove();
   saveCart();
   cartTotalPrice();
@@ -101,7 +105,7 @@ function cartItemClickListener(event) {
 // Desenvolvendo Função para Retornar a Lista de Produtos do LocalStorage
 function loadCart() {
   listCart.innerHTML = localStorage.getItem('cart');
-  const itemsCarts = document.querySelectorAll('.cart__item');
+  const itemsCarts = document.querySelectorAll(cartItem);
   for (let i = 0; i < itemsCarts.length; i += 1) {
     itemsCarts[i].addEventListener('click', cartItemClickListener);
   }
@@ -125,32 +129,53 @@ function getSkuFromProductItem(item) {
 
 // Desenvolvendo Função para Adicionar itens no Carrinho de Compras
 
+// Adiciona itens ao carrinho clicando somente no botão adicionar
 function addToCart() {
-  // Retorna todos os produtos com base na classe .item (seção onde estão todos os produtos)
+// Retorna todos os produtos com base na classe .item (seção onde estão todos os produtos)
   const allItems = document.querySelector('.items');
   allItems.addEventListener('click', async (event) => {
-    // parentNode retorna o pai do elemento clicado, no caso o pai do botão, imagem ou ID do produto -> section com classe .itens
-    const productID = getSkuFromProductItem(event.target.parentNode);
-    const endpoint = `https://api.mercadolibre.com/items/${productID}`;
-    const response = await fetch(endpoint);
-    const data = await response.json();
-    const item = {
-      sku: productID,
-      name: data.title,
-      salePrice: data.price,
-    };
-    const itemCart = createCartItemElement(item);
-    listCart.appendChild(itemCart);
-    saveCart();
-    cartTotalPrice();
+// parentNode retorna o pai do elemento clicado, no caso o pai do botão, imagem ou ID do produto -> section com classe .itens
+    if (event.target.classList.contains('item__add')) {
+      const productID = getSkuFromProductItem(event.target.parentElement);
+      const endpoint = `https://api.mercadolibre.com/items/${productID}`;
+      const response = await fetch(endpoint);
+      const data = await response.json();
+      const item = { sku: productID, name: data.title, salePrice: data.price };
+      const itemCart = createCartItemElement(item);
+      listCart.appendChild(itemCart);
+      saveCart();
+      cartTotalPrice();
+    }
   });
 }
+
+// Adiciona itens ao carrinho podendo clicar em todo o conteúdo do produto
+// function addToCart() {
+//   // Retorna todos os produtos com base na classe .item (seção onde estão todos os produtos)
+//   const allItems = document.querySelector('.items');
+//   allItems.addEventListener('click', async (event) => {
+//     // parentNode retorna o pai do elemento clicado, no caso o pai do botão, imagem ou ID do produto -> section com classe .itens
+//     const productID = getSkuFromProductItem(event.target.parentNode);
+//     const endpoint = `https://api.mercadolibre.com/items/${productID}`;
+//     const response = await fetch(endpoint);
+//     const data = await response.json();
+//     const item = {
+//       sku: productID,
+//       name: data.title,
+//       salePrice: data.price,
+//     };
+//     const itemCart = createCartItemElement(item);
+//     listCart.appendChild(itemCart);
+//     saveCart();
+//     cartTotalPrice();
+//   });
+// }
 
 // REQUISITO 6 -----------------------------------------------------------------------------------------
 function clearCart() {
   const btnClearCart = document.querySelector('.empty-cart');
   btnClearCart.addEventListener('click', () => {
-  const listItems = document.querySelectorAll('li');
+  const listItems = document.querySelectorAll(cartItem);
   if (listItems.length !== 0) {
       for (let i = 0; i < listItems.length; i += 1) {
       listItems[i].remove();
@@ -162,10 +187,27 @@ function clearCart() {
   }
 });
 }
+
+// const productList = () => {
+//   return fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
+//     .then((response) => {
+//       response.json().then((data) => {
+//         const products = data.results;
+//         console.log(products);
+//         products.forEach((product) => {
+//         const { id: sku, title: name, thumbnail: image } = product;
+//         createProductItemElement({ sku, name, image });
+//       });
+//     });
+//   });
+// };
+// console.log(productList());
+
 window.onload = function onload() {
   getMLProducts();
   addToCart();
   loadCart();
   clearCart();
   createLoading();
+  cartTotalPrice();
  };
