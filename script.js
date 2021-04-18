@@ -16,18 +16,16 @@ function createCustomElement(element, className, innerText) {
 }
 
 function priceCart() {
-  const sessionCart = document.querySelector('.cart');
   const priceClass = document.querySelector('.total-price');
   const sumPrice = priceItem.reduce((acc, curr) => acc + curr, 0);
   priceClass.innerHTML = `${sumPrice}`;
-  sessionCart.appendChild(priceClass);
 }
 
 async function cartItemClickListener(event) {
   const item = event.target;
   item.parentNode.removeChild(item);
   arrayStorage.splice(arrayStorage.indexOf(item), 1);
-  // priceItem.splice(priceItem.indexOf(Number(item.innerText.split('$')[1])), 1);
+  priceItem.splice(priceItem.indexOf(Number(item.innerText.split('$')[1])), 1);
   localStorage.setItem('items', JSON.stringify(arrayStorage));
   priceCart();
 }
@@ -95,4 +93,5 @@ window.onload = async function onload() {
   const recoveryArray = await localStorage.getItem('items');
   const arrayObj = JSON.parse(recoveryArray);
   arrayObj.forEach((itemArray) => createCartItemElement(itemArray));
+  priceCart();
 };
