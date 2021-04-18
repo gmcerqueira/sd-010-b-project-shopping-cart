@@ -27,17 +27,21 @@ function createCustomElement(element, className, innerText) {
 }
 
 let cart = [];
+let totalPrice = 0;
 
 const cartListItems = document.querySelector('.cart__items');
 
 function saveCart({ id, title, price }) {
   cart.push({ id, title, price });
   localStorage.setItem('shoppingCart', JSON.stringify(cart));
+  return cart
 }
 
-function cartItemClickListener(event) {
+async function cartItemClickListener(event) {
   const removeItem = cart.find(({ id }) => id === event.target);
   cart.splice(removeItem, 1);
+  await sumPrices();
+  showPrices();
   localStorage.setItem('shoppingCart', JSON.stringify(cart));
   cartListItems.removeChild(event.target);
 }
@@ -55,6 +59,7 @@ function loadCart() {
   const savedCart = localStorage.getItem('shoppingCart');
   cart = savedCart === null ? [] : JSON.parse(savedCart);
   cart.forEach((item) => createCartItemElement(item));
+  return cart
 }
 
 const clearButton = document.querySelector('.empty-cart');
@@ -64,6 +69,8 @@ clearButton.addEventListener('click', () => {
     cartListItems.removeChild(cartListItems.firstElementChild);
   }
   cart = [];
+  totalPrice = 0;
+  showPrices();
   localStorage.setItem('shoppingCart', JSON.stringify(cart));
 });
 
@@ -83,8 +90,26 @@ function createProductItemElement({ id, title, thumbnail }) {
     const itemID = await fetchIdItem(returnIdItem);
     saveCart(itemID);
     createCartItemElement(itemID);
+    await  sumPrices();
+    showPrices();
   });
   return section;
+}
+
+const sumPrices = async () => {
+  totalPrice = (cart.reduce((acc, cur) => acc + cur.price, 0));
+}
+
+const painelCart = document.querySelector('.cart')
+
+const showPrices = () => {
+  const spanPrice = document.querySelector('.total-price');
+  if (!spanPrice) {
+    painelCart.appendChild(createCustomElement('span', 'total-price', `${totalPrice}`));
+  } if (spanPrice) {
+    painelCart.removeChild(spanPrice);
+    painelCart.appendChild(createCustomElement('span', 'total-price', `${totalPrice}`));
+  }
 }
 
 async function addSectionElements() {
@@ -99,6 +124,8 @@ async function addSectionElements() {
 window.onload = async function onload() {
   await addSectionElements();
   loadCart();
+  await  sumPrices();
+  showPrices();
 };
 // Referências
 

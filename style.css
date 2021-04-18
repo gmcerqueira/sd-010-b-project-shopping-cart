@@ -83,3 +83,12 @@
 ol {
   list-style-type: square;
 }
+
+.loader-on {
+  border-top: 16px solid blue;
+  border-bottom: 16px solid blue;
+}
+
+.loader-off {
+  
+}
