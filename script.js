@@ -20,21 +20,22 @@ function cartConstructor(li) {
   ol.appendChild(li);
 }
 
-function clearbtn() {
-  localStorage.clear();
-  document.querySelector('.cart__items').innerHTML = '';
-}
-
 function totalSum() {
   const prices = [];
-  if (itens.length === 0) {
-  for (let index = 0; index < itens.length; index += 1) {
+  if (localStorage.length === 0) {
+  for (let index = 0; index < localStorage.length; index += 1) {
    prices.push(JSON.parse(itens[index]).salePrice);
   }
-  const sum = prices.reduce((total, price) => total + price);
+  const sum = prices.reduce((total, price) => total + price, []);
   const span = document.getElementsByClassName('total-price')[0];
   span.innerHTML = sum;
 }
+}
+
+function clearbtn() {
+  localStorage.clear();
+  document.querySelector('.cart__items').innerHTML = '';
+  totalSum();
 }
 
   function cartItemClickListener(event) {
@@ -47,6 +48,7 @@ function totalSum() {
     localStorage.setItem(index, JSON.stringify(item));
     li[index].id = index;
   });
+  totalSum();
 }
 
 // Recebi ajuda do colega, Alan Tanaka T10-B, para a execução do requisito 4
