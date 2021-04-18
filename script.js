@@ -5,6 +5,10 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+function getElement(parameter) {
+  return document.querySelector(parameter);
+}
+
 function createCustomElement(element, className, innerText) {
   const elementCreated = document.createElement(element);
   elementCreated.className = className;
@@ -12,12 +16,12 @@ function createCustomElement(element, className, innerText) {
   return elementCreated;
 }
 
-const ordenedList = document.querySelector('.cart__items');
-
 function cartItemClickListener(event) {
   event.target.remove();
- 
-  localStorage.setItem('itens', ordenedList.innerHTML);
+  const ordenedList = getElement('ol');
+  if (ordenedList) {
+    localStorage.setItem('itens', ordenedList.innerHTML);
+  }
   // const liItens = document.querySelectorAll('li');
   // liItens.forEach((element) => {
   //   localStorage.setItem('itens', JSON.stringify(element.innerHTML));
@@ -30,8 +34,10 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
 
-  ordenedList.appendChild(li);
-  localStorage.setItem('itens', ordenedList.innerHTML);
+  const ol = getElement('ol');
+  ol.appendChild(li);
+  localStorage.setItem('itens', ol.innerHTML);
+
   // const liItens = document.querySelectorAll('li');
   // liItens.forEach((element) => {
   //   localStorage.setItem('itens', JSON.stringify(element.innerHTML));
@@ -71,17 +77,18 @@ const getApi = async (parameter) => {
 
 const removeAll = () => {
   const buttonRemoveAll = document.querySelector('.empty-cart');
+  const ol2 = getElement('ol');
   buttonRemoveAll.addEventListener('click', () => {
-    ordenedList.innerHTML = '';
+    ol2.innerHTML = '';
   });
 };
 
 window.onload = function onload() {
   getApi('computador');
   removeAll();
-  const a = document.querySelector('.cart__items');
-  a.addEventListener('click', cartItemClickListener);
-  a.innerHTML = localStorage.getItem('itens');
+  const olList = document.querySelector('.cart__items');
+  olList.addEventListener('click', cartItemClickListener);
+  olList.innerHTML = localStorage.getItem('itens');
 
   // const liStorage = JSON.parse(localStorage.getItem('itens'));
   // liStorage.forEach((element) => {
