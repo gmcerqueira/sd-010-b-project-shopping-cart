@@ -1,5 +1,4 @@
 let localStorageCart = [];
-const cartItemClass = '.cart__item';
 
 async function getOrderPrice() {
   const orderPrice = document.querySelector('.total-price');
@@ -7,7 +6,6 @@ async function getOrderPrice() {
   document.querySelector('.cart').appendChild(orderPrice);
   const cartItems = JSON.parse(localStorage.getItem('MLCartItems'));
   const finalPrice = cartItems.reduce((acc, curr) => acc + curr.salePrice, 0);
-  console.log(finalPrice);
   orderPrice.innerText = finalPrice;
 }
 
@@ -37,8 +35,10 @@ function createProductItemElement({ sku, name, image }) {
 
   return section;
 }
+
 function cartItemClickListener(event) {
-  document.querySelectorAll(cartItemClass).removeChild(event.target);
+  // eslint-disable-next-line sonarjs/no-duplicate-string
+  document.querySelector('.cart__items').removeChild(event.target);
   const itemToRemoveSku = event.target.innerText.split(' ')[1];
   localStorageCart = localStorageCart.filter((cartItem) => cartItem.sku !== itemToRemoveSku);
   localStorage.setItem('MLCartItems', JSON.stringify(localStorageCart));
@@ -47,7 +47,7 @@ function cartItemClickListener(event) {
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
-  li.className = cartItemClass;
+  li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
@@ -74,7 +74,8 @@ function addItemToCart(event) {
     .then((response) => response.json())
     .then((object) => {
       const param = { sku: object.id, name: object.title, salePrice: object.price };
-      document.querySelectorAll(cartItemClass).appendChild(createCartItemElement(param));
+      document.querySelector('.cart__items')
+        .appendChild(createCartItemElement(param));
       localStorageCart.push(param);
       localStorage.setItem('MLCartItems', JSON.stringify(localStorageCart));
       getOrderPrice();
@@ -102,16 +103,16 @@ async function retriveMercadoLivreResults(term) {
 }
 
 function clearCart() {
-  const cartItems = document.querySelectorAll(cartItemClass);
+  const cartItems = document.querySelectorAll('.cart__item');
   cartItems.forEach((item) => {
-    document.querySelector(cartItemClass).removeChild(item);
+    document.querySelector('.cart__items').removeChild(item);
   });
   localStorage.removeItem('MLCartItems');
   getOrderPrice();
 }
 
 function saveLocalStorage() {
-  const customerCart = document.querySelector(cartItemClass);
+  const customerCart = document.querySelector('.cart__items');
   const retrievedLocalStorage = JSON.parse(localStorage.getItem('MLCartItems'));
   if (retrievedLocalStorage === null) {
     localStorage.setItem('MLCartItems', JSON.stringify([]));

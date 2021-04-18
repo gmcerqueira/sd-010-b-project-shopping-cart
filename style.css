@@ -79,3 +79,9 @@
   font-size: 16pt;
   text-align: center;
 }
+
+.total-price {
+  text-align: left;
+  font-size: 16pt;
+  flex-direction: row;
+}
