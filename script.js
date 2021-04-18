@@ -65,6 +65,8 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 const getApi = async (parameter) => {
   const objApi = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${parameter}`);
   const objApiJson = await objApi.json();
+  const loading = document.querySelector('.loading');
+  loading.remove();
   objApiJson.results
     .forEach((element) => {
       createProductItemElement(element);
