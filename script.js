@@ -96,6 +96,7 @@ async function getComputer() {
     const getComputers = createProductItemElement(product);
     document.querySelector('.items').appendChild(getComputers);
   });
+  document.querySelector('.loading').remove();
 }
 
 window.onload = function onload() {
@@ -103,4 +104,5 @@ window.onload = function onload() {
   getComputer();
   loadData();
   clearCart();
+  totalPrice();
 };
