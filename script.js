@@ -18,7 +18,7 @@ function cartItemClickListener(event) {
   intemCart.parentNode.removeChild(intemCart);
 }
 
-function createCartItemElement({ sku, name, salePrice }) {
+function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
@@ -42,9 +42,10 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
+
   const onClickButton = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
   section.appendChild(onClickButton);
-  onClickButton.addEventLstener('click', () => onClick(sku));
+  onClickButton.addEventListener('click', () => onClick(sku));
   return section;
 }
 
@@ -59,7 +60,7 @@ async function getComputer() {
   });
 }
 
-window.onload = function () {
+window.onload = function onload() {
   console.log('Funcionando, corretamente.');
   getComputer();
 };
