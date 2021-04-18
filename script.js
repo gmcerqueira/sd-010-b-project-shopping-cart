@@ -28,12 +28,39 @@ function createProductItemElement({ sku, name, image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
+const setTotalPrice = (price) => {
+  const spanPrice = document.getElementsByClassName('total-price')[0];
+
+  if (price === 0) {
+    spanPrice.innerText = '0.00';
+  } else {
+    spanPrice.innerText = `${price}`;
+  }
+};
+
+const sumTotalShoppingCart = async () => {
+  const shoppingCartProducts = document.querySelectorAll('.cart__item');
+  const totalCart = [0];
+
+  shoppingCartProducts.forEach((product) => {
+    const productPrice = product.innerText.split('$')[1];
+
+    totalCart.push(Number(productPrice));
+  });
+
+  const totalPrice = totalCart.reduce((accumulator, current) => accumulator + current);
+
+  setTotalPrice(totalPrice);
+};
+
 function cartItemClickListener(event) {
   const shoppingCart = document.getElementsByClassName('cart__items')[0];
   const productId = event.target.innerText.split(' ');
 
   shoppingCart.removeChild(event.target);
   localStorage.removeItem(productId[1]);
+
+  sumTotalShoppingCart();
 }
 
 const emptyShoppingCart = () => {
@@ -43,6 +70,7 @@ const emptyShoppingCart = () => {
   emptyButton.addEventListener('click', () => {
     localStorage.clear();
     shoppingCart.innerHTML = '';
+    setTotalPrice(0);
   });
 };
 
@@ -56,8 +84,8 @@ const getListLocalStorage = (localStorage) => {
     const item = JSON.parse(itemJason);
 
     product.className = 'cart__item';
-    product.innerText = `
-SKU: ${item.sku} | NAME: ${item.name} | PRICE: $${item.salePrice}`;
+    product.innerText = `SKU: ${item.sku} | NAME: ${item.name} | `
+    + `PRICE: $${item.salePrice}`;
     product.addEventListener('click', cartItemClickListener);
     shoppingCart.appendChild(product);
   });
@@ -134,18 +162,22 @@ const addShoppingCart = () => {
 
       fetchProduct(productId).then((dataProduct) => {
         shoppingCart.appendChild(createCartItemElement(getResultProduct(dataProduct)));
+      }).then(() => {
+        sumTotalShoppingCart();
       });
     });
   });
-
+  
   return product;
 };
 
-window.onload = function onload() {
+window.onload = async function onload() {
   getListProducts()
   .then(() => {
     addShoppingCart();
     emptyShoppingCart();
     getListLocalStorage(allItemsLocalStorage());
+  }).then(() => {
+    sumTotalShoppingCart();
   });
 };
