@@ -28,13 +28,14 @@ function createCustomElement(element, className, innerText) {
 
 let cart = [];
 
+const cartListItems = document.querySelector('.cart__items');
+
 function saveCart({ id, title, price }) {
   cart.push({ id, title, price });
   localStorage.setItem('shoppingCart', JSON.stringify(cart));
 }
 
 function cartItemClickListener(event) {
-  const cartListItems = document.querySelector('.cart__items');
   const removeItem = cart.find(({ id }) => id === event.target);
   cart.splice(removeItem, 1);
   localStorage.setItem('shoppingCart', JSON.stringify(cart));
@@ -42,12 +43,11 @@ function cartItemClickListener(event) {
 }
 
 function createCartItemElement({ id, title, price }) {
-  const cartItems = document.querySelector('.cart__items');
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
   li.addEventListener('click', cartItemClickListener);
-  cartItems.appendChild(li);
+  cartListItems.appendChild(li);
   return li;
 }
 
@@ -56,6 +56,16 @@ function loadCart() {
   cart = savedCart === null ? [] : JSON.parse(savedCart);
   cart.forEach((item) => createCartItemElement(item));
 }
+
+const clearButton = document.querySelector('.empty-cart');
+
+clearButton.addEventListener('click', () => {
+  while (cartListItems.firstChild) {
+    cartListItems.removeChild(cartListItems.firstElementChild);
+  }
+  cart = [];
+  localStorage.setItem('shoppingCart', JSON.stringify(cart));
+});
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
@@ -90,3 +100,14 @@ window.onload = async function onload() {
   await addSectionElements();
   loadCart();
 };
+// Referências
+
+// Referência requisito 3
+
+// https://www.youtube.com/watch?v=LEtLtRXBDms&t=390s&ab_channel=RogerMelo
+
+// Referências requisito 4, 
+
+// https://www.youtube.com/watch?v=WmBXh9ma138&ab_channel=MitchellHudson
+// https://www.youtube.com/watch?v=H7gGkUNoKSM&t=344s&ab_channel=MitchellHudson
+// também recebi ajuda do colega Misabel Bueno
