@@ -13,9 +13,9 @@ function clerCart() {
 
 butonClear.addEventListener('click', clerCart);
 
-function loadingRemove() {
-  loading.remove();
-}
+// function loadingRemove() {
+//   ;
+// }
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -96,8 +96,9 @@ function lista(http) {
         image: item.thumbnail,
       }),
       );
-    loadingRemove();
-  }))
+    loading.remove();
+  }),
+  )
   .catch((erro) => erro);
 }
 
@@ -111,5 +112,4 @@ window.onload = function onload() {
   lista(url);
   ol.innerHTML = localStorage.getItem('Salvo');
   colocaOsListeners();
-  loadingRemove();
 };
