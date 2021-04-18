@@ -12,10 +12,11 @@ function createCustomElement(element, className, innerText) {
   return elementCreated;
 }
 
+const ordenedList = document.querySelector('.cart__items');
+
 function cartItemClickListener(event) {
   event.target.remove();
-  // eslint-disable-next-line sonarjs/no-duplicate-string
-  const ordenedList = document.querySelector('.cart__items');
+ 
   localStorage.setItem('itens', ordenedList.innerHTML);
   // const liItens = document.querySelectorAll('li');
   // liItens.forEach((element) => {
@@ -29,7 +30,6 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
 
-  const ordenedList = document.querySelector('.cart__items');
   ordenedList.appendChild(li);
   localStorage.setItem('itens', ordenedList.innerHTML);
   // const liItens = document.querySelectorAll('li');
@@ -71,7 +71,6 @@ const getApi = async (parameter) => {
 
 const removeAll = () => {
   const buttonRemoveAll = document.querySelector('.empty-cart');
-  const ordenedList = document.querySelector('.cart__items');
   buttonRemoveAll.addEventListener('click', () => {
     ordenedList.innerHTML = '';
   });
@@ -80,9 +79,9 @@ const removeAll = () => {
 window.onload = function onload() {
   getApi('computador');
   removeAll();
-  const ordenedList = document.querySelector('.cart__items');
-  ordenedList.addEventListener('click', cartItemClickListener);
-  ordenedList.innerHTML = localStorage.getItem('itens');
+  const a = document.querySelector('.cart__items');
+  a.addEventListener('click', cartItemClickListener);
+  a.innerHTML = localStorage.getItem('itens');
 
   // const liStorage = JSON.parse(localStorage.getItem('itens'));
   // liStorage.forEach((element) => {
