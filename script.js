@@ -1,3 +1,23 @@
+function loadData() {
+  document.querySelector('.cart__items').innerHTML = localStorage.getItem('Cart data');
+}
+
+function saveLocalStorage() {
+  return localStorage.setItem('Cart data', document.querySelector('.cart__items').innerHTML);
+}
+
+async function totalPrice() {
+  let sum = 0;
+  const cartItems = document.querySelector('.cart__items');
+  cartItems.childNodes.forEach((child) => {
+    const valueItem = child.innerText.split('$')[1];
+    sum += Number(valueItem);
+    return sum;
+  });
+  saveLocalStorage();
+  document.querySelector('.total-price').innerHTML = `${sum}`;
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,10 +32,12 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// Remove o item do carrinho de compras ao clicar
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const intemCart = event.target;
   intemCart.parentNode.removeChild(intemCart);
+  totalPrice();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -26,13 +48,14 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
-// adiciona produto ao carrinho
+// Adicione o produto ao carrinho de compras
 async function onClick(sku) {
   const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
   const results = await response.json();
   const addToCart = createCartItemElement(results);
   document.querySelector('.cart__items').appendChild(addToCart);
   addToCart.addEventListener('click', cartItemClickListener);
+  totalPrice();
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
@@ -63,6 +86,7 @@ async function getComputer() {
 window.onload = function onload() {
   console.log('Funcionando, corretamente.');
   getComputer();
+  loadData();
 };
 
 // function getSkuFromProductItem(item) {
