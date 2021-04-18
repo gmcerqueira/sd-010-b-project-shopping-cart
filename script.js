@@ -96,7 +96,7 @@ function lista(http) {
         image: item.thumbnail,
       }),
       );
-    loadingRemove()
+    loadingRemove();
   }))
   .catch((erro) => erro);
 }
