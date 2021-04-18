@@ -136,12 +136,25 @@ const recarregarLocalStorage = () => {
   }
 };
 
+const clearCart = () => {
+  const buttunClear = document.querySelector('.empty-cart'); 
+  buttunClear.addEventListener('click', () => {
+    const olElements = document.querySelector('.cart__items'); 
+    const price = document.getElementById('total_price');
+    olElements.innerText = ''; 
+    price.innerText = '';
+    localStorage.clear();
+  });
+};
+
 window.onload = function onload() { 
   recarregarLocalStorage();
   allProductsChamada()
   .then(() => {
     addProduct();
   });
+
+  clearCart();
   /* const carItem = localStorage.getItem('produto'); 
   const ItemLocalStorage = JSON.parse(carItem) || [];
   if (ItemLocalStorage.length > 0) {
