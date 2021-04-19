@@ -31,9 +31,9 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
-
+// Remove o item do carrinho ao clicar nele.
 function cartItemClickListener(event) {
-  return event.target;
+  return event.target.remove();
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
