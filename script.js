@@ -30,9 +30,6 @@ async function totalPricesInCart() {
   const price = getPrices[index].innerText.split('$', 2)[1];
   totalPrices += Number(price);
     });
-  // totalInCart = totalPrices;
-  // const elementeH3 = document.getElementsByClassName('total-price');
-  // elementeH3.innerHTML = `${totalInCart}`;
   return totalPrices;
 }
 
@@ -62,14 +59,14 @@ async function cartItemClickListener(event) {
   await creatElementH3();
 }
 
-const localStorageCartShop = (cartShop) => {
+function localStorageCartShop(cartShop) {
   const sizeCartItem = document.getElementsByClassName('cart__item');
   for (let index = 1; index <= sizeCartItem.length; index += 1) {
     if (index === sizeCartItem.length) {
       localStorage.setItem(`cartShop[${index}]`, `${cartShop}`);
     }
   }
-};
+}
 
 // tive ajuda do Lucas Portella;
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -130,14 +127,15 @@ async function fethProdutos() {
 }
 
 async function recoveryLocalStorage() {
-  for (let index = 1; index <= localStorage.length; index += 1) {
-    const li = document.createElement('li');
+  const valuesLocalStorage = Object.values(localStorage);
+  const li = document.createElement('li');
+  const classCartItems = document.getElementsByClassName('cart__items')[0];
+  valuesLocalStorage.forEach((_key, index) => {
     li.className = 'cart__item';
-    li.innerText = localStorage.getItem(`cartShop[${index}]`);
-    const classCartItems = document.getElementsByClassName('cart__items')[0];
+    li.innerText = valuesLocalStorage[index];
     classCartItems.appendChild(li);
     li.addEventListener('click', cartItemClickListener);
-  }
+  });
   await totalPricesInCart();
   await creatElementH3();
 }
@@ -146,5 +144,4 @@ async function recoveryLocalStorage() {
   window.onload = async function onload() {
     await fethProdutos(); // so vem parar aqui oq for preciso carregar primeiro 
     recoveryLocalStorage();
-    // totalPricesInCart();
   };
