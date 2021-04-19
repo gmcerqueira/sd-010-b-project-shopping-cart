@@ -4,7 +4,12 @@ function eraseAll() { // requisito 6
     document.getElementsByClassName('cart__items')[0].innerText = ''; // esse do cart_items é a OL.
     });
 }
-
+// a função abaixo usei para o requisito 4. Para esta resolução, tive a ajuda do colega João Herculano.
+// Link do PR dele : https://github.com/tryber/sd-010-b-project-shopping-cart/pull/88/commits/a2d11f39b333e0c0898502bccccaa4f18cff8425
+function storage() {
+  const armazenar = localStorage.getItem('cart');
+  document.getElementsByClassName('cart__items')[0].innerHTML = armazenar; // usando o innerHTML que manteve os números na lista. Usando innerText esses números sumiam.
+}
 function cartItemClickListener(event) {
   event.target.remove();// o event.target alcança o elemento que começou o evento(Nesse caso, seria o LI). Então ao clicar em LI, eu chamo essa função e esta função remove este LI.
 }
@@ -27,7 +32,7 @@ const addToCard = async (sku) => {
      // Resumo da sequência do req. 2:  Quando eu clico no botão verde, eu chamo a função que faz a requisição e essa mesma função diz que a função createCartItemElement(que estrutura e retorna as LIs) é filha de OL. Por isso que aparece as informações do produto(que eu cliquei) naquela OL.
   
   const ol = document.getElementsByClassName('cart__items')[0];
-  
+  localStorage.setItem('cart', document.getElementsByClassName('cart__items')[0].innerHTML);// tive que botar aqui pra começar a dar certo(ao invés de lá em cima)
   return ol.appendChild(clickItem);
    };
 function createProductImageElement(imageSource) {
@@ -82,4 +87,5 @@ const myFetch = () => { // essas coisas é melhor botar no final do código pra 
 window.onload = function onload() { 
   myFetch(); 
   eraseAll();
+  storage();
 };
