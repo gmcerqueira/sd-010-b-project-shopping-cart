@@ -66,6 +66,13 @@ function localStorageCartShop(cartShop) {
       localStorage.setItem(`cartShop[${index}]`, `${cartShop}`);
     }
   }
+  // for (let index = 1; index <= sizeCartItem.length; index += 1) {
+  //   console.log(Object.keys(localStorage)[index]);
+  //   if (!Object.keys(localStorage)[index] !== ) {
+  //     localStorage.setItem(`cartShop[${index}]`, `${cartShop}`);
+  //     break;
+  //   }
+  // }
 }
 
 // tive ajuda do Lucas Portella;
@@ -128,9 +135,9 @@ async function fethProdutos() {
 
 async function recoveryLocalStorage() {
   const valuesLocalStorage = Object.values(localStorage);
-  const li = document.createElement('li');
-  const classCartItems = document.getElementsByClassName('cart__items')[0];
   valuesLocalStorage.forEach((_key, index) => {
+    const li = document.createElement('li');
+    const classCartItems = document.getElementsByClassName('cart__items')[0];
     li.className = 'cart__item';
     li.innerText = valuesLocalStorage[index];
     classCartItems.appendChild(li);
@@ -143,5 +150,5 @@ async function recoveryLocalStorage() {
     // tive ajuda do Lucas Matins
   window.onload = async function onload() {
     await fethProdutos(); // so vem parar aqui oq for preciso carregar primeiro 
-    recoveryLocalStorage();
+    await recoveryLocalStorage();
   };
