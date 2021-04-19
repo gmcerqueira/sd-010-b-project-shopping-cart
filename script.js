@@ -74,7 +74,7 @@ async function createCartItemElement({ id: sku, title: name, price: salePrice })
   return li;
 }
 
-async function getListProducts() {
+async function getListProducts() {  
   const endPoint = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const products = await endPoint.json();
   const span = document.querySelector('.items');
@@ -98,14 +98,22 @@ async function rendersAfterLoading(index) { // renderiza carrinho no onload
 }
 
 window.onload = async function onload() {
-  const products = await getListProducts();
-  for (let index = 0; index < products.children.length; index += 1) {
-    products.children[index].lastChild.addEventListener('click', async (buttonEvent) => {
-     const itemJson = await getProductID(buttonEvent.path[1].firstChild.innerText);
-     await addShoppingCart(itemJson);
-    });
-    rendersAfterLoading(index);
-  }
-  const clearButton = document.querySelector('.empty-cart');
-  clearButton.addEventListener('click', clearCarShopping);
+  const section = document.querySelector('.items');
+  const div = document.createElement('div');
+  div.className = 'loading';
+  div.innerHTML = 'Loading';
+  section.appendChild(div);
+  setTimeout(async () => {
+    div.remove();
+    const products = await getListProducts();
+    for (let index = 0; index < products.children.length; index += 1) {
+      products.children[index].lastChild.addEventListener('click', async (buttonEvent) => {
+        const itemJson = await getProductID(buttonEvent.path[1].firstChild.innerText);
+        await addShoppingCart(itemJson);
+      });
+      rendersAfterLoading(index);
+    }
+    const clearButton = document.querySelector('.empty-cart');
+    clearButton.addEventListener('click', clearCarShopping);
+  }, 3000);  
 };
