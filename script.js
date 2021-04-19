@@ -1,4 +1,4 @@
-const savedIds = localStorage.getItem('cart');
+
 
 function cartItemClickListener(event) {
   const itemToDelete = event.target;
@@ -11,14 +11,15 @@ function cartItemClickListener(event) {
     if (listOfChildren[index] === itemToDelete) position = index;
   }
   itemToDelete.parentNode.removeChild(itemToDelete);
-  if (savedIds !== undefined && savedIds !== null) {
+  const savedIds = localStorage.getItem('cart');
+  // if (savedIds !== undefined && savedIds !== null) {
     const arrayIds = savedIds.split(',');
     const removed = arrayIds.filter((item) => (arrayIds.indexOf(item)) !== position);
     if (removed.length === arrayIds.length) removed.shift();
     cartIds = cartIds.filter((item) => (cartIds.indexOf(item)) !== position)
     localStorage.setItem('cart', (removed));
     updateCartValue();
-  }
+  // }
 }
 
 let total = 0;
@@ -33,7 +34,7 @@ async function updateCartValue() {
     cartDiv.appendChild(some);
   }
   total = 0;
-  cartItems.forEach((item) => {
+  await cartItems.forEach((item) => {
     const value = parseFloat(item.innerText.split('$')[1]);
     total += value;
   });
@@ -120,7 +121,6 @@ function clearAll() {
   cart.innerHTML = "";
   localStorage.setItem("cart", "");
   cartIds = [];
-  total = 0;
   updateCartValue();
 }
 
@@ -133,6 +133,7 @@ async function asyncForEach(array, callback) {
 }
 
 async function restoreSavedCart() {
+  const savedIds = localStorage.getItem('cart');
   // savedIds.split(',').forEach((id) => addToCart(id));
   asyncForEach(savedIds.split(','), (id) => addToCart(id));
 }
