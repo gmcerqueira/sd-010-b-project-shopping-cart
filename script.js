@@ -25,15 +25,15 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 }
 
 const loadAvailableProducts = async () => {
-  const response = await fetch("https://api.mercadolibre.com/sites/MLB/search?q=computador");
+  const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const productsJSON = await response.json();
   const itens = productsJSON.results;
   const itensProntos = itens.forEach((produto) => {
     const produtos = document.getElementsByClassName('items')[0];
-    produtos.appendChild(createProductItemElement(produto))
+    produtos.appendChild(createProductItemElement(produto));
   });
   return itensProntos;
-}
+};
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
@@ -52,19 +52,19 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
-let itemsOnCarList = [];
+const itemsOnCarList = [];
 
 const putItemOnCartList = async (item) => {
-  const response = await fetch(`https://api.mercadolibre.com/items/${getSkuFromProductItem(item)}`)
+  const response = await fetch(`https://api.mercadolibre.com/items/${getSkuFromProductItem(item)}`);
   const itemProduto = await response.json();
   const cartItens = document.getElementsByClassName('cart__items')[0];
-  cartItens.innerHTML = "";
+  cartItens.innerHTML = '';
   itemsOnCarList.push(itemProduto);
 
-  localStorage.setItem('produtos', JSON.stringify(itemsOnCarList))
-  itemsOnCarList.forEach(produto => {
+  localStorage.setItem('produtos', JSON.stringify(itemsOnCarList));
+  itemsOnCarList.forEach((produto) => {
     cartItens.appendChild(createCartItemElement(produto));
-  })
+  });
   };
 
 const loadCartItems = () => {
@@ -74,15 +74,15 @@ const loadCartItems = () => {
       putItemOnCartList(itemClicado.target.parentNode);
     }
 });
-}
+};
 
 window.onload = function onload() { 
   loadAvailableProducts();
   loadCartItems();
   const itemsOnCarListString = localStorage.getItem('produtos');
-  const x = JSON.parse(itemsOnCarListString)
-  x.forEach(produto => {
+  const x = JSON.parse(itemsOnCarListString);
+  x.forEach((produto) => {
     const cartItens = document.getElementsByClassName('cart__items')[0];
-    cartItens.appendChild(createCartItemElement(produto))
-  })
+    cartItens.appendChild(createCartItemElement(produto));
+  });
 };
