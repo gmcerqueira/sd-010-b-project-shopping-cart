@@ -16,9 +16,9 @@ function createCustomElement(element, className, innerText) {
 
 const cartItemClickListener = async (event) => {
 const { target } = await event;
-const getSpan = document.querySelector('.total-price');
-const newObj = target.parentNode.children;
-const objRest = [...newObj];
+const getSpan = await document.querySelector('.total-price');
+const newObj = await target.parentNode.children;
+const objRest = await [...newObj];
 objRest.forEach((value, index) => {
   if (target === value) {
     target.parentNode.removeChild(target);
