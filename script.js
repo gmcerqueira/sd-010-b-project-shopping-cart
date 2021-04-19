@@ -54,8 +54,8 @@ function productOnCart(product) {
     };
 
   const item = createCartItemElement(cartProduct);
-  const cart = document.querySelector('.cart__items');
-  cart.appendChild(item);
+  const toCart = document.querySelector('.cart__items');
+  toCart.appendChild(item);
   saveCartStatus();
 }
 
@@ -110,9 +110,9 @@ async function getProducts() {
 
 // LOAD CART FROM LOCAL STORAGE
 function loadCart() {
-  const cart = document.querySelector('.cart__items');
-  if (localStorage.onCart) cart.innerHTML = localStorage.onCart;
-  const items = document.querySelectorAll('li')
+  const onCart = document.querySelector('.cart__items');
+  if (localStorage.onCart) onCart.innerHTML = localStorage.onCart;
+  document.querySelectorAll('li')
     .forEach((product) => product.addEventListener('click', cartItemClickListener));
 }
 
