@@ -1,7 +1,6 @@
 let sum = 0;
 let deduct = 0;
 let sumStorage = 0;
-const selecTotalPrice = document.querySelector('.total-price');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -31,14 +30,14 @@ function createProductItemElement({ sku, name, image }) {
 function storageCart() {
   localStorage.clear('cart');
   const myStorage = document.getElementsByClassName('cart__items')[0].innerHTML;
-  const sumPrice = selecTotalPrice.innerHTML;
+  const sumPrice = document.getElementsByClassName('total-price').innerHTML;
   console.log(myStorage);
   localStorage.setItem('cart', myStorage);
   localStorage.setItem('total', sumPrice);
 }
 
 async function totalSum() {
-  const totalPrice = await selecTotalPrice;
+  const totalPrice = await document.querySelector('.total-price');
   if (localStorage.cart === undefined || localStorage.cart === '') {
     totalPrice.innerHTML = 0;
     storageCart();
@@ -109,8 +108,8 @@ window.onload = function onload() {
     document.getElementsByClassName('cart__items')[0].innerHTML = localStorage.getItem('cart');
     const li = document.querySelectorAll('li');
     li.forEach((list) => list.addEventListener('click', cartItemClickListener));
-    selecTotalPrice.innerHTML = localStorage.getItem('price');
-    sumStorage = selecTotalPrice.innerHTML;
+    document.getElementsByClassName('total-price').innerHTML = localStorage.getItem('price');
+    sumStorage = document.querySelector('.total-price').innerHTML;
   }
   document.querySelectorAll('.empty-cart').forEach((empty) => empty 
     .addEventListener('click', () => {
