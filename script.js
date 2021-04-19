@@ -29,9 +29,10 @@ async function getSkuFromProductItem(item) {
 }
 
 async function changePrice(salePrice) {
-  const number = salePrice.price;
   const total = document.querySelector('.total-price');
-  total.innerHTML = (Math.round(((total.innerHTML) * 100) / 100) + number);
+  const numberTotal = +Math.round(parseFloat(total.innerHTML));
+  const numberPrice = salePrice.price;
+  total.innerHTML = numberTotal + numberPrice;
 }
 
 async function cartItemClickListener(event) {
@@ -41,6 +42,15 @@ async function cartItemClickListener(event) {
   await changePrice({ price: (num * (-1)) });
   await event.path[0].remove();
   localStorage.removeItem(event.path[0].id);
+}
+
+function clearCarShopping() {
+  const itemLi = document.querySelectorAll('.cart__item');
+  for (let index = 0; index < itemLi.length; index += 1) {
+    itemLi[index].remove();
+  }
+  const total = document.querySelector('.total-price');
+  total.innerHTML = 0;
 }
 
 async function getProductID(idButton) {
@@ -92,4 +102,6 @@ window.onload = async function onload() {
     });
     rendersAfterLoading(index);
   }
+  const clearButton = document.querySelector('.empty-cart');
+  clearButton.addEventListener('click', clearCarShopping);
 };
