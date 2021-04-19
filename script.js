@@ -1,5 +1,5 @@
 const saveLocalStorage = () => {
-  const shoppingCart = document.querySelector('.cart__items');
+  const shoppingCart = document.querySelector('.cart_items');
   localStorage.setItem('List_Shopping_Cart', shoppingCart.innerHTML);
 };
 
@@ -13,7 +13,7 @@ const interationShopCartChildrens = (shoppingCartChildrens) => {
 };
 
 const calcPriceItemsCart = async () => {
-  const shoppingCart = document.querySelector('.cart__items');
+  const shoppingCart = document.querySelector('.cart_items');
   const shoppingCartChildrens = shoppingCart.childNodes;
   const h1Price = document.querySelector('.total-price');
   h1Price.innerHTML = interationShopCartChildrens(shoppingCartChildrens);
@@ -51,7 +51,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  const productsCart = document.querySelector('.cart__items');
+  const productsCart = document.querySelector('.cart_items');
   productsCart.removeChild(event.currentTarget);
   saveLocalStorage();
   const shoppingCartChildrens = productsCart.childNodes;
@@ -93,7 +93,7 @@ const addProductCart = (addButtons) => {
         const idButton = getSkuFromProductItem(section);
         const endPointId = `https://api.mercadolibre.com/items/${idButton}`;
         const product = await fetchPromise(endPointId);
-        const cart = document.querySelector('.cart__items');
+        const cart = document.querySelector('.cart_items');
         cart.appendChild(createCartItemElement(product));
         await calcPriceItemsCart();
         saveLocalStorage();
@@ -105,7 +105,7 @@ const addProductCart = (addButtons) => {
 const clearButton = () => {
   const cleanButton = document.querySelector('.empty-cart');
   cleanButton.addEventListener('click', () => {
-    const shoppingCart = document.querySelector('.cart__items');
+    const shoppingCart = document.querySelector('.cart_items');
     const h1Price = document.querySelector('.total-price');
     shoppingCart.innerHTML = '';
     h1Price.innerHTML = '';
@@ -120,7 +120,7 @@ window.onload = async function onload() {
 
   await fetchPromise(endPointMain).then((products) => {
     const itemsSection = document.querySelector('.items');
-    return products.results.map(currentProduct => itemsSection
+    return products.results.map((currentProduct) => itemsSection
       .appendChild(createProductItemElement(currentProduct)));
   });
 
@@ -129,11 +129,11 @@ window.onload = async function onload() {
   addProductCart(addButtons);
 
   if (typeof (Storage) !== 'undefined' && localStorage.length !== 0) {
-    const productsInCart = document.querySelector('.cart__items');
+    const productsInCart = document.querySelector('.cart_items');
     const h1Price = document.querySelector('.total-price');
     productsInCart.innerHTML = localStorage.getItem('List_Shopping_Cart');
     productsInCart.childNodes
-      .forEach(item => item.addEventListener('click', cartItemClickListener));
+      .forEach((item) => item.addEventListener('click', cartItemClickListener));
     const priceTotal = localStorage.getItem('Price');
     h1Price.innerHTML = priceTotal;
     h1Price.style.display = 'block';
