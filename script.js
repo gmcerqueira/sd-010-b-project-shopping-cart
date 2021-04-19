@@ -23,6 +23,7 @@ function createProductItemElement({ id, title, thumbnail }) {
 
   return section;
 }
+// A função 'pega' os produtos computadores da APi, dentro do obj results, e depois através do loop do forEach adciona o item como 'filho' na classe items;
 async function getProduct() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const product = await response.json();
@@ -33,22 +34,45 @@ async function getProduct() {
 });
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+ function getSkuFromProductItem(item) {
+   return item.querySelector('span.item__sku').innerText;
+ }
 
-// function cartItemClickListener() {
-//   // coloque seu código aqui
-// }
+function cartItemClickListener(event) {
+ event.target.remove();
+}
 
-// function createCartItemElement({ sku, name, salePrice }) {
-//   const li = document.createElement('li');
-//   li.className = 'cart__item';
-//   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-//   li.addEventListener('click', cartItemClickListener);
-//   return li;
-// }
+function createCartItemElement({ id, title, price }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${id} | NAME: ${title} | PRICE: $${price}`;
+  li.addEventListener('click', cartItemClickListener);
+   return li;
+ }
+ async function getItem(id) {
+   const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
+   const items = await response.json();
+   return items;
+ }
 
-window.onload = function onload() { 
-  getProduct();
+ async function addItem(id) {
+   const add = await getItem(id);
+   const addOl = document.querySelector('.cart__items');
+   const cart = createCartItemElement(add);
+   addOl.appendChild(cart);
+ }
+
+function addItemCart() {
+   const buttonItem = document.querySelectorAll('.item__add');
+   buttonItem.forEach((button) => {
+     button.addEventListener('click', () => {
+       const id = getSkuFromProductItem(button.parentElement);
+       addItem(id);
+     });
+     });
+ }
+ 
+window.onload = async function onload() { 
+ await getProduct();
+ await addItemCart();
 };
