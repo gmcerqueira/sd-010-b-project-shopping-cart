@@ -86,10 +86,9 @@ const createCartItems = async () => {
 };
   // Tive ajuda do instrutor Eduardo para finalizar o requisito 1.
 const renderItems = (getResults) => {
-  let pc;
   const selectSection = document.getElementsByClassName('items')[0];
   getResults.forEach((el) => {
-   pc = createProductItemElement({ sku: el.id, name: el.title, image: el.thumbnail });
+   const pc = createProductItemElement({ sku: el.id, name: el.title, image: el.thumbnail });
     selectSection.appendChild(pc);
     pc.addEventListener('click', () => {
       const carProduct = cartItemsList.find((item) => item.id === el.id);
