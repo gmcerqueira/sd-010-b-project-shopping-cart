@@ -72,6 +72,8 @@ const removeAllCartItems = () => {
   items.innerHTML = '';
 };
 
+document.querySelector('.empty-cart').addEventListener('click', removeAllCartItems); 
+
 window.onload = async function onload() {
   await getItems();
   document.querySelector('.items').addEventListener('click', itemsListClickListener);
@@ -81,5 +83,4 @@ window.onload = async function onload() {
     const ol = document.querySelector(cartItemsClass);
     ol.appendChild(item);
   });
-  document.querySelector('.empty-cart').addEventListener('click', removeAllCartItems);  
 };
