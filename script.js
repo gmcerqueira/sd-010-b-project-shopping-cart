@@ -18,7 +18,7 @@ function createProductImageElement(imageSource) {
   img.src = imageSource;
   return img;
 }
-
+// funcao que cria novos elementos HTML
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -125,8 +125,21 @@ async function addSectionElements() {
   });
 }
 
+const body = document.getElementById('body');
+
+function loadScreenAdd() {
+  body.appendChild(createCustomElement('span', 'loading', 'Loading...'));
+}
+
+function loadScreenRemove() {
+  const spanLoad = document.querySelector('.loading');
+  body.removeChild(spanLoad);
+}
+
 window.onload = async function onload() {
+  loadScreenAdd();
   await addSectionElements();
+  loadScreenRemove();
   loadCart();
   await sumPrices();
   showPrices();

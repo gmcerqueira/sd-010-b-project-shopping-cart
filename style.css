@@ -84,11 +84,11 @@ ol {
   list-style-type: square;
 }
 
-.loader-on {
-  border-top: 16px solid blue;
-  border-bottom: 16px solid blue;
-}
-
-.loader-off {
-  
+.loading {
+  display: inline-block;
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 4px solid white;
+  top: 50%;
 }
