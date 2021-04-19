@@ -1,12 +1,12 @@
-// function loadData() {
-//   document.querySelector('.cart__items').innerHTML = localStorage.getItem('data');
-// }
+function loadData() {
+  document.querySelector('ol').innerHTML = localStorage.getItem('data');
+}
 
 // Carrega o carrinho de compras através do LocalStorage ao iniciar a página
 
-// function saveLocalStorage() {
-//   localStorage.setItem('data', document.querySelector('.cart__items').innerHTML);
-// }
+function saveLocalStorage() {
+  localStorage.setItem('data', document.querySelector('ol').innerHTML);
+}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -30,7 +30,7 @@ async function totalPrice() {
     sum += Number(valueItem);
     return sum;
   });
-  // saveLocalStorage();
+  saveLocalStorage();
   document.querySelector('.total-price').innerHTML = `${sum}`;
 }
 
@@ -98,7 +98,7 @@ async function getComputer() {
 window.onload = function onload() {
   console.log('Funcionando, corretamente.');
   getComputer();
-  // loadData();
+  loadData();
   clearCart();
   totalPrice();
 };
