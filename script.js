@@ -1,13 +1,22 @@
-const cartItems2 = [];
+// ajuda não consegui criar arcabouços para fazer do metodo convencional
+// então usei jQuery após descobri-lo na internet
+// mas lint me proibe de usa-lo sem importar o cypress nao roda quando importo.
+
+const sendLocalStorageCart = [];
 function cartItemClickListener(event) {
-  const localStorageRecovery = localStorage.getItem('cartItems');
-  const itensSaved = JSON.parse(localStorageRecovery);
-  console.log(itensSaved);
+  // recuperando o index o jQuery falta defini-lo o lint me trava nisso!
+  // imaginei porque é uma ferramenta que não existe.
+  const index = $(event.target).index();
+  console.log(sendLocalStorageCart);
+  sendLocalStorageCart.splice(index, 1);
   event.target.remove();
+  console.log(sendLocalStorageCart);
+  localStorage.setItem('cartItems', JSON.stringify(sendLocalStorageCart));
   }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
+  li.id = sendLocalStorageCart.length;
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
@@ -33,9 +42,9 @@ async function buttonClickAddCart(event) {
     name: title,
     salePrice: price,
   };
-  cartItems2.push(itemCart);
+  sendLocalStorageCart.push(itemCart);
   document.querySelector('.cart__items').appendChild(createCartItemElement(itemCart));
-  localStorage.setItem('cartItems', JSON.stringify(cartItems2));
+  localStorage.setItem('cartItems', JSON.stringify(sendLocalStorageCart));
   }
 
  function recoveryLocal() {
@@ -92,6 +101,7 @@ async function getComputer() {
 }
 window.onload = async function onload() { 
   // acima tenho os computadore que busca achou!
+  
   await getComputer();
   recoveryLocal();
   };
