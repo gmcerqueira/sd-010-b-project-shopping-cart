@@ -19,10 +19,15 @@ function getSkuFromProductItem(item) {
 }
 
 //-----------------------------------------------------------------------------
+// CART JOKER FUNCTION
+const cartJoker = () => {
+  const cart = document.querySelector('.cart__items');
+  return cart;
+};
+
 // SET CART TO LOCAL STORAGE
 function saveCartStatus() {
-  const cart = document.querySelector('.cart__items');
-  const productsList = cart.innerHTML;
+  const productsList = (cartJoker()).innerHTML;
   localStorage.onCart = productsList;
 }
 
@@ -54,8 +59,7 @@ function productOnCart(product) {
     };
 
   const item = createCartItemElement(cartProduct);
-  const toCart = document.querySelector('.cart__items');
-  toCart.appendChild(item);
+  (cartJoker()).appendChild(item);
   saveCartStatus();
 }
 
@@ -110,7 +114,7 @@ async function getProducts() {
 
 // LOAD CART FROM LOCAL STORAGE
 function loadCart() {
-  const onCart = document.querySelector('.cart__items');
+  const onCart = (cartJoker());
   if (localStorage.onCart) onCart.innerHTML = localStorage.onCart;
   document.querySelectorAll('li')
     .forEach((product) => product.addEventListener('click', cartItemClickListener));
