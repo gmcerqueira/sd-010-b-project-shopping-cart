@@ -10,9 +10,16 @@ const elementoTotalPrice = document.querySelector('.total-price');
 let total = 0;
 const butonClear = document.querySelector('.empty-cart');
 
+// Função fetch para por os elementos na tela
+function funcFetch(urls) {
+  return fetch(urls) 
+  .then((fetchReturn) => fetchReturn.json())
+  .catch((erro) => erro);
+}
+
 async function somaTotal(id) {
-  const itemSelecionado = await funcFetch(`${itemUrl}${id}`);
-  total += itemSelecionado.price;
+  const itemsSelecionados = await funcFetch(`${itemUrl}${id}`);
+  total += itemsSelecionados.price;
   elementoTotalPrice.innerText = total;
 }
 
