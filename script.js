@@ -4,11 +4,11 @@ async function getComputer(api) {
   return computer;
 } 
 
-const carrinho = [];
+let carrinho = [];
 
-// async function getProduct(id) {
-//  await fetch(`https://api.mercadolibre.com/items/${id}`).then((res) => res.json());
-// }
+async function getProduct(id) {
+ await fetch(`https://api.mercadolibre.com/items/${id}`).then((res) => res.json());
+}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -41,17 +41,33 @@ function createProductItemElement({ sku, name, image }) {
 // }
 
 function cartItemClickListener(event) {
+  const pegarId = event.target.id;
+  const numeroId = getProduct(pegarId);
   event.target.remove();
-  const ol = document.getElementsByClassName('cart__item');
-  console.log(ol);
+  carrinho.forEach((elementId, index) => {
+    if (pegarId === elementId.id) {
+      carrinho.splice(index, 1);
+      localStorage.setItem('computers', JSON.stringify(carrinho));
+    }
+  });
+  return numeroId;
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.id = `${sku}`;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   return li;
+}
+
+function recoverList() {
+  const ol = document.getElementsByTagName('ol')[0];
+  carrinho.forEach((lIts) => {
+    const lCar = createCartItemElement({ sku: lIts.id, name: lIts.title, salePrice: lIts.price });
+    ol.appendChild(lCar);
+  });
 }
 
 function renderComputer(computers) {
@@ -62,10 +78,12 @@ function renderComputer(computers) {
     elements.appendChild(iten);
     iten.lastChild.addEventListener('click', () => {
       const buy = carrinho.find((produto) => produto.id === its.id);
-      if (!buy) carrinho.push(iten);
+      if (!buy) {
+        carrinho.push(its);
       const list = createCartItemElement({ sku: its.id, name: its.title, salePrice: its.price });
+      localStorage.setItem('computers', JSON.stringify(carrinho));
       ol.appendChild(list);
-      // getProduct();
+      }
     });
   });
 }
@@ -77,4 +95,7 @@ window.onload = async function onload() {
   renderComputer(catalog);
   const loading = document.getElementsByTagName('p')[0];
   loading.remove();
+  const carrinhoCheio = localStorage.getItem('computers');   
+  carrinho = carrinhoCheio ? JSON.parse(carrinhoCheio) : [];
+  recoverList();
 };
