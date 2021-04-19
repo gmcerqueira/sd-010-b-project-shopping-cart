@@ -39,14 +39,14 @@ function getSkuFromProductItem(item) {
 function calcPreço(price) {
   let total = parseFloat(localStorage.getItem('preco'));
   total += price;
-  let price2 = Math.round(total * 100) / 100;
+  const price2 = Math.round(total * 100) / 100;
   localStorage.setItem('preco', price2);
   const encontrarP = document.getElementsByClassName('price-item')[0];
-  encontrarP.remove()
+  encontrarP.remove();
   const cartItems = document.getElementsByClassName('cart__items')[0];
   const criarP = document.createElement('p');
   criarP.classList.add('price-item');
-  criarP.innerHTML = `R$:${total}`
+  criarP.innerHTML = `R$:${total}`;
   cartItems.appendChild(criarP);
 }
 
