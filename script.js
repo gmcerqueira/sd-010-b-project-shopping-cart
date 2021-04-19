@@ -42,13 +42,6 @@ function clerCart() {
 }
 butonClear.addEventListener('click', clerCart);
 
-// Função fetch para por os elementos na tela
-function funcFetch(urls) {
-  return fetch(urls) 
-  .then((fetchReturn) => fetchReturn.json())
-  .catch((erro) => erro);
-}
-
 function cartItemClickListener(event) {
   const selecionado = event.target.parentNode;
   selecionado.removeChild(event.target);
