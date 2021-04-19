@@ -10,6 +10,12 @@ const elementoTotalPrice = document.querySelector('.total-price');
 let total = 0;
 const butonClear = document.querySelector('.empty-cart');
 
+async function somaTotal(id) {
+  const itemSelecionado = await funcFetch(`${itemUrl}${id}`);
+  total += itemSelecionado.price;
+  elementoTotalPrice.innerText = total;
+}
+
 // função salvar
 function salvar() {
   const itensASalvar = [];
@@ -36,12 +42,6 @@ function funcFetch(urls) {
   .catch((erro) => erro);
 }
 
-async function somaTotal(id) {
-  const itemSelecionado = await funcFetch(`${itemUrl}${id}`);
-  total += itemSelecionado.price;
-  elementoTotalPrice.innerText = total;
-}
-
 function cartItemClickListener(event) {
   const selecionado = event.target.parentNode;
   selecionado.removeChild(event.target);
@@ -65,11 +65,11 @@ function createCartItemElement({ sku, name, salePrice, keys }) {
 // adciona o produto selecionado ao carrinho
 async function adcionar(este) {
   const section = este.target.id;
-  const itemSelecionado = await funcFetch(`${itemUrl}${section}`);
+  const itemSelected = await funcFetch(`${itemUrl}${section}`);
     ol.appendChild(createCartItemElement({
-      sku: itemSelecionado.id,
-      name: itemSelecionado.title,
-      salePrice: itemSelecionado.price,
+      sku: itemSelected.id,
+      name: itemSelected.title,
+      salePrice: itemSelected.price,
       keys: ol.childNodes.length,
     }));
     salvar();
