@@ -58,8 +58,10 @@ function cartItemClickListener(event) {
   const getOL = document.getElementsByClassName('cart__items')[0];
   getOL.removeChild(event.target);
   cartItemsList.forEach((item, index) => {
-    if (item.id === getTargetId) cartItemsList.splice(index, 1);
-    localStorage.setItem('carShop', JSON.stringify(cartItemsList));
+    if (item.id === getTargetId) {
+      cartItemsList.splice(index, 1);
+      localStorage.setItem('carShop', JSON.stringify(cartItemsList));
+    };
   });
   return response;
  }
