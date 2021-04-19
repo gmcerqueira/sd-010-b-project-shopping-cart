@@ -28,14 +28,17 @@ async function getSkuFromProductItem(item) {
   return item.id;
 }
 
-async function changePrice(salePrice) {
+async function changePrice(salePrice) { // total preço
   const total = document.querySelector('.total-price');
-  const numberTotal = +Math.round(parseFloat(total.innerHTML));
+  const numberTotal = parseFloat(total.innerHTML);
   const numberPrice = salePrice.price;
   total.innerHTML = numberTotal + numberPrice;
+  if (total.innerHTML < 0) {
+    total.innerHTML = 0;
+  }
 }
 
-async function cartItemClickListener(event) {
+async function cartItemClickListener(event) { // remove no click
   // coloque seu código aqui
   const text = await event.path[0].innerText;
   const num = await text.substring(text.indexOf('$') + 1);
@@ -44,16 +47,17 @@ async function cartItemClickListener(event) {
   localStorage.removeItem(event.path[0].id);
 }
 
-function clearCarShopping() {
+function clearCarShopping() { // limpa carrinho
   const itemLi = document.querySelectorAll('.cart__item');
   for (let index = 0; index < itemLi.length; index += 1) {
     itemLi[index].remove();
+    localStorage.clear();
   }
   const total = document.querySelector('.total-price');
   total.innerHTML = 0;
 }
 
-async function getProductID(idButton) {
+async function getProductID(idButton) { // pegar produto id
   const item = await fetch(`https://api.mercadolibre.com/items/${idButton}`);
   const itemJson = await item.json();
   return itemJson;
@@ -65,8 +69,8 @@ async function createCartItemElement({ id: sku, title: name, price: salePrice })
   li.id = sku;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  localStorage.setItem(li.id, li);
-  await changePrice(await getProductID(await getSkuFromProductItem(li)));
+  localStorage.setItem(li.id, li); // add local storage
+  await changePrice(await getProductID(await getSkuFromProductItem(li))); // total preço
   return li;
 }
 
@@ -86,7 +90,7 @@ async function addShoppingCart(product) {
   ol.appendChild(await createCartItemElement(product));
 }
 
-async function rendersAfterLoading(index) {
+async function rendersAfterLoading(index) { // renderiza carrinho no onload
   const key = localStorage.key(index);
   if (key !== null) {
    await addShoppingCart(await getProductID(key));
@@ -98,7 +102,7 @@ window.onload = async function onload() {
   for (let index = 0; index < products.children.length; index += 1) {
     products.children[index].lastChild.addEventListener('click', async (buttonEvent) => {
      const itemJson = await getProductID(buttonEvent.path[1].firstChild.innerText);
-     addShoppingCart(itemJson);
+     await addShoppingCart(itemJson);
     });
     rendersAfterLoading(index);
   }
