@@ -13,7 +13,7 @@ function createProductImageElement(imageSource) {
 }
 
 function createProductItemElement({ id: sku, title: name, thumbnail: image }, callback) {
-  const section = createCustomElement('section', 'item');
+  const section = createCustomElement('section', 'item', null);
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
