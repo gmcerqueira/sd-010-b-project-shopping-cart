@@ -74,3 +74,24 @@
   font-size: 16pt;
   text-align: center;
 }
+
+.display-price {
+  border-collapse: collapse;
+  border: 2px solid;
+}
+
+.display-price th {
+  text-align: left;
+  line-height: 30px;
+  padding-left: 10px;
+}
+
+.display-price th:first-of-type {
+  width: 60%;
+}
+
+#display-text {
+  color: red;
+  display: flex;
+  justify-content: space-between;
+}
