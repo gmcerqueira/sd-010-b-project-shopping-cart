@@ -39,9 +39,15 @@ function getSkuFromProductItem(item) {
 function calcPreço(price) {
   let total = parseFloat(localStorage.getItem('preco'));
   total += price;
-  localStorage.setItem('preco', total);
-  const encontrarP = document.getElementById('price');
-  encontrarP.innerText = `R$:${total}`;
+  let price2 = Math.round(total * 100) / 100;
+  localStorage.setItem('preco', price2);
+  const encontrarP = document.getElementsByClassName('price-item')[0];
+  encontrarP.remove()
+  const cartItems = document.getElementsByClassName('cart__items')[0];
+  const criarP = document.createElement('p');
+  criarP.classList.add('price-item');
+  criarP.innerHTML = `R$:${total}`
+  cartItems.appendChild(criarP);
 }
 
 async function clickElemente(event) {
@@ -54,8 +60,8 @@ async function clickElemente(event) {
     name: prod.title,
     salePrice: prod.price,
   });
-  calcPreço(prod.price);
   incontrarItem.appendChild(newEl);
+  calcPreço(prod.price);
   localStorage.setItem('cartItems', incontrarItem.innerHTML);
 }
 
