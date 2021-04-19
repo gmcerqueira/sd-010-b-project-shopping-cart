@@ -76,6 +76,11 @@ const loadCartItems = () => {
 });
 };
 
+const clearCart = () => {
+  const cartItens = document.getElementsByClassName('cart__items')[0];
+  cartItens.innerHTML = '';
+};
+
 window.onload = function onload() { 
   loadAvailableProducts();
   loadCartItems();
@@ -87,4 +92,7 @@ window.onload = function onload() {
     cartItens.appendChild(createCartItemElement(produto));
   });
   }
+  const buttonClearCart = document.getElementsByClassName('empty-cart')[0];
+  console.log(buttonClearCart);
+  buttonClearCart.addEventListener('click', clearCart);
 };
