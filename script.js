@@ -7,7 +7,7 @@ async function getComputer(api) {
 const carrinho = [];
 
 // async function getProduct(id) {
-//   const product = await fetch(`https://api.mercadolibre.com/items/${id}`).then((res) => res.json());
+//  await fetch(`https://api.mercadolibre.com/items/${id}`).then((res) => res.json());
 // }
 
 function createProductImageElement(imageSource) {
@@ -65,6 +65,7 @@ function renderComputer(computers) {
       if (!buy) carrinho.push(iten);
       const list = createCartItemElement({ sku: its.id, name: its.title, salePrice: its.price });
       ol.appendChild(list);
+      // getProduct();
     });
   });
 }
@@ -74,4 +75,6 @@ window.onload = async function onload() {
   const catalog = await getComputer(api);
   console.log(catalog.results);
   renderComputer(catalog);
+  const loading = document.getElementsByTagName('p')[0];
+  loading.remove();
 };
