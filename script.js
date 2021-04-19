@@ -43,7 +43,7 @@ function cartItemClickListener(event) {
   const id = event.target.innerHTML.split(' ')[1];
   const price = event.target.innerHTML.split('$')[1];
   totalOrder(-price);
-  cartShoppingIds.splice(cartShoppingIds.indexOf(id), 1);
+  cartShoppingIds.splice(cartShoppingIds.indexOf(cartShoppingIds[id]), 1);
   localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
   event.target.remove();
 }
@@ -57,20 +57,20 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
-async function addToCart(event) {
-  // https://stackoverflow.com/questions/38481549/what-is-the-difference-between-e-target-parentnode-and-e-path1
-  let itemId = event;
-  if (event.target) {
-    itemId = getSkuFromProductItem(event.target.parentNode);
-    cartShoppingIds.push(itemId);
-    localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
-  }
-  const resultFetch = await fetch(`https://api.mercadolibre.com/items/${itemId}`);
-  const itemToAdd = await resultFetch.json();
+async function addToCart(itemToAdd) {
   const listItem = createCartItemElement(itemToAdd);
   const { price } = itemToAdd;
   await totalOrder(price);
   shoppingList.appendChild(listItem);
+}
+
+async function addNewToCart(event) {
+  const itemId = getSkuFromProductItem(event.target.parentNode);
+  const resultFetch = await fetch(`https://api.mercadolibre.com/items/${itemId}`);
+  const itemToAdd = await resultFetch.json();
+  cartShoppingIds.push(itemToAdd);
+  localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
+  addToCart(itemToAdd);
 }
 
 async function getComputers() {
@@ -88,7 +88,7 @@ function renderComputers(computers) {
   // usado querySectorAll, pois retorna uma NodeList, senão, usando getElementsByClassName retorna uma HTMLCollection e teria que usar outro comando (Array.prototype.forEach.call)
   // https://stackoverflow.com/questions/3871547/js-iterating-over-result-of-getelementsbyclassname-using-array-foreach
   const buttons = document.querySelectorAll('.item__add');
-  buttons.forEach((button) => button.addEventListener('click', addToCart));
+  buttons.forEach((button) => button.addEventListener('click', addNewToCart));
 }
 
 async function renderCart() {
