@@ -1,6 +1,6 @@
 function cartItemClickListener(event) {
   event.target.remove();
-  calcPreço();
+//  calcPreço();
   localStorage.setItem('cartItems', document.querySelector('.cart__items').innerHTML);
 }
 
@@ -33,23 +33,19 @@ function criarImagem(imageSource) {
   return img;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
+// function calcPreço(price) {
+//   let total = parseFloat(localStorage.getItem('preco'));
+//   total += price;
+//   const price2 = Math.round(total * 100) / 100;
+//   localStorage.setItem('preco', price2);
+//   const encontrarP = document.getElementsByClassName('price-item')[0];
+//   encontrarP.remove();
+//   const cartItems = document.getElementsByClassName('cart__items')[0];
+//   const criarP = document.createElement('p');
+//   criarP.classList.add('price-item');
+//   criarP.innerHTML = `R$:${total}`;
+//   //cartItems.appendChild(criarP);
 // }
-
-function calcPreço(price) {
-  let total = parseFloat(localStorage.getItem('preco'));
-  total += price;
-  const price2 = Math.round(total * 100) / 100;
-  localStorage.setItem('preco', price2);
-  const encontrarP = document.getElementsByClassName('price-item')[0];
-  encontrarP.remove();
-  const cartItems = document.getElementsByClassName('cart__items')[0];
-  const criarP = document.createElement('p');
-  criarP.classList.add('price-item');
-  criarP.innerHTML = `R$:${total}`;
-  cartItems.appendChild(criarP);
- }
 
 async function clickElemente(event) {
   const incontrarItem = document.getElementsByClassName('cart__items')[0];
