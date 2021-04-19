@@ -1,7 +1,8 @@
-// const p = document.createElement('p');
-// p.innerText = 'vqv'
-// const lista = document.getElementsByClassName('cart__items');
-// lista.appendChild(p)
+function cartItemClickListener(event) {
+  event.target.remove();
+  //sumPrices();
+  localStorage.setItem('cartItems', document.querySelector('.cart__items').innerHTML);
+}
 
 function getProductId(sku) {
   return fetch(`https://api.mercadolibre.com/items/${sku}`)
@@ -14,7 +15,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  // li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', cartItemClickListener);
   return li;
 }
 
@@ -36,19 +37,19 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function calcPreço(price) {
-  let total = parseFloat(localStorage.getItem('preco'));
-  total += price;
-  const price2 = Math.round(total * 100) / 100;
-  localStorage.setItem('preco', price2);
-  const encontrarP = document.getElementsByClassName('price-item')[0];
-  encontrarP.remove();
-  const cartItems = document.getElementsByClassName('cart__items')[0];
-  const criarP = document.createElement('p');
-  criarP.classList.add('price-item');
-  criarP.innerHTML = `R$:${total}`;
-  cartItems.appendChild(criarP);
-}
+// function calcPreço(price) {
+//   let total = parseFloat(localStorage.getItem('preco'));
+//   total += price;
+//   const price2 = Math.round(total * 100) / 100;
+//   localStorage.setItem('preco', price2);
+//   const encontrarP = document.getElementsByClassName('price-item')[0];
+//   encontrarP.remove();
+//   const cartItems = document.getElementsByClassName('cart__items')[0];
+//   const criarP = document.createElement('p');
+//   criarP.classList.add('price-item');
+//   criarP.innerHTML = `R$:${total}`;
+//   //cartItems.appendChild(criarP);
+// }
 
 async function clickElemente(event) {
   const incontrarItem = document.getElementsByClassName('cart__items')[0];
@@ -61,7 +62,7 @@ async function clickElemente(event) {
     salePrice: prod.price,
   });
   incontrarItem.appendChild(newEl);
-  calcPreço(prod.price);
+  //calcPreço(prod.price);
   localStorage.setItem('cartItems', incontrarItem.innerHTML);
 }
 
@@ -94,11 +95,12 @@ async function transformarUrl(url) {
   });
 }
 
-//   function cartItemClickListener(event) {
-//    console.log('entrou na lista');
-// }
-
 window.onload = function onload() {
   transformarUrl('https://api.mercadolibre.com/sites/MLB/search?q=computador');
-  localStorage.setItem('preco', 0);
+  //localStorage.setItem('preco', 0);
+  document.querySelector('.cart__items').innerHTML = localStorage.getItem('cartItems');
  };
+
+const apagar = () => {
+  document.getElementsByClassName('cart__items')[0].innerHTML = '';
+}
