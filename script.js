@@ -91,10 +91,12 @@ const callFetch = async () => {
         const idProduct = getSkuFromProductItem(event.target.parentNode);
         const fetchCall = await fetch(`https://api.mercadolibre.com/items/${idProduct}`);
         const response = await fetchCall.json();
-        arrStorage.push(response);
-        localStorage.setItem('qualquer', JSON.stringify(arrStorage));/* pesquisa JSON. */
         const changeObject = changeToObject(response);
-      const liCreate = createCartItemElement(changeObject);
+        // console.log(changeObject);
+        const liCreate = createCartItemElement(changeObject);
+        arrStorage.push(changeObject);
+        // console.log(arrStorage);
+        localStorage.setItem('item', JSON.stringify(arrStorage));/* pesquisa JSON. */
       joinItemsCart(liCreate);
     });
   });
@@ -116,11 +118,23 @@ const afterLoadingAPI = () => {
   sectionCart.removeChild(stopLoading);
 };
 
+const funct = async () => {
+  const delStorage = localStorage.getItem('item');
+  // console.log(delStorage);
+  const newObject = await JSON.parse(delStorage);/* string dentro do array novamente */
+  await newObject.forEach((element) => {
+    createCartItemElement(element);
+  });
+};
+
 window.onload = async function onload() {
   expectLoadingAPI();
   const products = await callFetch();  
   afterLoadingAPI();
   renderProductList(products);  
   buttonEvent();
+  const cartItem = createCartItemElement();
+  renderProductList(cartItem);
   removeAllItems();
+  await funct();
 };
