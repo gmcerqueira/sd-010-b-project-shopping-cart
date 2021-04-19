@@ -1,26 +1,12 @@
-function loadData() {
-  document.querySelector('.cart__items').innerHTML = localStorage.getItem('data');
-}
-
+// function loadData() {
+//   document.querySelector('.cart__items').innerHTML = localStorage.getItem('data');
+// }
 
 // Carrega o carrinho de compras através do LocalStorage ao iniciar a página
 
-
-function saveLocalStorage() {
-  return localStorage.setItem('data', document.querySelector('.cart__items').innerHTML);
-}
-
-async function totalPrice() {
-  let sum = 0;
-  const cartItems = document.querySelector('.cart__items');
-  cartItems.childNodes.forEach((child) => {
-    const valueItem = child.innerText.split('$')[1];
-    sum += Number(valueItem);
-    return sum;
-  });
-  saveLocalStorage();
-  document.querySelector('.total-price').innerHTML = `${sum}`;
-}
+// function saveLocalStorage() {
+//   localStorage.setItem('data', document.querySelector('.cart__items').innerHTML);
+// }
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -36,10 +22,23 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+async function totalPrice() {
+  let sum = 0;
+  const cartItems = document.querySelector('ol');
+  cartItems.childNodes.forEach((child) => {
+    const valueItem = child.innerText.split('$')[1];
+    sum += Number(valueItem);
+    return sum;
+  });
+  // saveLocalStorage();
+  document.querySelector('.total-price').innerHTML = `${sum}`;
+}
+
 // Remove o item do carrinho de compras ao clicar
 function cartItemClickListener(event) {
   // coloque seu código aqui
-  event.target.remove();
+  const targetItem = event.target;
+  targetItem.parentNode.removeChild(targetItem);
   totalPrice();
 }
 
@@ -75,10 +74,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-function getSkuFromProductItem(item) {
-  return item.querySelector('span.item__sku').innerText;
-}
-
 // apaga todos os itens do local storage
 function clearCart() {
   const removeItemId = document.querySelector('.empty-cart');
@@ -103,7 +98,7 @@ async function getComputer() {
 window.onload = function onload() {
   console.log('Funcionando, corretamente.');
   getComputer();
-  loadData();
+  // loadData();
   clearCart();
   totalPrice();
 };
