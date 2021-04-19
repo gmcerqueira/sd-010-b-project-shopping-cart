@@ -1,5 +1,4 @@
 const mlbURL = 'https://api.mercadolibre.com/sites/MLB/search?q=computador';
-// const idURL = `https://api.mercadolibre.com/items/$ItemID`
 
 const fetchResults = (url) => fetch(url)
   .then((response) => response.json())
@@ -36,10 +35,6 @@ function createCustomElement(element, className, innerText) {
   e.innerText = innerText;
   return e;
 }
-
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
 
 const cartItemsLocalStorage = [];
 
@@ -138,9 +133,7 @@ const loading = async () => {
 };
 
 window.onload = async function onload() {
-  // const results = await fetchResults(mlbURL);
-  // await renderCatalog(results);
-  await loading();
+  await loading(); // Função para renderizar o catálogo de items é chamada dentro de loading(). para que a requisição seja feita enquanto o "Loading..." permanece na tela.
   emptyCart();
   renderCart();
 };
