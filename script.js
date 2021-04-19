@@ -22,6 +22,8 @@ function getSkuFromProductItem(item) {
 // DEVELOPED FUNCTION - ALMOST NATIVE
 function cartItemClickListener(event) {
   // coloque seu código aqui
+  const toRemove = event.target;
+  toRemove.parentNode.removeChild(toRemove);
 }
 
 //-----------------------------------------------------------------------------
