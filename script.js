@@ -76,9 +76,9 @@ function createCartItemElement({
 const addItemToCart = async (event) => {
   const element = event.target.parentElement;
   const idSku = element.firstChild.innerText;
-  const cartItems = document.querySelector('.cart__items');
+  const cartElement = document.getElementsByClassName('cart__items')[0];
   const itemDetails = await fetchItem(idSku);
-  cartItems.appendChild(createCartItemElement(itemDetails));
+  cartElement.appendChild(createCartItemElement(itemDetails));
 };
 
 function createProductItemElement({
@@ -111,16 +111,21 @@ const renderCart = () => {
   const cartItems = JSON.parse(localStorage.getItem('cartItems'));
   cartItems.forEach((item) =>
     cartElement.appendChild(createCartItemElement(item)));
-  // const cartItems = document.querySelector('.cart__items');
-  // for (let index in cartArray) {
-  //   const itemObj = JSON.parse(localStorage.getItem(index));
-  //   fetchItem(itemObj).then((response) =>
-  //     cartItems.appendChild(createCartItemElement(response)));
-  // };
+};
+
+const emptyCart = () => {
+  const emptyCartButton = document.querySelector('.empty-cart');
+  emptyCartButton.addEventListener('click', () => {
+    const cartElement = document.querySelector('.cart__items');
+    cartElement.innerHTML = '';
+    cartItemsLocalStorage.length = 0;
+    localStorage.clear();
+  });
 };
 
 window.onload = async function onload() {
   const results = await fetchResults(mlbURL);
   await renderCatalog(results);
   renderCart();
+  emptyCart();
 };
