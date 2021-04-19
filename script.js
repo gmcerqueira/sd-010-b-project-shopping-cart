@@ -36,8 +36,8 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
-function calcPreço(price){
-  let total =  parseFloat(localStorage.getItem('preco'));
+function calcPreço(price) {
+  let total = parseFloat(localStorage.getItem('preco'));
   total += price;
   localStorage.setItem('preco', total);
   const encontrarP = document.getElementById('price');
