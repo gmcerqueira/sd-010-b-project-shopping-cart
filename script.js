@@ -36,6 +36,14 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+function calcPreço(price){
+  let total =  parseFloat(localStorage.getItem('preco'));
+  total += price;
+  localStorage.setItem('preco', total);
+  const encontrarP = document.getElementById('price');
+  encontrarP.innerText = `R$:${total}`;
+}
+
 async function clickElemente(event) {
   const incontrarItem = document.getElementsByClassName('cart__items')[0];
   const parent = event.target.parentElement;
@@ -46,7 +54,7 @@ async function clickElemente(event) {
     name: prod.title,
     salePrice: prod.price,
   });
-  // calcPreço(prod.price);
+  calcPreço(prod.price);
   incontrarItem.appendChild(newEl);
   localStorage.setItem('cartItems', incontrarItem.innerHTML);
 }
@@ -62,14 +70,6 @@ function criarElementoNaTabela({ sku, name, image }) {
   encontraSection.appendChild(criarButton);
   return encontraSection;
 }
-
-// function calcPreço(price){
-//   parseFloat(price);
-//   let total =  localStorage.getItem("preco");
-//   total += price;
-//   localStorage.setItem("preco", total);
-//   console.log(total);
-// }
 
 async function transformarUrl(url) {
   const pegarIformacoesDaUrl = await fetch(url);
