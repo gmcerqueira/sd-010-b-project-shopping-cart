@@ -17,13 +17,11 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function createProductItemElement({ sku, name, image, price }) {
+function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
-  const priceFixed = price.toFixed(2).replace('.', ',');
-  section.appendChild(createCustomElement('span', 'item__title', priceFixed));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
@@ -94,7 +92,6 @@ function addObject() {
           sku: item.id,
           name: item.title,
           image: item.thumbnail,
-          price: item.price,
         });
         document.querySelector('.items').appendChild(computer);
       });
