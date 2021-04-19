@@ -22,13 +22,9 @@ const objRest = [...newObj];
 objRest.forEach((value, index) => {
   if (target === value) {
     target.parentNode.removeChild(target);
-    getPricesItem.splice(index);
-    if (getPricesItem.length >= 1) {
-      const soma = getPricesItem.reduce((accumulator, currentValue) => accumulator + currentValue);
-      getSpan.textContent = soma;
-    } else {
-      [getSpan.textContent] = [getPricesItem[0]];
-    }
+    getPricesItem.splice(index, 1);
+    const soma = getPricesItem.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    getSpan.textContent = soma;
   }
 });
 };
