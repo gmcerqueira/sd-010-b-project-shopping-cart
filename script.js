@@ -120,16 +120,16 @@ function clearAll() {
 
 // Função ForEach assícrono, por Sebastien Chopin.
 // Disponível em: https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index += 1) {
-    await callback(array[index], index, array);
-  }
-}
+// async function asyncForEach(array, callback) {
+//   for (let index = 0; index < array.length; index += 1) {
+//     await callback(array[index], index, array);
+//   }
+// }
 
 async function restoreSavedCart() {
   const savedIds = localStorage.getItem('cart');
-  // savedIds.split(',').forEach((id) => addToCart(id));
-  asyncForEach(savedIds.split(','), (id) => addToCart(id));
+  savedIds.split(',').forEach((id) => addToCart(id));
+  // asyncForEach(savedIds.split(','), (id) => addToCart(id));
 }
 
 const buttons = document.getElementsByClassName('item__add');
