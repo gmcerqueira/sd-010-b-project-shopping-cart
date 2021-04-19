@@ -31,7 +31,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
-// Remove o item do carrinho ao clicar nele.
+// Remove o item do carrinho ao clicar nele. https://developer.mozilla.org/pt-BR/docs/Web/API/ChildNode/remove
 function cartItemClickListener(event) {
   return event.target.remove();
 }
