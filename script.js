@@ -133,8 +133,8 @@ window.onload = async function onload() {
   afterLoadingAPI();
   renderProductList(products);  
   buttonEvent();
-  const cartItem = createCartItemElement();
-  renderProductList(cartItem);
   removeAllItems();
+  const cartItem = createCartItemElement();
+  renderProductList(cartItem);  
   await funct();
 };
