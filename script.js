@@ -14,11 +14,23 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-const cartItemClickListener = async (event) => {
-const { target } = await event;
-const getSpan = await document.querySelector('.total-price');
-const newObj = await target.parentNode.children;
-const objRest = await [...newObj];
+const loadingStatus = false;
+function verifyStatus() {
+  if (loadingStatus) {
+    const newEl = document.createElement('p');
+    newEl.className = 'loading';
+    newEl.innerText = 'loading...';
+    document.body.appendChild(newEl);
+  } else if (loadingStatus === false) {
+    document.querySelector('.loading').remove();
+  }
+}
+
+const cartItemClickListener = (event) => {
+const { target } = event;
+const getSpan = document.querySelector('.total-price');
+const newObj = target.parentNode.children;
+const objRest = [...newObj];
 objRest.forEach((value, index) => {
   if (target === value) {
     target.parentNode.removeChild(target);
@@ -33,11 +45,14 @@ objRest.forEach((value, index) => {
 });
 };
 
-const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
+const createCartItemElement = async ({ id: sku, title: name, price: salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', await cartItemClickListener);
+  const containerItems = document.querySelector('.cart__items');
+  containerItems.appendChild(li);
+  verifyStatus();
   return li;  
 };
 
@@ -87,4 +102,5 @@ const clearCart = () => {
 window.onload = function () {
   getProduct();
   clearCart();
+  verifyStatus();
 };
