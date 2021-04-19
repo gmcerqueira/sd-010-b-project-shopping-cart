@@ -1,3 +1,5 @@
+const getPricesItem = [];
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,26 +14,31 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
-
 const cartItemClickListener = (event) => {
 const { target } = event;
-target.parentNode.removeChild(target);
+const getSpan = document.querySelector('.total-price');
+const newObj = target.parentNode.children;
+const objRest = [...newObj];
+objRest.forEach((value, index) => {
+  if (target === value) {
+    target.parentNode.removeChild(target);
+    getPricesItem.splice(index);
+    if (getPricesItem.length > 1) {
+      const soma = getPricesItem.reduce((accumulator, currentValue) => accumulator + currentValue);
+      getSpan.textContent = soma;
+    } else {
+      [getSpan.textContent] = [getPricesItem[0]];
+    }
+  }
+});
 };
-const arr = [];
 
 const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  if (li.addEventListener) {
-    arr.push(salePrice);
-    console.log(arr);
-  }
-  return li;
+  return li;  
 };
 
 const theProduct = async (item) => {
@@ -50,7 +57,12 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   .addEventListener('click', async () => {
   const sc = section.firstChild.textContent;
-  document.querySelector('.cart__items').appendChild(createCartItemElement(await theProduct(sc)));
+  const data = await theProduct(sc);
+  document.querySelector('.cart__items').appendChild(createCartItemElement(data));
+  getPricesItem.push(data.price);
+  const soma = getPricesItem.reduce((accumulator, value = 0) => accumulator + value);
+  const getSpan = document.querySelector('.total-price');
+  getSpan.textContent = soma;
 });
   return section;
 }
@@ -65,6 +77,14 @@ const getProduct = async () => {
   });
 };
 
+const clearCart = () => {
+  const clearCartItems = document.querySelector('.empty-cart');
+  clearCartItems.addEventListener('click', () => {
+    document.querySelector('ol.cart__items').innerHTML = '';
+  });
+};
+
 window.onload = function () {
   getProduct();
+  clearCart();
 };
