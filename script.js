@@ -58,7 +58,15 @@ function createProductItemElement({
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
+const cartItemsLocalStorage = [];
+
 function cartItemClickListener(event) {
+  const cartIndexToRemove = cartItemsLocalStorage.findIndex((item) =>
+    item.cartText === event.target.innerHTML);
+  const cartItemsKey = JSON.parse(localStorage.getItem('cartItems'));
+  cartItemsKey.splice(cartIndexToRemove, 1);
+  cartItemsLocalStorage.splice(cartIndexToRemove, 1);
+  localStorage.setItem('cartItems', JSON.stringify(cartItemsKey));
   event.target.remove();
 }
 
@@ -69,9 +77,16 @@ function createCartItemElement({
 }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  const storageText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.innerText = storageText;
+  const storageText = {
+    sku,
+    name,
+    salePrice,
+    cartText: `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`,
+  };
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', (event) => cartItemClickListener(event));
+  cartItemsLocalStorage.push(storageText);
+  localStorage.setItem('cartItems', JSON.stringify(cartItemsLocalStorage));
   return li;
 }
 
@@ -80,7 +95,6 @@ const addItemToCart = async (event) => {
   const idSku = element.firstChild.innerText;
   const cartItems = document.querySelector('.cart__items');
   const itemDetails = await fetchItem(idSku);
-  console.log(itemDetails);
   cartItems.appendChild(createCartItemElement(itemDetails));
 };
 
@@ -92,7 +106,21 @@ const renderCatalog = (results) => {
   });
 };
 
+const renderCart = () => {
+  const cartElement = document.querySelector('.cart__items');
+  const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+  cartItems.forEach((item) =>
+    cartElement.appendChild(createCartItemElement(item)));
+  // const cartItems = document.querySelector('.cart__items');
+  // for (let index in cartArray) {
+  //   const itemObj = JSON.parse(localStorage.getItem(index));
+  //   fetchItem(itemObj).then((response) =>
+  //     cartItems.appendChild(createCartItemElement(response)));
+  // };
+};
+
 window.onload = async function onload() {
   const results = await fetchResults(mlbURL);
-  renderCatalog(results);
+  await renderCatalog(results);
+  renderCart();
 };
