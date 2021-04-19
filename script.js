@@ -109,7 +109,7 @@ function createElements() {
     });
     addToCart();
   });
-  hideAndShowLoading('');
+  setTimeout(() => hideAndShowLoading(''), 1000);
 }
 
 function setShoppingCart() {
