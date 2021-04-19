@@ -110,10 +110,8 @@ shopp.forEach((shop) => {
  }
 // O colega Denis me ajudou no primeiro quesito. 
 const loadPage = () => {
-  setTimeout(() => {
     createLoadMessage();
     renderComputers();
-  });
 };
 
 const loadedPage = () => {
@@ -121,7 +119,7 @@ const loadedPage = () => {
     takeLoadMessageDown();
   }, Math.random() * 3000);
 };
-
+// Eu pedi para o Luanderson durante o plantão do dia 19/04 às 18:40 para ver se poderia utilizar a função desta forma.
 window.onload = async function onload() {
   savingS = document.querySelector('.cart__items');
   loadPage();
