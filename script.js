@@ -1,6 +1,6 @@
 const classOl = document.querySelector('.cart__items');
-const buttonAdd = document.querySelectorAll('.item__add');
-const itemsPage = document.querySelectorAll('.item');
+const body = document.querySelector('body');
+const classItens = document.querySelector('.items');
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -33,7 +33,7 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  return event;
+  return event.target;
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -53,7 +53,6 @@ const apiUrl = async (item) => {
 // Adiciona o elemento buscado (computador) como filho da section com a classe items
 const elementComputerSection = async () => {
   const list = await apiUrl('computador');
-  const classItens = document.querySelector('.items');
   list.forEach((item) => {
     const computers = createProductItemElement(item);
       classItens.appendChild(computers);
@@ -71,17 +70,21 @@ const createProductCart = async (id) => {
   const itemId = await fetchSearchId(id);
   classOl.appendChild(createCartItemElement(itemId));
 };
-
-const addProductCart = async () => {
-  buttonAdd.addEventListener('click', (event) => {
-    const click = event.target;
-    createProductCart(click);
+// Adiciona Item no carrinho. Referencia da ajuda que encontrei, no final  da pagina.
+const addProductCart = () => {
+   body.addEventListener('click', (event) => {
+    const clickElement = event.target;
+      if (clickElement.className === 'item__add') {
+         createProductCart(getSkuFromProductItem(event.target.parentNode));
+    }
   });
 };
 
-createProductCart('MLB1341706310');
-
-window.onload = async () => {
-  elementComputerSection();
-  await addProductCart();
+addProductCart();
+ 
+window.onload = () => {
+   elementComputerSection(); 
 };
+
+// Resolução do segundo exercicio: https://www.youtube.com/watch?v=LEtLtRXBDms&t=492s
+// https://www.youtube.com/watch?v=9bWDK5oltiI.
