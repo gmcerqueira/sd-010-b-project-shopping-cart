@@ -36,12 +36,12 @@ const listOfProducts = async () => {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-const sumItemsPrices = async () => cartItemsList.reduce((acc, curr) => acc + curr.price, 0);
-const appendValue = async (sumReturn) => {
+const sumItemsPrices = () => cartItemsList.reduce((acc, curr) => acc + curr.price, 0);
+const appendValue = (sumReturn) => {
   const createH2 = document.createElement('h2');
   const selectDiv = document.getElementsByClassName('total-price')[0];
   selectDiv.innerHTML = '';
-  createH2.innerHTML = await sumReturn;
+  createH2.innerHTML = sumReturn;
   selectDiv.appendChild(createH2);
 };
 
@@ -61,7 +61,7 @@ function cartItemClickListener(event) {
     if (item.id === getTargetId) {
       cartItemsList.splice(index, 1);
       localStorage.setItem('carShop', JSON.stringify(cartItemsList));
-    };
+    }
   });
   return response;
  }
@@ -77,10 +77,10 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-const createCartItems = async () => {
+const createCartItems = () => {
   const carOL = document.getElementsByClassName('cart__items')[0];
   carOL.innerHTML = '';
-  await appendValue(sumItemsPrices());
+  appendValue(sumItemsPrices());
   cartItemsList.forEach((itm) => {
     const creatLi = createCartItemElement({ sku: itm.id, name: itm.title, salePrice: itm.price });
     carOL.appendChild(creatLi);
@@ -94,14 +94,16 @@ const renderItems = (getResults) => {
     selectSection.appendChild(pc);
     pc.addEventListener('click', () => {
       const carProduct = cartItemsList.find((item) => item.id === el.id);
-      if (!carProduct) cartItemsList.push(el);
+      if (!carProduct) {
+      cartItemsList.push(el);
       localStorage.setItem('carShop', JSON.stringify(cartItemsList));
-      createCartItems();      
+      createCartItems();
+      }    
     });
    });
   };
 
-  const emptyCart = async () => {
+  const emptyCart = () => {
     const selectbtn = document.getElementsByClassName('empty-cart')[0];
      selectbtn.addEventListener('click', () => {
       cartItemsList = [];
@@ -116,7 +118,6 @@ window.onload = async function onload() {
   const getLoadEl = document.querySelector('.loading');
   getLoadEl.remove();
   renderItems(getResult);
-  createCartItemElement(getResult);
   const itemsStorageString = localStorage.getItem('carShop');
   cartItemsList = itemsStorageString ? JSON.parse(itemsStorageString) : [];
   createCartItems();
