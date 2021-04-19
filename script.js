@@ -130,9 +130,11 @@ async function createProductList() {
   try {
     const res = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
     const data = await res.json();
-    container.removeChild(loading);
-    data.results
-      .forEach((product) => productList.appendChild(createProductItemElement(product)));
+    // setTimeout(() => {
+      container.removeChild(loading);
+      data.results
+        .forEach((product) => productList.appendChild(createProductItemElement(product)));
+    // }, 10000);
   } catch (error) {
     console.log(error);
   }

@@ -8,26 +8,49 @@ body {
   align-items: center;
   display: flex;
   height: 100px;
-  justify-content: space-around;
-  margin-bottom: 10px;
-  width: 100%;
-  background-color: aliceblue;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  background-color: rgb(241, 241, 241);
+  padding: 0 50px;
 }
 
-.top-bar .input-name-group {
-  align-items: flex-start;
+.top-bar .logo-container {
   display: flex;
 }
 
-.top-bar .input-terms-group {
-  align-items: flex-start;
+.top-bar .logo {
+  fill: rgb(15, 179, 0);
+}
+
+.top-bar .logo-text {
+  margin-left: 10px;
+  font-style: italic;
+  color: rgb(15, 179, 0);
+}
+
+.top-bar .search-container {
   display: flex;
+  align-items: center;
+}
+
+.top-bar .search-input {
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
+
+}
+
+.top-bar .search-button-icon {
+  fill: rgb(15, 179, 0);
+  margin-left: 10px;
+  height: 36px;
 }
 
 .container {
   display: flex;
   justify-content: space-around;
-  width: 100%;
+  width: 94%;
+  margin: 0 auto;
 }
 
 .items {
@@ -45,7 +68,7 @@ body {
   flex-direction: column;
   align-items: center;
   height: auto;
-  margin: 10px;
+  margin: 0 20px 10px 0;
   padding: 14px;
   width: 250px;
 }
@@ -79,15 +102,49 @@ body {
   justify-content: space-around;
 }
 
-
 .cart {
+  background-color: rgb(241, 241, 241);
   display: flex;
   flex-basis: 30%;
   flex-flow: column wrap;
+  padding: 20px;
+  border-radius: 10px;
+  height: fit-content;
+}
+
+.cart .cart__items {
+  margin: 0;
 }
 
 .cart .cart__title {
   flex-basis: 1;
-  font-size: 16pt;
+  font-size: 36px;
   text-align: center;
+  margin-bottom: 10px;
+}
+
+.cart .empty-cart {
+  margin: 10px;
+  padding: 8px 24px;
+  background-color: rgb(255, 117, 117);
+  font-size: 18px;
+  font-weight: 500;
+  align-self: center;
+  color: rgb(241, 241, 241);
+  border: 0;
+  border-radius: 5px;
+}
+
+.cart .cart__item {
+  line-height: 24px;
+  margin: 12px 0;
+}
+
+.cart .total-price-container {
+  align-self: flex-end;
+  font-weight: 600;
+}
+
+.cart .total-price-container .total-price {
+  margin-left: 6px;
 }
