@@ -1,5 +1,3 @@
-// const fetch = require('node-fetch');
-
 const strCartItems = '.cart__items';
 
 function hideAndShowLoading(action) {
