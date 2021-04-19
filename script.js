@@ -120,12 +120,27 @@ const emptyCart = () => {
     cartElement.innerHTML = '';
     cartItemsLocalStorage.length = 0;
     localStorage.clear();
+    localStorage.setItem('cartItems', [{}]);
   });
 };
 
-window.onload = async function onload() {
+const loading = async () => {
+  const loadingBar = document.createElement('p');
+  loadingBar.className = 'loading';
+  loadingBar.innerText = 'Loading...';
+  const body = document.querySelector('body');
+  body.appendChild(loadingBar);
   const results = await fetchResults(mlbURL);
-  await renderCatalog(results);
-  renderCart();
+  setTimeout(() => {
+    renderCatalog(results);
+    body.removeChild(loadingBar);
+  }, 2000);
+};
+
+window.onload = async function onload() {
+  // const results = await fetchResults(mlbURL);
+  // await renderCatalog(results);
+  await loading();
   emptyCart();
+  renderCart();
 };
