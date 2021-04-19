@@ -1,22 +1,76 @@
-const url = 'https://api.mercadolibre.com/sites/MLB/search?q=$computador';
-const ol = document.querySelector('.cart__items');
-const salvos = ol.childNodes;
+const objeto = 'computador';
+const url = `https://api.mercadolibre.com/sites/MLB/search?q=${objeto}`;
+const itemUrl = `https://api.mercadolibre.com/items/`;
+//const fetch = require("node-fetch");
+let itemSelecionado;
 const itens = document.querySelector('.items');
-// const preco = document.querySelector('.total-price');
 const loading = document.querySelector('.loading');
+const ol = document.querySelector('.cart__items');
+const elementoTotalPrice = document.querySelector('.total-price');
+let total = 0;
 const butonClear = document.querySelector('.empty-cart');
 
 function clerCart() {
   ol.innerHTML = [];
-  localStorage.clear();
+  salvar();
 }
-
 butonClear.addEventListener('click', clerCart);
 
-function loadingRemove() {
-  loading.remove();
+async function somaTotal(id) {
+  const itemSelecionado = await funcFetch(`${itemUrl}${id}`);
+  total += itemSelecionado.price;
+  elementoTotalPrice.innerText = total;
 }
 
+// função salvar
+function salvar() {
+  const itensASalvar = [];
+  const carrinho = document.querySelectorAll('.keys');
+  total = 0;
+  elementoTotalPrice.innerText = total;
+  carrinho.forEach((item, key) => {
+    itensASalvar[key] = item.innerText;
+    somaTotal(item.innerText);
+  });
+  localStorage.setItem('Salvo', itensASalvar);
+}
+
+function cartItemClickListener(event) {
+  const selecionado = event.target.parentNode;
+  selecionado.removeChild(event.target);
+  salvar();
+}
+
+// cria o produto selecionado no carrinho
+function createCartItemElement({ sku, name, salePrice, keys }) {
+  const li = document.createElement('li');
+  const spam = document.createElement('spam');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  spam.className = 'keys'
+  spam.id = keys
+  spam.innerText = sku
+  li.appendChild(spam)
+  li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
+// adciona o produto selecionado ao carrinho
+async function adcionar(este) {
+  const section = este.target.id;
+  const itemSelecionado = await funcFetch(`${itemUrl}${section}`);
+    ol.appendChild(createCartItemElement({
+      sku: itemSelecionado.id,
+      name: itemSelecionado.title,
+      salePrice: itemSelecionado.price,
+      keys : ol.childNodes.length,
+    }));
+    salvar();
+  }
+
+// daqui para baixo, parte de mostrar os elementos na tela 
+
+// cria a imagem dos elementos 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -24,12 +78,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
-function funcFetch(urls) {
-  return fetch(urls) 
-  .then((fetchReturn) => fetchReturn.json())
-  .catch((erro) => erro);
-}
-
+// cria os elementos para aparecerem na tela
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -37,58 +86,32 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-function salvar() {
-  const itensASalvar = ol.innerHTML;
-  localStorage.setItem('Salvo', itensASalvar); // por innerHTMH pois o localStorageso salva texto
-}
-
-function cartItemClickListener(event) {
-  // coloque seu código aqui
-  const selecionado = event.target.parentNode;
-  selecionado.removeChild(event.target);
-  salvar();
-}
-
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
-
-async function adcionar(este) {
-  const section = este.target.id;
-  const itemSelecionado = await funcFetch(`https://api.mercadolibre.com/items/${section}`);
-  ol.appendChild(createCartItemElement({
-    sku: itemSelecionado.id,
-    name: itemSelecionado.title,
-    salePrice: itemSelecionado.price,
-  }));
-  salvar();
-}
-
+// organiza os elementos e chama as funçoes para crialos
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  // section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
   const button = (createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  button.id = sku;
-  button.addEventListener('click', adcionar); 
-  section.appendChild(button);
+    button.id = sku;
+    button.addEventListener('click', adcionar); 
+    section.appendChild(button);
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+// Função fetch para por os elementos na tela
+function funcFetch(urls) {
+  return fetch(urls) 
+  .then((fetchReturn) => fetchReturn.json())
+  .catch((erro) => erro);
+}
 
-function lista(http) {
-  funcFetch(http)
-  .then((coisa) => coisa.results.forEach((item) => {
+// coloca os produtos na tela
+async function buscaECriaElementos(url) {
+  const todaAPI = await funcFetch(url);
+  itemSelecionado = todaAPI.results;
+  itemSelecionado.forEach((item) => {
     itens.appendChild(
       createProductItemElement({
         sku: item.id,
@@ -96,19 +119,35 @@ function lista(http) {
         image: item.thumbnail,
       }),
       );
-    loadingRemove();
-  }))
-  .catch((erro) => erro);
+  loading.remove();
+  })
 }
 
-function colocaOsListeners() {
-  for (let cont = 0; cont < salvos.length; cont += 1) {
-    salvos[cont].addEventListener('click', cartItemClickListener);
+function reloading(savede) {
+  const separa = savede.split(',')
+  separa.forEach((item) => {
+    fetch(`${itemUrl}${item}`)
+    .then((fetchReturn) => fetchReturn.json())
+    .then((itemSelecionado) => {
+    ol.appendChild(createCartItemElement({
+      sku: itemSelecionado.id,
+      name: itemSelecionado.title,
+      salePrice: itemSelecionado.price,
+      keys : ol.childNodes.length,
+    }));
+  })
+  })
+}
+
+function ifLOading(retornoDoSave) {
+  if (retornoDoSave.length > 0) {
+    reloading(retornoDoSave);
   }
 }
 
-window.onload = function onload() {
-  lista(url);
-  ol.innerHTML = localStorage.getItem('Salvo');
-  colocaOsListeners();
-};
+
+window.onload = function onload() { 
+  buscaECriaElementos(url);
+  const retornoDoSave = localStorage.getItem('Salvo');
+  ifLOading(retornoDoSave);
+}
