@@ -23,7 +23,7 @@ objRest.forEach((value, index) => {
   if (target === value) {
     target.parentNode.removeChild(target);
     getPricesItem.splice(index);
-    if (getPricesItem.length > 1) {
+    if (getPricesItem.length >= 1) {
       const soma = getPricesItem.reduce((accumulator, currentValue) => accumulator + currentValue);
       getSpan.textContent = soma;
     } else {
@@ -68,12 +68,18 @@ function createProductItemElement({ sku, name, image }) {
 }
 
 const getProduct = async () => {
+  const container = document.querySelector('.container');
+  const mensagem = document.createElement('span');
+  mensagem.classList.add('loading');
+  mensagem.textContent = 'loading...';
+  container.appendChild(mensagem);
   const getComputer = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const getResponse = await getComputer.json();
   const response = await getResponse.results;
   return response.forEach((value) => {
     const product = { sku: value.id, name: value.title, image: value.thumbnail };
     document.querySelector('.items').appendChild(createProductItemElement(product));
+    mensagem.remove()
   });
 };
 
