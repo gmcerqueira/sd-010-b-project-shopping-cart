@@ -61,7 +61,7 @@ const loadData = () => {
   cartItem.innerHTML = localStorage.getItem('saved');
   totalPrice.innerText = localStorage.getItem('totalPrice');
 
-  const [...allItems] = document.querySelectorAll('.cart__item');
+  const [...allItems] = document.querySelectorAll('.cart__item'); // com ajuda do henrique zozimo
   allItems.forEach((item) =>
     item.addEventListener('click', cartItemClickListener));
 };
@@ -98,7 +98,12 @@ const deleteCart = () => {
   saveData();
 };
 
-const load = async () => {
+const load = async () => { 
+  const loading = document.createElement('p');
+  loading.className = 'loading';
+  loading.innerText = 'loading...';
+  const body = document.querySelector('body');
+  body.appendChild(loading);
   await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador')
     .then((response) => response.json())
     .then((data) => {
@@ -108,7 +113,9 @@ const load = async () => {
       const emptyCartButton = document.querySelector('.empty-cart');
       emptyCartButton.addEventListener('click', deleteCart);
       loadData();
-    });
+    })
+    
+    .then(body.removeChild(loading));
 };
 
 window.onload = function onload() {
