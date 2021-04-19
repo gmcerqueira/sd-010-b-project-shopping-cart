@@ -1,5 +1,12 @@
+function eraseAll() { // requisito 6
+  const removeButton = document.getElementsByClassName('empty-cart')[0];// botão que esvazia o carrinho
+  removeButton.addEventListener('click', () => { // fazer essa HOF aqui no addEventListener me ajudou a resolver problema de lint. Fazendo assim, eu chamo a função eraseAll usando o addEventListener dentro da própria eraseAll. 
+    document.getElementsByClassName('cart__items')[0].innerText = ''; // esse do cart_items é a OL.
+    });
+}
+
 function cartItemClickListener(event) {
-  event.target.remove();
+  event.target.remove();// o event.target alcança o elemento que começou o evento(Nesse caso, seria o LI). Então ao clicar em LI, eu chamo essa função e esta função remove este LI.
 }
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
@@ -10,14 +17,14 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
    
   return li;
  }
- 
+
 const addToCard = async (sku) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${sku}`);
   const jsonIds = await response.json();// melhor fazer dessa forma do que usando then()
   const clickItem = createCartItemElement({
      id: jsonIds.id, title: jsonIds.title, price: jsonIds.price });// o clickitem vai receber essa função com esses parâmetros. Tive que fazer isso pra não dar problema de Lint. Tem que fazer isso somente pra usar o appendChild com o OL.
      // esses parâmetros desse jeito foram a forma de fazer dar certo.
-     // Resumo da sequência do req. 2:  Quando eu clico no botão verde, eu chamo a função que faz a requisição e essa mesma função diz que a função createCartItemElement(que estrutura as LIs) é filha de OL. Por isso que aparece as informações do produto(que eu cliquei) naquela OL.
+     // Resumo da sequência do req. 2:  Quando eu clico no botão verde, eu chamo a função que faz a requisição e essa mesma função diz que a função createCartItemElement(que estrutura e retorna as LIs) é filha de OL. Por isso que aparece as informações do produto(que eu cliquei) naquela OL.
   
   const ol = document.getElementsByClassName('cart__items')[0];
   
@@ -72,4 +79,7 @@ const myFetch = () => { // essas coisas é melhor botar no final do código pra 
   });
 };
 
-window.onload = function onload() { myFetch(); };
+window.onload = function onload() { 
+  myFetch(); 
+  eraseAll();
+};
