@@ -14,8 +14,8 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
-const cartItemClickListener = (event) => {
-const { target } = event;
+const cartItemClickListener = async (event) => {
+const { target } = await event;
 const getSpan = document.querySelector('.total-price');
 const newObj = target.parentNode.children;
 const objRest = [...newObj];
