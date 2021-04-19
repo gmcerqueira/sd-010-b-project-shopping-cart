@@ -79,10 +79,12 @@ const loadCartItems = () => {
 window.onload = function onload() { 
   loadAvailableProducts();
   loadCartItems();
-  const itemsOnCarListString = localStorage.getItem('produtos');
+  if (localStorage.getItem('produtos')) {
+    const itemsOnCarListString = localStorage.getItem('produtos');
   const x = JSON.parse(itemsOnCarListString);
   x.forEach((produto) => {
     const cartItens = document.getElementsByClassName('cart__items')[0];
     cartItens.appendChild(createCartItemElement(produto));
   });
+  }
 };
