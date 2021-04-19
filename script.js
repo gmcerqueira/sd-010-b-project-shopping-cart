@@ -19,11 +19,19 @@ function getSkuFromProductItem(item) {
 }
 
 //-----------------------------------------------------------------------------
+// SET CART TO LOCAL STORAGE
+function saveCartStatus() {
+  const cart = document.querySelector('.cart__items');
+  const productsList = cart.innerHTML;
+  localStorage.onCart = productsList;
+}
+
 // DEVELOPED FUNCTION - ALMOST NATIVE
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const toRemove = event.target;
   toRemove.parentNode.removeChild(toRemove);
+  saveCartStatus();
 }
 
 //-----------------------------------------------------------------------------
@@ -45,9 +53,10 @@ function productOnCart(product) {
     salePrice: product.price,
     };
 
-    const item = createCartItemElement(cartProduct);
-    const cart = document.querySelector('.cart__items');
-    cart.appendChild(item);
+  const item = createCartItemElement(cartProduct);
+  const cart = document.querySelector('.cart__items');
+  cart.appendChild(item);
+  saveCartStatus();
 }
 
 // FUNÇÃO QUE PEGA O ITEM VIA API PARA CRIAR OS PRODUTOS DO CARRINHO DE COMPRAS
@@ -99,8 +108,17 @@ async function getProducts() {
     .then((data) => createProducts(data));
 }
 
+// LOAD CART FROM LOCAL STORAGE
+function loadCart() {
+  const cart = document.querySelector('.cart__items');
+  if (localStorage.onCart) cart.innerHTML = localStorage.onCart;
+  const items = document.querySelectorAll('li')
+    .forEach((product) => product.addEventListener('click', cartItemClickListener));
+}
+
 //-----------------------------------------------------------------------------
 // FUNCTION CALLS
 window.onload = function onload() {
   getProducts();
+  loadCart();
 };
