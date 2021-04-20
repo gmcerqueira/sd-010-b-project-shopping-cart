@@ -95,3 +95,7 @@
   display: flex;
   justify-content: space-between;
 }
+
+.loading {
+  font-size: 50px;
+}

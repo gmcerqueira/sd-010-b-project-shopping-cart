@@ -1,5 +1,6 @@
 const cartShoppingClass = '.cart__items';
 
+// creates the element of the product's image
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -7,6 +8,7 @@ function createProductImageElement(imageSource) {
   return img;
 }
 
+// creates an element to show the product correctly on screen
 function createCustomElement(element, className, innerText) {
   const e = document.createElement(element);
   e.className = className;
@@ -14,6 +16,7 @@ function createCustomElement(element, className, innerText) {
   return e;
 }
 
+// creates all the product's details
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
   section.className = 'item';
@@ -26,16 +29,34 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
+// fetches products in the API
 async function fetchProducts(query) {
   const response = await fetch(`https://api.mercadolibre.com/sites/MLB/search?q=${query}`);
   const products = await response.json();
   return products.results;
 }
 
+// shows or removes the loading screen
+function loadingDisplay(loadingOrReady) {
+  if (loadingOrReady === 'loading') {
+    const containerItems = document.querySelector('.items');
+    const loadingScreen = document.createElement('span');
+    loadingScreen.className = 'loading';
+    loadingScreen.innerText = 'loading...';
+    containerItems.appendChild(loadingScreen);
+  } else if (loadingOrReady === 'ready') {
+    document.querySelector('.loading').remove();
+  }
+}
+
+// gets products from API and calls the function to shows the items on screen
 async function getProductsFromAPI() {
   const productSpace = document.querySelector('.items');
+  loadingDisplay('loading');
   const productsResult = await fetchProducts('computador');
-  productsResult.forEach((product) => productSpace.appendChild(createProductItemElement(product)));
+  loadingDisplay('ready');
+  productsResult.forEach((product) => 
+    productSpace.appendChild(createProductItemElement(product)));
 }
 
 // function getSkuFromProductItem(item) {
@@ -66,10 +87,7 @@ function updateLocalStorage({ id, price }, addDel) {
 
 // saves the entire shopping cart to de localStorage
 function setCarttoLocalStorage() {
-  const cartItemsSpace = document.querySelector(cartShoppingClass); // .cart__items
-  
-  console.log(cartItemsSpace.innerHTML);
-
+  const cartItemsSpace = document.querySelector(cartShoppingClass); // cartShoppingClass = .cart__items
   localStorage.setItem('shopping_cart', cartItemsSpace.innerHTML);
 }
 
@@ -89,7 +107,6 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  // li.appendChild(createItemInfoToCart('span', sku, salePrice));
   li.addEventListener('click', cartItemClickListener);
 
   return li;
@@ -104,7 +121,7 @@ async function fetchItem(productID) {
 
 // adds an item to cart when click add button
 async function addItemToCart(productID, newOrNot) {
-  const cartElement = document.querySelector(cartShoppingClass); // .cart__items
+  const cartElement = document.querySelector(cartShoppingClass); // cartShoppingClass = .cart__items
   const item = await fetchItem(productID);
   if (newOrNot) updateLocalStorage(item, 'add');
   cartElement.appendChild(createCartItemElement(item));
@@ -126,7 +143,7 @@ function loadCartShopping() {
   updateTotalPriceCart(savedItems);
   
   const savedCart = localStorage.getItem('shopping_cart');
-  const cartItemsSpace = document.querySelector(cartShoppingClass); // .cart__items
+  const cartItemsSpace = document.querySelector(cartShoppingClass); // cartShoppingClass = .cart__items
   cartItemsSpace.innerHTML = savedCart;
 
   const allItems = document.querySelectorAll('.cart__item');
@@ -137,7 +154,7 @@ function loadCartShopping() {
 function deleteShoppingCart() {
   const emptyButton = document.querySelector('.empty-cart');
   emptyButton.addEventListener('click', () => {
-    const cart = document.querySelector(cartShoppingClass); // .cart__items
+    const cart = document.querySelector(cartShoppingClass); // cartShoppingClass = .cart__items
     cart.innerHTML = '';
     localStorage.setItem('shopping_cart', '');
     localStorage.setItem('itemIDs', '[]');
@@ -150,5 +167,4 @@ window.onload = async function onload() {
   eventListenerToAllButtons();
   deleteShoppingCart();
   loadCartShopping();
-  // sumTotalPriceCart();
 };
