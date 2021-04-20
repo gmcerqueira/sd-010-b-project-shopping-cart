@@ -158,3 +158,5 @@ window.onload = async function onload() {
 // https://www.youtube.com/watch?v=WmBXh9ma138&ab_channel=MitchellHudson
 // https://www.youtube.com/watch?v=H7gGkUNoKSM&t=344s&ab_channel=MitchellHudson
 // também recebi ajuda do colega Misabel Bueno
+
+// Requisito 5 recebi ajuda dos colegas Alan Tanaka, Mariana Mohr e Wolf
