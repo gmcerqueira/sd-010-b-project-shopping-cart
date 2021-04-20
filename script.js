@@ -19,13 +19,17 @@ const price = () => {
   const sumPrices = savePrice.reduce((acc, element) => acc + element);
    divPrice.innerText = `${sumPrices}`;
 };
- async function cartItemClickListener(event) {
+ async function cartItemClickListener(event, sku) {
    // let newArray = savelocalStorage;
   const select = event.target;
   select.remove();
-  console.log(select.innerText.split('$')[1]);
-  console.log(savePrice);
-  savelocalStorage.splice(savelocalStorage.indexOf(select), 1);
+  console.log(select);
+  console.log(savelocalStorage);
+  const teste = savelocalStorage.find((element) => element.id === sku); //  Com ajuda Gabriel Esseênio.
+  savelocalStorage.splice(savelocalStorage.indexOf(teste), 1);
+  console.log(savelocalStorage);
+  console.log(select);
+
   savePrice.splice(savePrice.indexOf(Number(select.innerText.split('$')[1])), 1);
   localStorage.setItem('selected', JSON.stringify(savelocalStorage));
   price();
@@ -36,7 +40,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
     const li = document.createElement('li');
     li.className = 'cart__item';
     li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-    li.addEventListener('click', cartItemClickListener);
+    li.addEventListener('click', (event) => cartItemClickListener(event, sku));
 
     return ol.appendChild(li);
   }
@@ -57,8 +61,6 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
     const select = event.target;
     const itemID = select.parentElement.firstElementChild.innerText;
     fetchItem(itemID);
-
-    // localStorage.setItem('selected', JSON.stringify(savelocalStorage));
   };
 function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   const section = document.createElement('section');
@@ -72,9 +74,6 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 
   return item.appendChild(section);
 }
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
 
 const fetchProducts = (product) => {
   const loading = document.querySelector('.loading');
@@ -98,12 +97,6 @@ const fetchProducts = (product) => {
     document.querySelector('.cart').appendChild(ol);
     });
   };
-  // const load = () => {
-  //   const creatLoading = document.createElement('span');
-  //   creatLoading.className = 'loading';
-  //   creatLoading.innerText = 'Loading...';
-  //   document.querySelector('.container').appendChild(creatLoading);
-  // };
 
   window.onload = async () => {
   fetchProducts('computador');
@@ -111,4 +104,6 @@ const fetchProducts = (product) => {
   const savedLocalStorage = await localStorage.getItem('selected');
   const arraySaved = JSON.parse(savedLocalStorage);
   arraySaved.forEach((element) => createCartItemElement(element));
+  arraySaved.forEach((element) => savePrice.push(element.price));
+  await price();
 };
