@@ -1,5 +1,3 @@
-const cartItemsClass = '.cart__items';
-
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -26,7 +24,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
   return section;
 }
 
-async function getItems() {
+const getItems = async () => {
   const request = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const response = await request.json();
   const computers = response.results;
@@ -34,14 +32,31 @@ async function getItems() {
     const items = document.querySelector('.items');
     items.appendChild(createProductItemElement(computer));
   });
-}
+};
 
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 
+const cartItemsString = 'cart-items';
+let itemsOnCart;
+
+if (localStorage.getItem(cartItemsString)) {
+  itemsOnCart = JSON.parse(localStorage.getItem(cartItemsString));
+} else {
+  itemsOnCart = [];
+}
+
 function cartItemClickListener(event) {
   event.target.remove();
+  const id = event.target.innerHTML.split(' ')[1];
+  itemsOnCart.forEach((item) => {
+    if (item.id === id) {
+      itemsOnCart.splice(itemsOnCart.indexOf(item), 1);
+    }
+  });
+  localStorage.removeItem(cartItemsString);
+  localStorage.setItem(cartItemsString, JSON.stringify(itemsOnCart));
 }
 
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
@@ -52,35 +67,41 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   return li;
 }
 
-const itemsOnCart = [];
+const ol = document.querySelector('.cart__items');
 
-async function itemsListClickListener(event) {
-  const ol = document.querySelector(cartItemsClass);
-  if (event.target.className === 'item__add') {
-    const sku = getSkuFromProductItem(event.target.parentNode);
-    const request = await fetch(`https://api.mercadolibre.com/items/${sku}`);
-    const response = await request.json();
-    ol.appendChild(createCartItemElement(response));
-    const cartItemObject = { id: response.id, title: response.title, price: response.price };
-    itemsOnCart.push(cartItemObject);
-    localStorage.setItem('cart-items', JSON.stringify(itemsOnCart));
-  }
-}
-
-const removeAllCartItems = () => {
-  const items = document.querySelector(cartItemsClass);
-  items.innerHTML = '';
+const requestItem = async (sku) => {
+  const request = await fetch(`https://api.mercadolibre.com/items/${sku}`);
+  const response = await request.json();
+  return response;
 };
 
-document.querySelector('.empty-cart').addEventListener('click', removeAllCartItems); 
+const addToCart = async (event) => {
+  if (event.target.className === 'item__add') {
+    const sku = getSkuFromProductItem(event.target.parentNode);
+    const item = await requestItem(sku);
+    itemsOnCart.push({ id: item.id, title: item.title, price: item.price });
+    const cartItem = createCartItemElement(item);
+    ol.appendChild(cartItem);
+    localStorage.setItem(cartItemsString, JSON.stringify(itemsOnCart));
+  }
+  console.log(itemsOnCart);
+};
 
-window.onload = async function onload() {
-  await getItems();
-  document.querySelector('.items').addEventListener('click', itemsListClickListener);
-  const cartItems = JSON.parse(localStorage.getItem('cart-items'));
-  cartItems.forEach((cartItem) => {
-    const item = createCartItemElement(cartItem);
-    const ol = document.querySelector(cartItemsClass);
-    ol.appendChild(item);
-  });
+const removeAllItems = () => {
+  ol.innerHTML = '';
+  localStorage.removeItem(cartItemsString);
+};
+
+window.onload = function onload() {
+  getItems();
+  document.querySelector('.items').addEventListener('click', addToCart);
+  if (localStorage.getItem(cartItemsString)) {
+    const cartItemsWebStorage = JSON.parse(localStorage.getItem(cartItemsString));
+    cartItemsWebStorage.forEach((cartItem) => {
+      const item = createCartItemElement(cartItem);
+      ol.appendChild(item);
+    });
+  }
+  const clearButton = document.querySelector('.empty-cart');
+  clearButton.addEventListener('click', removeAllItems);
 };
