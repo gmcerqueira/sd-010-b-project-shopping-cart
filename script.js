@@ -1,5 +1,5 @@
 const arrStorage = [];
-localStorage.setItem('cart', JSON.stringify(arrStorage));
+// localStorage.setItem('cart', JSON.stringify(arrStorage));
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -23,7 +23,7 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-  
+
   return section;
 }
 
@@ -98,12 +98,15 @@ const emptyCart = () => {
   });
 };
 
-const recoverCartStorage = async () => {
-  const returnStorage = await JSON.parse(localStorage.getItem('cart'));
-  await returnStorage.forEach((object) => {
-    const elementCart = createCartItemElement(object);
-    renderItemsCart(elementCart);
-  });
+const recoverCartStorage = () => {
+  const returnStorage = JSON.parse(localStorage.getItem('cart'));
+  console.log(returnStorage);
+  if (returnStorage) {
+    returnStorage.forEach((object) => {
+      const elementCart = createCartItemElement(object);
+      renderItemsCart(elementCart);
+    });
+  }
 };
 
 const toIntroduceLoading = () => {
