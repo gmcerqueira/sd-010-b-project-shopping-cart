@@ -20,10 +20,19 @@ function getSkuFromProductItem(item) {
 
 //-----------------------------------------------------------------------------
 // CART JOKER FUNCTION
-const cartJoker = () => {
+function cartJoker() {
   const cart = document.querySelector('.cart__items');
   return cart;
-};
+}
+
+// CART TOTAL PRICE JOKER FUNCTION
+function cartValue() {
+  const totalValue = document.querySelector('.total-price');
+  return totalValue;
+}
+
+// GLOBAL DECLARATIONS
+let cartTotal = 0;
 
 // SET CART TO LOCAL STORAGE
 function saveCartStatus() {
@@ -31,10 +40,26 @@ function saveCartStatus() {
   localStorage.onCart = productsList;
 }
 
+// CART TOTAL SUM FUNCTION
+function cartSum(price) {
+    cartTotal += price;
+    const value = (cartValue());
+    value.innerText = cartTotal.toFixed(2);
+}
+
+// CART TOTAL REDUCE FUNCTION
+function cartReduce(price) {
+  cartTotal -= price;
+  const value = (cartValue());
+  value.innerText = Math.floor(cartTotal.toFixed(2));
+}
+
 // DEVELOPED FUNCTION - ALMOST NATIVE
 function cartItemClickListener(event) {
   // coloque seu código aqui
   const toRemove = event.target;
+  cartReduce(Math.round(toRemove.value));
+  console.log(toRemove);
   toRemove.parentNode.removeChild(toRemove);
   saveCartStatus();
 }
@@ -45,6 +70,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  li.value = salePrice;
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
@@ -52,10 +78,13 @@ function createCartItemElement({ sku, name, salePrice }) {
 //-----------------------------------------------------------------------------
 // FUNÇÃO QUE CRIA OS PRODUTOS QUE IRÃO PARA O CART
 function productOnCart(product) {
+  const { price } = product;
+  // cartSum(price);
+  cartSum(price);
   const cartProduct = {
     sku: product.id,
     name: product.title,
-    salePrice: product.price,
+    salePrice: price,
     };
 
   const item = createCartItemElement(cartProduct);
@@ -88,7 +117,7 @@ function createProductItemElement({ sku, name, image }) {
 
 //-----------------------------------------------------------------------------
 // CRIAR TODOS OS PRODUTOS DA LOJA COM BASE NOS DADOS RECEBIDOS DA API
-async function createProducts(productInfos) {
+function createProducts(productInfos) {
   const data = productInfos.results;
   data.forEach((info) => {
     const product = {
@@ -115,7 +144,12 @@ async function getProducts() {
 // LOAD CART FROM LOCAL STORAGE
 function loadCart() {
   const onCart = (cartJoker());
-  if (localStorage.onCart) onCart.innerHTML = localStorage.onCart;
+  const savedValue = (cartValue());
+  if (localStorage.onCart) { 
+    onCart.innerHTML = localStorage.onCart;
+    savedValue.innerText = localStorage.values;
+  }
+
   document.querySelectorAll('li')
     .forEach((product) => product.addEventListener('click', cartItemClickListener));
 }
@@ -123,6 +157,7 @@ function loadCart() {
 //-----------------------------------------------------------------------------
 // FUNCTION CALLS
 window.onload = function onload() {
-  getProducts();
+  console.log(localStorage.values);
   loadCart();
+  getProducts();
 };
