@@ -114,7 +114,6 @@ window.onload = async function onload() {
   getSavedCartItems(cartItems);
   const computers = await fetchProducts();
   await renderProducts(computers);
-  await cartTotalPrice();
 };
 
 // function getSkuFromProductItem(item) {
