@@ -39,6 +39,7 @@ async function totalOrder(price) {
 }
 
 function cartItemClickListener(event) {
+  // https://stackoverflow.com/questions/41755268/how-to-get-index-of-an-array-element-in-click-event-with-javascript
   const indexCartItem = Array.from(shoppingList.children).indexOf(event.target);
   const price = event.target.innerHTML.split('$')[1];
   totalOrder(-price);
