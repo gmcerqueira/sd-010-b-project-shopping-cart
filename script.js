@@ -142,29 +142,21 @@ const loadingCart = async () => {
   }
 };
 
-// async function getProducts() {
-//   const array = ids.map((id) => fetch(`www.example.com/${id}`));
-//   // nesse momento teremos um array de promises que ainda estão pendentes
-//   // o Promise.all vai esperar ate que todas as promises do array sejam resolvidas
-//   await Promise.all(array);
-
 // O preço total permanace ao carregar a página;
-// const loadingCartPrice = async () => {
-//   // variável pega carrinho do Local Storage
-//   const carrinho = await JSON.parse(localStorage.getItem(chaveLocalStorage));
-//   let valueTotal = 0;
-
-//   if (carrinho !== null) {
-
-//     for (let index = 0; index < carrinho.length; index += 1) {
-//       requestAPIItem(carrinho[index])
-//       .then((item) => {
-//         valueTotal += item.price;
-//       });     
-//     }
-//   }
-//   console.log(valueTotal);
-// };
+const loadingCartPrice = async () => {
+// variável pega carrinho do Local Storage
+  const carrinho = await JSON.parse(localStorage.getItem(chaveLocalStorage));
+  if (carrinho !== null) {
+    const cars = carrinho.map((id) => requestAPIItem(id));
+    await Promise.all(cars).then((itens) => {
+      itens.forEach((item) => {
+        const getPrice = document.querySelector('.price');
+        const total = parseFloat(getPrice.innerText) + item.price;
+        getPrice.innerText = total;
+      });
+    });
+  }
+};
 
 // Função principal
 window.onload = async function onload() {
@@ -172,5 +164,5 @@ window.onload = async function onload() {
   const sectionItems = document.querySelector('.items');
   await createListItems(data, sectionItems);
   await loadingCart();
-  // await loadingCartPrice();
+  await loadingCartPrice();
  };
