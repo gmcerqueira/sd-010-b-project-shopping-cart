@@ -59,6 +59,7 @@ async function createListItems() {
 const cartItems = document.querySelector('.cart__items');
 
 function addItemCart() {
+  const storageList = [];
   const btnAddItemCart = document.querySelectorAll('.item__add'); // captura todos os botões.
   btnAddItemCart.forEach((event) => {
     event.addEventListener('click', async (productId) => {
@@ -71,6 +72,8 @@ function addItemCart() {
         salePrice: productResponseJson.price,
       };
       cartItems.appendChild(createCartItemElement(productCartInfo));
+      storageList.push([productCartInfo]);
+      localStorage.setItem('product', JSON.stringify(storageList));
     });
   });
 }
