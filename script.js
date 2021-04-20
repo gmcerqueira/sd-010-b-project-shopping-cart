@@ -91,7 +91,7 @@ function emptyCart() {
 }
 
 function loading() {
-  const loadAlert = document.createElement('span');
+  const loadAlert = document.createElement('p');
   loading.className = 'loading';
   loading.innerHTML = 'loading...';
   document.body.append(loadAlert);
