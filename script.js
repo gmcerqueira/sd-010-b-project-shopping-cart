@@ -47,6 +47,19 @@ if (localStorage.getItem(cartItemsString)) {
   itemsOnCart = [];
 }
 
+const calcPrice = () => {
+  if (itemsOnCart.length > 0) {
+    const totalPrice = itemsOnCart.reduce((total, item) => {
+      const result = (Math.round((total + item.price) * 100) / 100);
+      return result;
+    }, 0);
+    return totalPrice;
+  }
+  return 0;
+};
+
+const priceOnScreen = document.querySelector('.total-price');
+
 function cartItemClickListener(event) {
   event.target.remove();
   const id = event.target.innerHTML.split(' ')[1];
@@ -55,6 +68,7 @@ function cartItemClickListener(event) {
       itemsOnCart.splice(itemsOnCart.indexOf(item), 1);
     }
   });
+  priceOnScreen.innerHTML = calcPrice();
   localStorage.removeItem(cartItemsString);
   localStorage.setItem(cartItemsString, JSON.stringify(itemsOnCart));
 }
@@ -83,13 +97,15 @@ const addToCart = async (event) => {
     const cartItem = createCartItemElement(item);
     ol.appendChild(cartItem);
     localStorage.setItem(cartItemsString, JSON.stringify(itemsOnCart));
+    priceOnScreen.innerHTML = calcPrice();
   }
-  console.log(itemsOnCart);
 };
 
-const removeAllItems = () => {
+const removeAllItems = async () => {
   ol.innerHTML = '';
   localStorage.removeItem(cartItemsString);
+  itemsOnCart = [];
+  priceOnScreen.innerHTML = calcPrice();
 };
 
 window.onload = function onload() {
@@ -104,4 +120,5 @@ window.onload = function onload() {
   }
   const clearButton = document.querySelector('.empty-cart');
   clearButton.addEventListener('click', removeAllItems);
+  priceOnScreen.innerHTML = calcPrice();
 };
