@@ -1,3 +1,37 @@
+// async function cartItemClickListener(event) {
+//   //
+// }
+
+function createCartItemElement({ sku, name, salePrice }) {
+  const li = document.createElement('li');
+  li.className = 'cart__item';
+  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
+  // li.addEventListener('click', cartItemClickListener);
+  return li;
+}
+
+async function createItemCart(id) {
+  const getData = await fetch(`https://api.mercadolibre.com/items/${id}`)
+  .then((response) => response.json())
+  .then((response) => response);
+  const createItem = createCartItemElement({
+    sku: getData.id,
+    name: getData.title,
+    salePrice: getData.price,
+  });
+  document.querySelector('.cart__items').appendChild(createItem);
+}
+
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
+
+function getItemId(event) {
+  const elementFather = event.target.parentElement;
+  const elementChildId = getSkuFromProductItem(elementFather);
+  createItemCart(elementChildId);
+}
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -19,8 +53,10 @@ function createProductItemElement({ sku, name, image }) {
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
-  section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
-
+  // Nessa parte eu me orientei com o Leandro Reis, porque eu não conseguia adicionar os eventos por meio do forEach, que inclusive está comentada a função que eu tentei criar. link:https://github.com/tryber/sd-010-b-project-shopping-cart/pull/6/commits/6786f64c56a36ac67c936481ba9426f1e3b3d64e.
+  const btn = createCustomElement('button', 'item__add', 'Adicionar ao carrinho!');
+  btn.addEventListener('click', getItemId);
+  section.appendChild(btn);
   return section;
 }
 
@@ -43,46 +79,13 @@ async function getProducts() {
   });
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
-
-async function cartItemClickListener(event) {
-  //
-}
-
-
-
-function createCartItemElement({ sku, name, salePrice }) {
-  const li = document.createElement('li');
-  li.className = 'cart__item';
-  li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
-  return li;
-}
-
-async function createItemCart(event) {
-  const itemId = await event.target.id;
-  const getData = await fetch(`https://api.mercadolibre.com/items/${itemId}`)
-  .then(response => response.json());
-
-  getData.forEach(item => {
-    const createItemCart = createCartItemElement({
-      sku: item.id,
-      name: item.title,
-      salePrice: item.price,
-    })
-    const getFather = document.querySelector('.cart__items');
-    getFather.appendChild(createItemCart);
-  })
-}
-
-function getButtonAddItem() {
-  const getButton = document.querySelectorAll('.item__add');
-  getButton.forEach(button => button.addEventListener('click', createItemCart))
-}
+// Aqui eu tentei adicionar um evento em cada botão, porém sem sucesso.
+// function getButtonAddItem() {
+  //   const getButton = document.querySelectorAll('button');
+  //   getButton.forEach(button => button.addEventListener('click', getItemId))
+  // }
 
 window.onload = function onload() { 
   getProducts();
-  getButtonAddItem();
+  // getButtonAddItem();
 };
