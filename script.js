@@ -28,11 +28,12 @@ function createProductItemElement({ sku, name, image }) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
 
-const listC = '.cart__items';
+const listCartItems = '.cart__items';
+const totalPriceValue = '.total-price';
 
 function listItem() {
   let list = 0;
-  const sumValue = document.querySelector('.total-price');
+  const sumValue = document.querySelector(totalPriceValue);
   const cartItems = document.querySelectorAll('li');
   [...cartItems].forEach((element) => {
     list += parseFloat(element.innerHTML.split('$')[1]);
@@ -40,10 +41,9 @@ function listItem() {
   sumValue.innerHTML = list.toFixed(2);
 }
 
-
 function save() {
-  const listCart = document.querySelector(listC);
-  const totalValue = document.querySelector('.total-price');
+  const listCart = document.querySelector(listCartItems);
+  const totalValue = document.querySelector(totalPriceValue);
   localStorage.setItem('cart', listCart.innerHTML);
   localStorage.setItem('value', totalValue.innerHTML);
 }
@@ -59,7 +59,7 @@ function cartItemClickListener(event) {
 }
 
 function load() {
-  const cart = document.querySelector(listC);
+  const cart = document.querySelector(listCartItems);
   cart.innerHTML = localStorage.getItem('cart');
   
   const cartItems = document.querySelectorAll('li');
@@ -80,7 +80,7 @@ function emptyCart() {
   // Variavel contem o elemento do botão.
   const emptyCartBtn = document.querySelector('.empty-cart');
   // Variavel contem uma lista Ordenada.
-  const cartList = document.querySelector(listC);
+  const cartList = document.querySelector(listCartItems);
   // adciona um evento de 'click' que remove os elementos.
   const totalValue = document.querySelector('.total-price'); 
   emptyCartBtn.addEventListener('click', () => {
@@ -121,7 +121,7 @@ async function fetchID(sku) {
       list.appendChild(createCartItemElement(dataProduct));
     });
     listItem();
-    saveCart();
+    save();
 }
 
 function getId() {
