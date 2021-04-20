@@ -1,5 +1,7 @@
 // Trabalho executado com colaboração de Fellipe Correa, Lotar Lucas, João Herculano e do instrutor Gabriel Almeida. //
 
+const arrStorage = [];
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -17,13 +19,14 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
+  const item = document.querySelector('.items');
 
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
-  return section;
+  return item.appendChild(section);
 }
 
 function getSkuFromProductItem(item) {
@@ -31,7 +34,10 @@ function getSkuFromProductItem(item) {
 }
 
 function cartItemClickListener(event) {
-  event.target.remove();
+  const idRemove = event.target;
+  idRemove.remove();
+  arrStorage.splice(arrStorage.indexOf(idRemove), 1);
+  localStorage.setItem('item', JSON.stringify(arrStorage));/* retirar de dentro do array o elemento do carrinho */
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -64,12 +70,14 @@ const callFetch = async () => {
       };
       const joinProducts = createProductItemElement(object);
       items.appendChild(joinProducts);
+      // console.log(joinProducts);
     });
   };
   
   const changeToObject = (data) => ({ sku: data.id, name: data.title, salePrice: data.price });
   
   const joinItemsCart = (item) => {
+    // eslint-disable-next-line sonarjs/no-duplicate-string
     const olCartItem = document.querySelector('.cart__items');
     olCartItem.appendChild(item);
   };
@@ -79,12 +87,11 @@ const callFetch = async () => {
     const createOl = document.querySelector('.cart__items');
     catchButton.addEventListener('click', () => {
       createOl.innerHTML = ' ';
+      localStorage.removeItem('item');
     });
   }
 
-  const arrStorage = [];
-  
-  function buttonEvent() {
+    function buttonEvent() {
     const productButton = document.querySelectorAll('.item__add');
     productButton.forEach((addProduct) => {
       addProduct.addEventListener('click', async (event) => {
@@ -96,7 +103,7 @@ const callFetch = async () => {
         const liCreate = createCartItemElement(changeObject);
         arrStorage.push(changeObject);
         // console.log(arrStorage);
-        localStorage.setItem('item', JSON.stringify(arrStorage));/* pesquisa JSON. */
+        localStorage.setItem('item', JSON.stringify(arrStorage));
       joinItemsCart(liCreate);
     });
   });
@@ -105,7 +112,7 @@ const callFetch = async () => {
 // antes do renderProduct
 const expectLoadingAPI = () => {
   const newSpan = document.createElement('span');
-  const sectionCart = document.querySelector('.cart');
+  const sectionCart = document.querySelector('.items');
   newSpan.className = 'loading';
   newSpan.innerText = 'loading...';
   sectionCart.appendChild(newSpan);
@@ -113,17 +120,18 @@ const expectLoadingAPI = () => {
 
 // depois do renderProduct
 const afterLoadingAPI = () => {
-  const sectionCart = document.querySelector('.cart');
-  const stopLoading = document.querySelector('.loading');
-  sectionCart.removeChild(stopLoading);
+  document.querySelector('.loading').remove();
 };
 
 const funct = async () => {
   const delStorage = localStorage.getItem('item');
-  // console.log(delStorage);
+  console.log(delStorage);
   const newObject = await JSON.parse(delStorage);/* string dentro do array novamente */
-  await newObject.forEach((element) => {
-    createCartItemElement(element);
+  console.log(newObject);
+  return newObject.forEach((element) => {
+    console.log(element);
+    const createCart = createCartItemElement(element);
+    joinItemsCart(createCart);
   });
 };
 
@@ -132,9 +140,8 @@ window.onload = async function onload() {
   const products = await callFetch();  
   afterLoadingAPI();
   renderProductList(products);  
+  // saveShopCart();
   buttonEvent();
   removeAllItems();
-  const cartItem = createCartItemElement();
-  renderProductList(cartItem);  
   await funct();
 };
