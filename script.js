@@ -1,5 +1,5 @@
 const getPricesItem = [];
-const getClassCart = '.cart__items'
+const getClassCart = '.cart__items';
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -48,13 +48,13 @@ function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
   section.appendChild(createCustomElement('span', 'item__sku', sku));
-  section.appendChild(createCustomElement('span', 'item__title', name));
+  section.appendChild(createCustomElement('spagetClassCartn', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   .addEventListener('click', async () => {
   const sc = section.firstChild.textContent;
   const data = await theProduct(sc);
-  document.querySelector('.cart__items').appendChild(createCartItemElement(data));
+  document.querySelector(getClassCart).appendChild(createCartItemElement(data));
   getPricesItem.push(data.price);
   const soma = getPricesItem.reduce((accumulator, value = 0) => accumulator + value);
   const getSpan = document.querySelector('.total-price');
