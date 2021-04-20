@@ -95,10 +95,10 @@ const apagar = (valor) => {
   if (valor !== true) {
     document.getElementsByClassName('cart__items')[0].innerHTML = '';
   };
-}
+};
 
 window.onload = function onload() {
   transformarUrl('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   document.querySelector('.cart__items').innerHTML = localStorage.getItem('cartItems');
-  apagar(true)
+  apagar(true);
 };
