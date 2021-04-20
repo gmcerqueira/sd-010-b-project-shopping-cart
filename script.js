@@ -44,10 +44,8 @@ async function getProductsFromAPI() {
 
 // sums the prices of the items in cart
 function updateTotalPriceCart(items) {
-  const totalPrice = items.reduce((total, currentPrice) => (total + currentPrice.price), 0);
-  // console.log(totalPrice);
+  const totalPrice = items.reduce((total, currentPrice) => (total + currentPrice.price), 0.00);
   const displayPrice = document.querySelector('.total-price');
-  // console.log(displayPrice);
   displayPrice.innerText = totalPrice;
 }
 
@@ -68,7 +66,7 @@ function updateLocalStorage({ id, price }, addDel) {
 
 // saves the entire shopping cart to de localStorage
 function setCarttoLocalStorage() {
-  const cartItemsSpace = document.querySelector(cartShoppingClass);
+  const cartItemsSpace = document.querySelector(cartShoppingClass); // .cart__items
   
   console.log(cartItemsSpace.innerHTML);
 
@@ -106,7 +104,7 @@ async function fetchItem(productID) {
 
 // adds an item to cart when click add button
 async function addItemToCart(productID, newOrNot) {
-  const cartElement = document.querySelector(cartShoppingClass);
+  const cartElement = document.querySelector(cartShoppingClass); // .cart__items
   const item = await fetchItem(productID);
   if (newOrNot) updateLocalStorage(item, 'add');
   cartElement.appendChild(createCartItemElement(item));
@@ -125,23 +123,32 @@ function eventListenerToAllButtons() {
 // gets all cart saved on localStorage
 function loadCartShopping() {
   const savedItems = JSON.parse(localStorage.getItem('itemIDs'));
-  // savedItems.forEach((itemInfo) => {
-  //   addItemToCart(itemInfo.id);
-  // });
   updateTotalPriceCart(savedItems);
   
   const savedCart = localStorage.getItem('shopping_cart');
-  const cartItemsSpace = document.querySelector(cartShoppingClass);
-  // console.log(cartItemsSpace.innerHTML);
+  const cartItemsSpace = document.querySelector(cartShoppingClass); // .cart__items
   cartItemsSpace.innerHTML = savedCart;
 
   const allItems = document.querySelectorAll('.cart__item');
   allItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
 }
 
+// deletes the entire Shopping Cart
+function deleteShoppingCart() {
+  const emptyButton = document.querySelector('.empty-cart');
+  emptyButton.addEventListener('click', () => {
+    const cart = document.querySelector(cartShoppingClass); // .cart__items
+    cart.innerHTML = '';
+    localStorage.setItem('shopping_cart', '');
+    localStorage.setItem('itemIDs', '[]');
+    updateTotalPriceCart([]);
+  });
+}
+
 window.onload = async function onload() {
   await getProductsFromAPI();
   eventListenerToAllButtons();
+  deleteShoppingCart();
   loadCartShopping();
   // sumTotalPriceCart();
 };
