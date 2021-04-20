@@ -90,9 +90,22 @@ function emptyCart() {
   });
 }
 
+function loading() {
+  const loading = document.createElement('span');
+  loading.className = 'loading';
+  loading.innerHTML = 'loading...';
+  document.body.append(loading);
+}
+
+function removeLoading() {
+  const loading = document.querySelector('.loading');
+  document.body.removeChild(loading);
+}
+
 // função assincrona que espera uma API
 async function fetchAPI(endpoint) {
-  // variavel espera a resposta da URL/ENDPOINT 
+  // variavel espera a resposta da URL/ENDPOINT
+  loading();
   const response = await fetch(endpoint);
   // Transforma o endpoint em formato JSON
   const object = await response.json();
@@ -104,10 +117,12 @@ async function fetchAPI(endpoint) {
     const element = createProductItemElement({ sku, name, image });
     items.appendChild(element);
   });
+  removeLoading();
   listItem();
 }
 
 async function fetchID(sku) {
+  loading();
   const endpoint = (`https://api.mercadolibre.com/items/${sku}`);  
   const response = await fetch(endpoint);
   await response.json()
@@ -120,11 +135,13 @@ async function fetchID(sku) {
       const list = document.querySelector('.cart__items');
       list.appendChild(createCartItemElement(dataProduct));
     });
+    removeLoading();
     listItem();
     // A lista estava apresentando um resultado inesperado, na qual somente
     // salvava quando REMOVIA algum item, então resolvi chamar a função Save () tanto no evento de click
     // quanto na busca pelo ID.
     save();
+    
 }
 
 function getId() {
@@ -136,7 +153,7 @@ function getId() {
 });
 }
 
-window.onload = function onload() { 
+window.onload = async function onload() { 
   const endpoint = ('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   fetchAPI(endpoint);
   getId();
