@@ -56,7 +56,7 @@ function fetchItems(number) {
 }
 
 window.onload = () => {
-  fetchItems(12);
+  fetchItems(50);
 };
 
 document.addEventListener('click', (event) => {
