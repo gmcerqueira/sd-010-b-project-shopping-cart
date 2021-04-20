@@ -11,6 +11,18 @@ const apiAcess = async () => {
   return results;
 };
 
+const clearCart = () => { 
+  const emptyCart = document.querySelector('.empty-cart');
+  const parent = document.querySelector('.cart__items');
+  emptyCart.addEventListener('click', () => {
+     while (parent.firstChild) {
+       parent.removeChild(parent.firstChild);
+     }
+     localStorage.clear();
+     spanHtml.innerHTML = '';
+  });
+};
+
 // cria elemento img no html
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -77,13 +89,14 @@ const sumItensCart = ({ price }) => {
 const addToCart = async (skuId) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${skuId}`);
   const jsonResponse = await response.json();
+  if (!skuId) createCartItemElement();
+
   const newItem = createCartItemElement({
     sku: jsonResponse.id,
     name: jsonResponse.title,
     salePrice: jsonResponse.price,
   });
   const orderedList = document.querySelector(olClass);
-  console.log(orderedList);
   orderedList.appendChild(newItem);
   sumItensCart(jsonResponse);
   setStorage(orderedList);// set do storage depois da criacao do ultimo filho
@@ -125,7 +138,6 @@ const makeProduct = (apiJason) => {
 
 const cartStorage = () => {
   const getStorage = localStorage.getItem('localCart');
-  console.log(getStorage);
   const olStorage = document.querySelector(olClass);
   olStorage.innerHTML = getStorage;
   const liCart = document.querySelectorAll('.cart__item');
@@ -139,4 +151,5 @@ const createList = async () => {
 window.onload = function onload() {
   createList();
   cartStorage();
+  clearCart();
 };
