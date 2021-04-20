@@ -31,10 +31,10 @@ function createProductItemElement({ sku, name, image }) {
 const listCartItems = '.cart__items';
 const totalPriceValue = '.total-price';
 
-function listItem() {
+async function listItem() {
   let list = 0;
-  const sumValue = document.querySelector(totalPriceValue);
   const cartItems = document.querySelectorAll('li');
+  const sumValue = document.querySelector(totalPriceValue);
   [...cartItems].forEach((element) => {
     list += parseFloat(element.innerHTML.split('$')[1]);
   });
@@ -121,6 +121,9 @@ async function fetchID(sku) {
       list.appendChild(createCartItemElement(dataProduct));
     });
     listItem();
+    // A lista estava apresentando um resultado inesperado, na qual somente
+    // salvava quando REMOVIA algum item, então resolvi chamar a função Save () tanto no evento de click
+    // quanto na busca pelo ID.
     save();
 }
 
