@@ -38,7 +38,7 @@ async function listItem() {
   [...cartItems].forEach((element) => {
     list += parseFloat(element.innerHTML.split('$')[1]);
   });
-  sumValue.innerHTML = list //.toFixed(2);
+  sumValue.innerHTML = list; // .toFixed(2);
 }
 
 function save() {
