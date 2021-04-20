@@ -94,7 +94,7 @@ async function transformarUrl(url) {
 const apagar = (valor) => {
   if (valor !== true) {
     document.getElementsByClassName('cart__items')[0].innerHTML = '';
-  };
+  }
 };
 
 window.onload = function onload() {
