@@ -108,14 +108,20 @@ function renderProducts(computersList) {
   });
 }
 
+function emptyCart() {
+  const cart = document.querySelector('.cart__items');
+  cart.innerHTML = '';
+  localStorage.clear();
+  cartTotalPrice();
+}
+
 window.onload = async function onload() {
+  const emptyButton = document.querySelector('.empty-cart');
+  emptyButton.addEventListener('click', emptyCart);
   const cartItemsString = localStorage.getItem('cart');
   cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
   getSavedCartItems(cartItems);
   const computers = await fetchProducts();
   await renderProducts(computers);
+  cartTotalPrice();
 };
-
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
