@@ -91,15 +91,15 @@ function emptyCart() {
 }
 
 function loading() {
-  const load = document.createElement('span');
+  const loadAlert = document.createElement('span');
   loading.className = 'loading';
   loading.innerHTML = 'loading...';
-  document.body.append(load);
+  document.body.append(loadAlert);
 }
 
 function removeLoading() {
-  const load = document.querySelector('.loading');
-  document.body.removeChild(load);
+  const loadAlert = document.querySelector('.loading');
+  document.body.removeChild(loadAlert);
 }
 
 // função assincrona que espera uma API
@@ -137,8 +137,7 @@ async function fetchID(sku) {
     removeLoading();
     listItem();
     // A lista estava apresentando um resultado inesperado, na qual somente
-    // salvava quando REMOVIA algum item, então resolvi chamar a função Save () tanto no evento de click
-    // quanto na busca pelo ID.
+    // salvava quando REMOVIA algum item, então resolvi chamar a função Save () tanto no evento de click quanto na busca pelo ID.
     save();   
 }
 
