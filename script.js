@@ -90,27 +90,28 @@ function emptyCart() {
   });
 }
 
-function loading() {
-  const loadAlert = document.createElement('p');
+function loadingMsg() {
+  const loading = document.createElement('p');
   loading.className = 'loading';
   loading.innerHTML = 'loading...';
-  document.body.append(loadAlert);
+  document.body.append(loading);
 }
 
 function removeLoading() {
-  const loadAlert = document.querySelector('.loading');
-  document.body.removeChild(loadAlert);
+  const loading = document.querySelector('.loading');
+  document.body.removeChild(loading);
 }
 
 // função assincrona que espera uma API
 async function fetchAPI(endpoint) {
   // variavel espera a resposta da URL/ENDPOINT
-  loading();
+  loadingMsg();
   const response = await fetch(endpoint);
   // Transforma o endpoint em formato JSON
   const object = await response.json();
   const resul = object.results;
   const items = document.querySelector('.items');
+
     resul.forEach((result) => {
     const { id: sku, title: name, thumbnail: image } = result;
     const element = createProductItemElement({ sku, name, image });
@@ -121,7 +122,7 @@ async function fetchAPI(endpoint) {
 }
 
 async function fetchID(sku) {
-  loading();
+  loadingMsg();
   const endpoint = (`https://api.mercadolibre.com/items/${sku}`);  
   const response = await fetch(endpoint);
   await response.json()
