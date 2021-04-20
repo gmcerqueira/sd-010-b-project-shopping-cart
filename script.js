@@ -32,7 +32,7 @@ function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
 // Remove o item do carrinho ao clicar nele. https://developer.mozilla.org/pt-BR/docs/Web/API/ChildNode/remove
-function cartItemClickListener(event) {
+async function cartItemClickListener(event) {
    event.target.remove();
 }
 
@@ -66,15 +66,15 @@ const fetchSearchId = async (id) => {
   return response;
 };
 // Salva os items do carrinho no localStorage.Referencia https://www.youtube.com/watch?v=hNTozXl-qJA. Me inspirei no codigo do Emerson.
-function updateLocalStorage() {
+async function updateLocalStorage() {
   const item = document.querySelector('.cart__items');
-  localStorage.setItem('Cart', item.innerHTML);
+  await localStorage.setItem('Cart', item.innerHTML);
 }
 // Cria o item a ser adicionado no carrinho. Codigo ajustado com a ajuda de Herique Clementino.
 const createProductCart = async (id) => {
   const itemId = await fetchSearchId(id);
   classOl.appendChild(createCartItemElement(itemId));
-  updateLocalStorage();
+  await updateLocalStorage();
 };
 
 // Adiciona Item no carrinho. Referencia da ajuda que encontrei, no final  da pagina.
@@ -96,9 +96,9 @@ function reloadStorage() {
   }
 }
 
-window.onload = () => {
-   elementComputerSection(); 
-   reloadStorage();
+window.onload = async () => {
+   await elementComputerSection(); 
+   await reloadStorage();
 };
 
 // segundo Requisito: https://www.youtube.com/watch?v=LEtLtRXBDms&t=492s
