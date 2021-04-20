@@ -1,3 +1,5 @@
+// AJUDA DO JEFFERSON ANDRADE NO PROJETO <3
+// AJUDA DO LUCAS NO PROJETO <3
 const arrayStorage = [];
 const priceItem = [];
 
@@ -21,10 +23,11 @@ function priceCart() {
   priceClass.innerHTML = `${sumPrice}`;
 }
 
-async function cartItemClickListener(event) {
+async function cartItemClickListener(event, sku) {
   const item = event.target;
   item.remove();
-  arrayStorage.splice(arrayStorage.indexOf(item), 1);
+  const itemRemove = arrayStorage.find((iten) => iten.id === sku);
+  arrayStorage.splice(arrayStorage.indexOf(itemRemove), 1);
   priceItem.splice(priceItem.indexOf(Number(item.innerText.split('$')[1])), 1);
   localStorage.setItem('items', JSON.stringify(arrayStorage));
   priceCart();
@@ -43,7 +46,7 @@ function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
-  li.addEventListener('click', cartItemClickListener);
+  li.addEventListener('click', (event) => cartItemClickListener(event, sku));
   ol.appendChild(li);
 }
 
