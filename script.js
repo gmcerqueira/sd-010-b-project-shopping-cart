@@ -14,7 +14,7 @@ function sum() {
   localTotal.innerText = (Math.round(total * 100) / 100);
 }
 async function cartItemClickListener(event) {
-  // recupero o index do elmento clicado
+  // recupero o index do elemento clicado
   // https://stackoverflow.com/questions/13658021/jquery-index-in-vanilla-javascript
   const index = (Array.from(event.target.parentElement.children).indexOf(event.target));
   sendLocalStorageCart.splice(index, 1);
@@ -115,6 +115,13 @@ async function getComputer() {
 }
 
 window.onload = async function onload() { 
+const buttonClearAll = document.querySelector('.empty-cart');
+buttonClearAll.addEventListener('click', async () => {
+document.querySelector('.cart__items').innerHTML = '';
+sendLocalStorageCart.splice(0, sendLocalStorageCart.length);
+localStorage.setItem('cartItems', JSON.stringify(sendLocalStorageCart));
+await sum();
+});
   sum();
   // acima tenho os computadore que busca achou!
   await getComputer();
