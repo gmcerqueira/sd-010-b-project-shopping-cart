@@ -1,3 +1,6 @@
+const arrStorage = [];
+localStorage.setItem('cart', JSON.stringify(arrStorage));
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -27,11 +30,13 @@ function createProductItemElement({ sku, name, image }) {
 function getSkuFromProductItem(item) {
   return item.querySelector('span.item__sku').innerText;
 }
-  
+
 function cartItemClickListener(event) {
   event.target.remove();
+  arrStorage.splice(event.path[1].childElementCount, 1);
+  localStorage.setItem('cart', JSON.stringify(arrStorage));
 }
-    
+
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -39,7 +44,7 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
-  
+
 const consultAPI = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const responseObjeto = await response.json();
@@ -60,12 +65,12 @@ const renderProduct = async (products) => {
   });
 };
 
-const transformToObject = (data) => ({ sku: data.id, name: data.title, salePrice: data.price });
-
 const renderItemsCart = (item) => {
   const cartItemsOl = document.querySelector('.cart__items');
   cartItemsOl.appendChild(item);
 };
+
+const transformToObject = (data) => ({ sku: data.id, name: data.title, salePrice: data.price });
 
 const eventButton = () => {
   const buttonProducts = document.querySelectorAll('.item__add'); // traz uma lista con todos os botões dos produtos;
@@ -76,6 +81,8 @@ const eventButton = () => {
       const response = await fetch(`https://api.mercadolibre.com/items/${id}`);
       const responseAPI = await response.json();
       const objTransform = transformToObject(responseAPI);// a função pega os dados necessarios para entrar como parametro a função da proxima linha retornando um objeto;
+      arrStorage.push(objTransform);
+      localStorage.setItem('cart', JSON.stringify(arrStorage));
       const liCreated = createCartItemElement(objTransform);
       renderItemsCart(liCreated);
     });
@@ -87,12 +94,36 @@ const emptyCart = () => {
   buttonEmptyCart.addEventListener('click', () => {
     const listCart = document.querySelector('.cart__items');
     listCart.innerText = '';
+    localStorage.removeItem('cart');
   });
 };
 
-window.onload = async function onload() { 
+const recoverCartStorage = async () => {
+  const returnStorage = await JSON.parse(localStorage.getItem('cart'));
+  await returnStorage.forEach((object) => {
+    const elementCart = createCartItemElement(object);
+    renderItemsCart(elementCart);
+  });
+};
+
+const toIntroduceLoading = () => {
+  const sectionItens = document.querySelector('.items');
+  const loadingSpan = document.createElement('span');
+  loadingSpan.className = 'loading';
+  loadingSpan.innerText = 'loading...';
+  sectionItens.appendChild(loadingSpan);
+ };
+
+const removeLoading = () => {
+  document.querySelector('.loading').remove();
+};
+
+window.onload = async function onload() {
+  toIntroduceLoading();
   const products = await consultAPI();
   renderProduct(products);
+  removeLoading();
+  recoverCartStorage();
   eventButton();
   emptyCart();
 };
