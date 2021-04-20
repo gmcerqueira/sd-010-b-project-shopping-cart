@@ -1,5 +1,6 @@
 const getPricesItem = [];
 const getClassCart = '.cart_items';
+
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
