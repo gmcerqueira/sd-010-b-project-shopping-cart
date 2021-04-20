@@ -52,7 +52,6 @@ async function clickElemente(event) {
   const parent = event.target.parentElement;
   const prodID = parent.querySelector('span.item__sku').innerText;;
   const prod = await getProductId(prodID);
-  console.log(event)
   const newEl = createCartItemElement({
     sku: prod.id,
     name: prod.title,
@@ -94,10 +93,12 @@ async function transformarUrl(url) {
 
 window.onload = function onload() {
   transformarUrl('https://api.mercadolibre.com/sites/MLB/search?q=computador');
-  //localStorage.setItem('preco', 0);
   document.querySelector('.cart__items').innerHTML = localStorage.getItem('cartItems');
- };
+  apagar(true)
+};
 
-const apagar = () => {
-  document.getElementsByClassName('cart__items')[0].innerHTML = '';
+const apagar = (valor) => {
+  if (valor !== true){
+    document.getElementsByClassName('cart__items')[0].innerHTML = '';
+  }
 }
