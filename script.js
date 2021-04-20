@@ -1,22 +1,31 @@
 // ajuda não consegui criar arcabouços para fazer do metodo convencional
 // então usei jQuery após descobri-lo na internet
 // mas lint me proibe de usa-lo sem importar o cypress nao roda quando importo.
-
+// depois de clicar minha constante não recebe o item
 const sendLocalStorageCart = [];
-function cartItemClickListener(event) {
-  // recuperando o index o jQuery falta defini-lo o lint me trava nisso!
-  // imaginei porque é uma ferramenta que não existe.
-  const index = $(event.target).index();
-  console.log(sendLocalStorageCart);
+// O fim está chegando 
+function sum() {
+  const total = sendLocalStorageCart.reduce((acc, product) => {
+  const { salePrice } = product;
+  return acc + salePrice;
+  }, 0);
+  console.log(Math.round(total * 100) / 100);
+  const localTotal = document.querySelector('.total-price');
+  localTotal.innerText = (Math.round(total * 100) / 100);
+}
+async function cartItemClickListener(event) {
+  // recupero o index do elmento clicado
+  // https://stackoverflow.com/questions/13658021/jquery-index-in-vanilla-javascript
+  const index = (Array.from(event.target.parentElement.children).indexOf(event.target));
   sendLocalStorageCart.splice(index, 1);
   event.target.remove();
-  console.log(sendLocalStorageCart);
+  await sum();
+  // precisa empurrar novamente o array para o localStorage
   localStorage.setItem('cartItems', JSON.stringify(sendLocalStorageCart));
   }
 
 function createCartItemElement({ sku, name, salePrice }) {
   const li = document.createElement('li');
-  li.id = sendLocalStorageCart.length;
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
@@ -45,15 +54,21 @@ async function buttonClickAddCart(event) {
   sendLocalStorageCart.push(itemCart);
   document.querySelector('.cart__items').appendChild(createCartItemElement(itemCart));
   localStorage.setItem('cartItems', JSON.stringify(sendLocalStorageCart));
+  await sum();
   }
 
  function recoveryLocal() {
   const localStorageRecovery = localStorage.getItem('cartItems');
   const itensSaved = JSON.parse(localStorageRecovery);
+  // preciso empurrar o itensSaved novamente pra dentro do array quando eu der o recovery
+  // porque quando carrego ele fica vazio e empurra um array vazio para  chave cartItems
   const cartItems = document.getElementsByClassName('cart__items')[0];
   itensSaved.forEach((item) => {
   const itemAddLocalStorage = createCartItemElement(item);
   cartItems.appendChild(itemAddLocalStorage);
+  // sendLocalStorageCart precisa receber os itens salvos, sele não receber após f5 
+  // ele vai virar []
+  sendLocalStorageCart.push(itensSaved);
   });
 }
 
@@ -74,7 +89,6 @@ function createCustomElement(element, className, innerText) {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
@@ -99,9 +113,10 @@ async function getComputer() {
     document.querySelector('.items').appendChild(createProductItemElement(newComputerObject));
   });
 }
+
 window.onload = async function onload() { 
+  sum();
   // acima tenho os computadore que busca achou!
-  
   await getComputer();
   recoveryLocal();
   };
