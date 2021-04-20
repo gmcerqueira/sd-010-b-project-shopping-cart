@@ -6694,7 +6694,7 @@ const results = {
             "level_id": "5_green"
           }
         },
-        "price": 14.6,
+        "price": 13.6,
         "currency_id": "BRL",
         "available_quantity": 1,
         "sold_quantity": 200,

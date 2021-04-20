@@ -131,15 +131,22 @@ const createListItems = (data, section) => {
 const loadingCart = async () => {
   // variável pega carrinho do Local Storage
   const carrinho = await JSON.parse(localStorage.getItem(chaveLocalStorage));
-
   if (carrinho !== null) {
-    carrinho.forEach(async (element) => {
-      const getOl = document.querySelector('.cart__items');
-      const item = await requestAPIItem(element);
-      getOl.appendChild(createCartItemElement(item));
+    const cars = carrinho.map((id) => requestAPIItem(id));
+    await Promise.all(cars).then((itens) => {
+      itens.forEach((item) => {
+        const getOl = document.querySelector('.cart__items');
+        getOl.appendChild(createCartItemElement(item));
+      });
     });
   }
 };
+
+// async function getProducts() {
+//   const array = ids.map((id) => fetch(`www.example.com/${id}`));
+//   // nesse momento teremos um array de promises que ainda estão pendentes
+//   // o Promise.all vai esperar ate que todas as promises do array sejam resolvidas
+//   await Promise.all(array);
 
 // O preço total permanace ao carregar a página;
 // const loadingCartPrice = async () => {
