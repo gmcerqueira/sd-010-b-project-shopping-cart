@@ -1,17 +1,25 @@
+const classItemCart = '.cart__items';
 function eraseAll() { // requisito 6
   const removeButton = document.getElementsByClassName('empty-cart')[0];// botão que esvazia o carrinho
   removeButton.addEventListener('click', () => { // fazer essa HOF aqui no addEventListener me ajudou a resolver problema de lint. Fazendo assim, eu chamo a função eraseAll usando o addEventListener dentro da própria eraseAll. 
     document.getElementsByClassName('cart__items')[0].innerText = ''; // esse do cart_items é a OL.
+    
+      const ol = document.querySelector(classItemCart);
+   localStorage.setItem('produto', ol.innerHTML);
     });
 }
+
 // a função abaixo usei para o requisito 4. Para esta resolução, tive a ajuda do colega João Herculano.
 // Link do PR dele : https://github.com/tryber/sd-010-b-project-shopping-cart/pull/88/commits/a2d11f39b333e0c0898502bccccaa4f18cff8425
-function storage() {
-  const armazenar = localStorage.getItem('cart');
-  document.getElementsByClassName('cart__items')[0].innerHTML = armazenar; // usando o innerHTML que manteve os números na lista. Usando innerText esses números sumiam.
-}
+  function storage() {
+    const armazenar = localStorage.getItem('produto');
+    document.querySelector(classItemCart).innerHTML = armazenar; // usando o innerHTML que manteve os números na lista. Usando innerText esses números sumiam.
+    console.log(armazenar);
+  }
 function cartItemClickListener(event) {
   event.target.remove();// o event.target alcança o elemento que começou o evento(Nesse caso, seria o LI). Então ao clicar em LI, eu chamo essa função e esta função remove este LI.
+   const ol = document.querySelector(classItemCart);
+    localStorage.setItem('produto', ol.innerHTML);
 }
 function createCartItemElement({ id: sku, title: name, price: salePrice }) {
   const li = document.createElement('li');
@@ -31,10 +39,10 @@ const addToCard = async (sku) => {
      // esses parâmetros desse jeito foram a forma de fazer dar certo.
      // Resumo da sequência do req. 2:  Quando eu clico no botão verde, eu chamo a função que faz a requisição e essa mesma função diz que a função createCartItemElement(que estrutura e retorna as LIs) é filha de OL. Por isso que aparece as informações do produto(que eu cliquei) naquela OL.
   
-  const ol = document.getElementsByClassName('cart__items')[0];
-  localStorage.setItem('cart', document.getElementsByClassName('cart__items')[0].innerHTML);// tive que botar aqui pra começar a dar certo(ao invés de lá em cima)
-  return ol.appendChild(clickItem);
-   };
+     const ol = document.querySelector(classItemCart);
+      ol.appendChild(clickItem);
+    localStorage.setItem('produto', ol.innerHTML); // tive que botar aqui pra começar a dar certo(ao invés de lá em cima) // isso PRECISA ser depos do ol.appendChild(clickItem). Aí por isso não é pra eu colocar return  nesse ol.appendChild
+  };
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -74,6 +82,7 @@ const myFetch = () => { // essas coisas é melhor botar no final do código pra 
     response.json()
     .then((computador) => {
       console.log(computador); // esse não é obrigatório, mas é bom pra poder visualizar melhor.
+      
       computador.results.forEach((element) => { // Computador é aquele array com todo aquele absurdo de informação depois que faço o fetch.
         // computador.results me alcança tudo que tiver no array "results". Aí faço o forEach dentro desse RESULTS.
         // esse result tem uns 50 itens lá. Cada 1 desses equivale a um dos 50 produtos.
@@ -83,7 +92,6 @@ const myFetch = () => { // essas coisas é melhor botar no final do código pra 
     });
   });
 };
-
 window.onload = function onload() { 
   myFetch(); 
   eraseAll();
