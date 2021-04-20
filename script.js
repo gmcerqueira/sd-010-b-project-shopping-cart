@@ -34,9 +34,9 @@ function somarPrice(price) {
   let totalPrice = 0;
   for (let index = 0; index < localStorage.length; index += 1) {
    const key = localStorage.key(index);
-   console.log(key);
+   // console.log(key);
    const dataObjt = JSON.parse(localStorage[key]); 
-   console.log(dataObjt);
+   // console.log(dataObjt);
    arrayPrices.push(dataObjt.salePrice);   
   }
   if (price) {
@@ -45,7 +45,7 @@ function somarPrice(price) {
     document.querySelector('.total-price').innerText = totalPrice;
   }
   totalPrice = arrayPrices.reduce((acc, curr) => acc + curr, 0);
-  document.querySelector('.total-price').innerText = totalPrice;
+  document.querySelector('.total-price').innerText = `Total: R$ ${totalPrice}`;
 }
 
 function cartItemClickListener(event) { 

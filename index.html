@@ -6,17 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="bulma-0.9.2/bulma/css/bulma.min.css">
     <script src="script.js"></script>
   </head>
 
   <body>
+    <header>
+      <section class="bar-sup">
+        <p>Project Shopping Cart</p>
+      </section>
+    </header>
     <section class="container">
       <section class="items"></section>
       <section class="cart">
         <span class="cart__title">Carrinho de compras</span>
         <p class="loading">Loading ...</p>
-        <button class="empty-cart">Esvaziar carrinho</button>
-        <span class="total-price" id="total_price"></span>
+        <button class="empty-cart button is-danger is-rounded">Esvaziar carrinho</button>
+        <span class="total-price" id="total_price"><p>Total:</p></span>
         <ol class="cart__items"></ol>
       </section>
     </section>
