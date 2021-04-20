@@ -11,15 +11,15 @@ const apiAcess = async () => {
   return results;
 };
 
-const clearCart = () => { 
+const clearCart = () => {
   const emptyCart = document.querySelector('.empty-cart');
   const parent = document.querySelector('.cart__items');
   emptyCart.addEventListener('click', () => {
-     while (parent.firstChild) {
-       parent.removeChild(parent.firstChild);
-     }
-     localStorage.clear();
-     spanHtml.innerHTML = '';
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild);
+    }
+    localStorage.clear();
+    spanHtml.innerHTML = '';
   });
 };
 
@@ -63,7 +63,7 @@ function cartItemClickListener(event) {
   } else {
     subItensCart();
   }
-  setStorage(olStorage);// o target referencia o objeto que criou o evento, no caso é a li que foi clicada
+  setStorage(olStorage); // o target referencia o objeto que criou o evento, no caso é a li que foi clicada
 }
 // cria card dos itens no carrinho
 function createCartItemElement({
@@ -73,14 +73,15 @@ function createCartItemElement({
 }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
-  li.id = `${sku}`;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
   li.setAttribute('price', salePrice);
   return li;
 }
 // soma os itens adcionados no carrinho
-const sumItensCart = ({ price }) => {
+const sumItensCart = ({
+  price,
+}) => {
   arraySum.push(price);
   const priceTotal = arraySum.reduce((sum, curr) => sum + curr);
   spanHtml.innerHTML = priceTotal;
@@ -89,8 +90,6 @@ const sumItensCart = ({ price }) => {
 const addToCart = async (skuId) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${skuId}`);
   const jsonResponse = await response.json();
-  if (!skuId) createCartItemElement();
-
   const newItem = createCartItemElement({
     sku: jsonResponse.id,
     name: jsonResponse.title,
@@ -99,7 +98,7 @@ const addToCart = async (skuId) => {
   const orderedList = document.querySelector(olClass);
   orderedList.appendChild(newItem);
   sumItensCart(jsonResponse);
-  setStorage(orderedList);// set do storage depois da criacao do ultimo filho
+  setStorage(orderedList); // set do storage depois da criacao do ultimo filho
 };
 
 function createProductItemElement({
