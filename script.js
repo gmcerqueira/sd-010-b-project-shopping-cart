@@ -1,5 +1,5 @@
 const getPricesItem = [];
-
+const getClassCart = '.cart_items';
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -34,7 +34,7 @@ const createCartItemElement = ({ id: sku, title: name, price: salePrice }) => {
   li.className = 'cart__item';
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
-  return li;  
+  return li;
 };
 
 const theProduct = async (item) => {
@@ -46,12 +46,13 @@ const theProduct = async (item) => {
 function createProductItemElement({ sku, name, image }) {
   const section = document.createElement('section');
   section.className = 'item';
-
   section.appendChild(createCustomElement('span', 'item__sku', sku));
   section.appendChild(createCustomElement('span', 'item__title', name));
   section.appendChild(createProductImageElement(image));
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'))
   .addEventListener('click', async () => {
+  const cartItens = document.querySelector('.cart__items').innerHTML;
+  localStorage.setItem('cart', cartItens);
   const sc = section.firstChild.textContent;
   const data = await theProduct(sc);
   document.querySelector('.cart__items').appendChild(createCartItemElement(data));
@@ -61,6 +62,11 @@ function createProductItemElement({ sku, name, image }) {
   getSpan.textContent = soma;
 });
   return section;
+}
+
+function getStorage() {
+  const itensStorage = localStorage.getItem('cart');
+  document.querySelector(getClassCart).innerHTML = itensStorage;
 }
 
 const getProduct = async () => {
@@ -83,10 +89,12 @@ const clearCart = () => {
   const clearCartItems = document.querySelector('.empty-cart');
   clearCartItems.addEventListener('click', () => {
     document.querySelector('ol.cart__items').innerHTML = '';
+    localStorage.removeItem('cart');
   });
 };
 
 window.onload = function () {
   getProduct();
   clearCart();
+  getStorage();
 };
