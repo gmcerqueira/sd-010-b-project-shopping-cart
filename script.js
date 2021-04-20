@@ -29,8 +29,12 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 */
 
 const getItems = async () => {
+  const loading = document.createElement('p');
+  loading.className = 'loading';
+  document.body.appendChild(loading);
   const request = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const response = await request.json();
+  document.querySelector('.loading').remove();
   const computers = response.results;
   computers.forEach((computer) => {
     const items = document.querySelector('.items');
