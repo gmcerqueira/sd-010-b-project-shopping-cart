@@ -32,17 +32,20 @@ const listC = '.cart__items';
 
 function listItem() {
   let list = 0;
+  const sumValue = document.querySelector('.total-price');
   const cartItems = document.querySelectorAll('li');
   [...cartItems].forEach((element) => {
-    list += element;
+    list += parseFloat(element.innerHTML.split('$')[1]);
   });
-  
-  return list;
+  sumValue.innerHTML = list.toFixed(2);
 }
+
 
 function save() {
   const listCart = document.querySelector(listC);
+  const totalValue = document.querySelector('.total-price');
   localStorage.setItem('cart', listCart.innerHTML);
+  localStorage.setItem('value', totalValue.innerHTML);
 }
 
 function remove(event) {
@@ -61,6 +64,7 @@ function load() {
   
   const cartItems = document.querySelectorAll('li');
   cartItems.forEach((item) => item.addEventListener('click', cartItemClickListener));
+  listItem();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -71,17 +75,26 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
+// Botão removedor.
 function emptyCart() {
+  // Variavel contem o elemento do botão.
   const emptyCartBtn = document.querySelector('.empty-cart');
+  // Variavel contem uma lista Ordenada.
   const cartList = document.querySelector(listC);
+  // adciona um evento de 'click' que remove os elementos.
+  const totalValue = document.querySelector('.total-price'); 
   emptyCartBtn.addEventListener('click', () => {
     cartList.innerHTML = '';
     localStorage.clear();
+    totalValue.innerHTML = 0;
   });
 }
 
+// função assincrona que espera uma API
 async function fetchAPI(endpoint) {
+  // variavel espera a resposta da URL/ENDPOINT 
   const response = await fetch(endpoint);
+  // Transforma o endpoint em formato JSON
   const object = await response.json();
   const resul = object.results;
   const items = document.querySelector('.items');
@@ -91,6 +104,7 @@ async function fetchAPI(endpoint) {
     const element = createProductItemElement({ sku, name, image });
     items.appendChild(element);
   });
+  listItem();
 }
 
 async function fetchID(sku) {
@@ -106,6 +120,8 @@ async function fetchID(sku) {
       const list = document.querySelector('.cart__items');
       list.appendChild(createCartItemElement(dataProduct));
     });
+    listItem();
+    saveCart();
 }
 
 function getId() {
