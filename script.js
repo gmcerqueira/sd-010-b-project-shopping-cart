@@ -62,9 +62,9 @@ async function cartItemClickListener(event) {
 function localStorageCartShop(cartShop) {
   const sizeCartItem = document.getElementsByClassName('cart__item');
   const lS = Object.keys(localStorage).sort();
-  for (let index = 0; index <= sizeCartItem.length + 1; index += 1) {
-    if (lS[index] !== `cartShop[${index + 1}]`) {
-      localStorage.setItem(`cartShop[${index + 1}]`, `${cartShop}`);
+  for (let index = 0; index <= sizeCartItem.length; index += 1) {
+    if (!lS.includes(`cartShop[${index}]`)) {
+      localStorage.setItem(`cartShop[${index}]`, `${cartShop}`);
       break;
     }
   }
