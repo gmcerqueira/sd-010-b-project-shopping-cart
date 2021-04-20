@@ -1,4 +1,6 @@
 const olClass = '.cart__items';
+let arraySum = [];
+let spanHtml = document.querySelector('.total-price');
 const apiAcess = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const {
@@ -30,10 +32,23 @@ const setStorage = (ol) => {
   localStorage.setItem('localCart', ol.innerHTML);
 };
 
+const subItensCart = () => {
+  const sub = arraySum.reduce((sum, curr) => sum + curr);
+  spanHtml.innerHTML = sub;
+};
+
 function cartItemClickListener(event) {
   // coloque seu código aqui
   event.target.remove();
+  const price = event.target.getAttribute('price');
   const olStorage = document.querySelector(olClass);
+  const newArray = arraySum.filter((element) => element !== parseFloat(price));
+  arraySum = newArray;
+  if (arraySum.length === 0) {
+    spanHtml.innerHTML = 0;
+  } else {
+    subItensCart();
+  }
   setStorage(olStorage);// o target referencia o objeto que criou o evento, no caso é a li que foi clicada
 }
 // cria card dos itens no carrinho
@@ -44,10 +59,18 @@ function createCartItemElement({
 }) {
   const li = document.createElement('li');
   li.className = 'cart__item';
+  li.id = `${sku}`;
   li.innerText = `SKU: ${sku} | NAME: ${name} | PRICE: $${salePrice}`;
   li.addEventListener('click', cartItemClickListener);
+  li.setAttribute('price', salePrice);
   return li;
 }
+// soma os itens adcionados no carrinho
+const sumItensCart = ({ price }) => {
+  arraySum.push(price);
+  const priceTotal = arraySum.reduce((sum, curr) => sum + curr);
+  spanHtml.innerHTML = priceTotal;
+};
 
 const addToCart = async (skuId) => {
   const response = await fetch(`https://api.mercadolibre.com/items/${skuId}`);
@@ -60,7 +83,8 @@ const addToCart = async (skuId) => {
   const orderedList = document.querySelector(olClass);
   console.log(orderedList);
   orderedList.appendChild(newItem);
-  setStorage(orderedList);
+  sumItensCart(jsonResponse);
+  setStorage(orderedList);// set do storage depois da criacao do ultimo filho
 };
 
 function createProductItemElement({
