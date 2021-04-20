@@ -1,6 +1,6 @@
 const olClass = '.cart__items';
 let arraySum = [];
-let spanHtml = document.querySelector('.total-price');
+const spanHtml = document.querySelector('.total-price');
 const apiAcess = async () => {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador');
   const {
