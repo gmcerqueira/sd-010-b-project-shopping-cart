@@ -41,6 +41,8 @@ function createCartItemElement({ sku, name, salePrice }) {
 }
 
 async function createListItems() {
+  const loadingText = createCustomElement('p', 'loading', 'Loading...');
+  document.querySelector('body').appendChild(loadingText);
   const responseList = await (fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador'));
   const responseJson = await responseList.json();
   responseJson.results.forEach((item) => {
@@ -50,6 +52,7 @@ async function createListItems() {
       image: item.thumbnail,
     };
     document.querySelector('.items').appendChild(createProductItemElement(product));
+    loadingText.remove();
   });
 }
 // capturar o id do produto clicado, faz acesso à API ML e joga pro carrinho.
