@@ -24,9 +24,9 @@ function createProductItemElement({ sku, name, image }) {
   return section;
 }
 
-// function getSkuFromProductItem(item) {
-//   return item.querySelector('span.item__sku').innerText;
-// }
+function getSkuFromProductItem(item) {
+  return item.querySelector('span.item__sku').innerText;
+}
 
 function cartItemClickListener(event) {
   return event;
@@ -39,10 +39,10 @@ function createCartItemElement({ sku, name, salePrice }) {
   li.addEventListener('click', cartItemClickListener);
   return li;
 }
- 
+
 async function createListItems() {
-  const response = await (fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador'));
-  const responseJson = await response.json();
+  const responseList = await (fetch('https://api.mercadolibre.com/sites/MLB/search?q=$computador'));
+  const responseJson = await responseList.json();
   responseJson.results.forEach((item) => {
     const product = {
       sku: item.id,
@@ -52,15 +52,27 @@ async function createListItems() {
     document.querySelector('.items').appendChild(createProductItemElement(product));
   });
 }
+// capturar o id do produto clicado, faz acesso à API ML e joga pro carrinho.
+const cartItems = document.querySelector('.cart__items');
 
-const btnAddItemCart = document.getElementsByClassName('item__add');
+function addItemCart() {
+  const btnAddItemCart = document.querySelectorAll('.item__add'); // captura todos os botões.
+  btnAddItemCart.forEach((event) => {
+    event.addEventListener('click', async (productId) => {
+      const id = getSkuFromProductItem(productId.target.parentNode); // ao clicar, captura a section que contém o item clicado.
+      const productResponse = await fetch(`https://api.mercadolibre.com/items/${id}`); // passa para a API a id do item clicado.
+      const productResponseJson = await productResponse.json();
+      const productCartInfo = {
+        sku: productResponseJson.id,
+        name: productResponseJson.title,
+        salePrice: productResponseJson.price,
+      };
+      cartItems.appendChild(createCartItemElement(productCartInfo));
+    });
+  });
+}
 
-// btnAddItemCart.addEventListener('click', () => {
-//   const responseItems = await (fetch('"https://api.mercadolibre.com/items/$ItemID"'));
-//   const responseItemJson = await responseItems.json();
-//   responseItemJson.
-// });
-
-window.onload = function onload() {
-  createListItems();
+window.onload = async function onload() {
+  await createListItems();
+  addItemCart();
 };
