@@ -25,7 +25,7 @@ function createProductItemElement({ id: sku, title: name, thumbnail: image }) {
 }
 
 /*
-  Requisito os itens para a API e a partir deles crio cada elemento na página.
+  Requisito os itens para a API e a partir deles crio cada elemento na página. Enquanto os itens são carregados existe um elemento com a mensagem 'Loading...' na tela. Após a API responder, o texto deixa de existir.
 */
 
 const getItems = async () => {
