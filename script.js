@@ -91,15 +91,15 @@ function emptyCart() {
 }
 
 function loading() {
-  const loading = document.createElement('span');
+  const load = document.createElement('span');
   loading.className = 'loading';
   loading.innerHTML = 'loading...';
-  document.body.append(loading);
+  document.body.append(load);
 }
 
 function removeLoading() {
-  const loading = document.querySelector('.loading');
-  document.body.removeChild(loading);
+  const load = document.querySelector('.loading');
+  document.body.removeChild(load);
 }
 
 // função assincrona que espera uma API
@@ -111,7 +111,6 @@ async function fetchAPI(endpoint) {
   const object = await response.json();
   const resul = object.results;
   const items = document.querySelector('.items');
-
     resul.forEach((result) => {
     const { id: sku, title: name, thumbnail: image } = result;
     const element = createProductItemElement({ sku, name, image });
@@ -140,8 +139,7 @@ async function fetchID(sku) {
     // A lista estava apresentando um resultado inesperado, na qual somente
     // salvava quando REMOVIA algum item, então resolvi chamar a função Save () tanto no evento de click
     // quanto na busca pelo ID.
-    save();
-    
+    save();   
 }
 
 function getId() {
