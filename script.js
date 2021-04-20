@@ -1,3 +1,5 @@
+// Entendimento das funções com a juda de Ferdanda Porto.
+
 async function getComputer(api) {
   const response = await fetch(api);
   const computer = await response.json();
@@ -5,10 +7,6 @@ async function getComputer(api) {
 } 
 
 let carrinho = [];
-
-async function getProduct(id) {
- await fetch(`https://api.mercadolibre.com/items/${id}`).then((res) => res.json());
-}
 
 function createProductImageElement(imageSource) {
   const img = document.createElement('img');
@@ -39,6 +37,18 @@ function createProductItemElement({ sku, name, image }) {
 // function getSkuFromProductItem(item) {
 //   return item.querySelector('span.item__sku').innerText;
 // }
+
+function esvaziarCarrinho() {
+  const clear = document.querySelector('.empty-cart');
+  const sum = document.getElementById('sum');
+  const ol = document.getElementsByTagName('ol')[0];
+  clear.addEventListener('click', () => {
+    carrinho = [];
+    localStorage.clear();
+    ol.innerHTML = '';
+    sum.innerHTML = '0';
+  });
+}
 
 const soma = () => {
   const sum = carrinho.reduce((acc, curr) => acc + curr.price, 0);
@@ -104,4 +114,5 @@ window.onload = async function onload() {
   carrinho = carrinhoCheio ? JSON.parse(carrinhoCheio) : [];
   recoverList();
   soma();
+  esvaziarCarrinho();
 };
