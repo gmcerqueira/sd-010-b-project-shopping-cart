@@ -6,6 +6,8 @@ const apiAcess = async () => {
   const {
     results,
   } = await response.json();
+  const spanLoading = document.querySelector('.loading');
+  spanLoading.remove();
   return results;
 };
 
@@ -45,7 +47,7 @@ function cartItemClickListener(event) {
   const newArray = arraySum.filter((element) => element !== parseFloat(price));
   arraySum = newArray;
   if (arraySum.length === 0) {
-    spanHtml.innerHTML = 0;
+    spanHtml.innerHTML = '';
   } else {
     subItensCart();
   }
