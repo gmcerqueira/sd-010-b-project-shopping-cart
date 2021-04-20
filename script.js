@@ -61,18 +61,13 @@ async function cartItemClickListener(event) {
 
 function localStorageCartShop(cartShop) {
   const sizeCartItem = document.getElementsByClassName('cart__item');
-  for (let index = 1; index <= sizeCartItem.length; index += 1) {
-    if (index === sizeCartItem.length) {
-      localStorage.setItem(`cartShop[${index}]`, `${cartShop}`);
+  const lS = Object.keys(localStorage).sort();
+  for (let index = 0; index <= sizeCartItem.length + 1; index += 1) {
+    if (lS[index] !== `cartShop[${index + 1}]`) {
+      localStorage.setItem(`cartShop[${index + 1}]`, `${cartShop}`);
+      break;
     }
   }
-  // for (let index = 1; index <= sizeCartItem.length; index += 1) {
-  //   console.log(Object.keys(localStorage)[index]);
-  //   if (!Object.keys(localStorage)[index] !== ) {
-  //     localStorage.setItem(`cartShop[${index}]`, `${cartShop}`);
-  //     break;
-  //   }
-  // }
 }
 
 // tive ajuda do Lucas Portella;
