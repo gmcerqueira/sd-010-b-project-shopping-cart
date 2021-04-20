@@ -1,3 +1,8 @@
+function loadingMessageVanish() {
+  const loading = document.querySelector('.loading');
+  loading.remove();
+}
+
 async function fetchProducts() {
   const response = await fetch('https://api.mercadolibre.com/sites/MLB/search?q=computador');
   const productsInfos = await response.json();
@@ -122,6 +127,7 @@ window.onload = async function onload() {
   cartItems = cartItemsString ? JSON.parse(cartItemsString) : [];
   getSavedCartItems(cartItems);
   const computers = await fetchProducts();
+  await loadingMessageVanish();
   await renderProducts(computers);
   cartTotalPrice();
 };
