@@ -60,7 +60,7 @@ if (localStorage.getItem(cartItemsString)) {
 }
 
 /*
-  Determino que casa exista pelo menos um item na lista, o valor é dado pela soma de todos os preços presentes na lista. Caso contrário é 0.
+  Determino que casa exista pelo menos um item na lista, o valor é dado pela soma de todos os preços presentes na lista (corrigido pelo Math.round()). Caso contrário é 0.
 */
 
 const calcPrice = () => {
