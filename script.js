@@ -39,11 +39,10 @@ async function totalOrder(price) {
 }
 
 function cartItemClickListener(event) {
-  // coloque seu código aqui
-  const id = event.target.innerHTML.split(' ')[1];
+  const indexCartItem = Array.from(shoppingList.children).indexOf(event.target);
   const price = event.target.innerHTML.split('$')[1];
   totalOrder(-price);
-  cartShoppingIds.splice(cartShoppingIds.indexOf(cartShoppingIds[id]), 1);
+  cartShoppingIds.splice(indexCartItem, 1);
   localStorage.setItem('computers', JSON.stringify(cartShoppingIds));
   event.target.remove();
 }
